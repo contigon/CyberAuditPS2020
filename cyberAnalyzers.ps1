@@ -179,13 +179,16 @@ switch ($input) {
         4 - Domain_Users_Enterprise Admins.csv
 
 "@
-        Read-Host $help
+
         $files = @("found_","left_","Domain_Users_Domain Admins.csv","Domain_Users_Enterprise Admins.csv")
         $goddi = ACQA("goddi")
         $DomainAdmins = $goddi + "\" + $files[2].ToString()
-        Copy-Item -Path $DomainAdmins -Destination $ACQ
-        $DomainAdmins = $goddi + "\" + $files[3].ToString()
-        Copy-Item -Path $DomainAdmins -Destination $ACQ
+        Copy-Item -Path $DomainAdmins -Destination $ACQ -Force
+        $EntAdmins = $goddi + "\" + $files[3].ToString()
+        Copy-Item -Path $EntAdmins -Destination $ACQ -Force
+        Write-Host $help -ForegroundColor Yellow
+        Start-Process iexplore $ACQ
+        $input  = Read-Host "Press [Enter] if you all files are located in $ACQ (or Ctrl + C to quit)"
         $folderFiles = Get-ChildItem -Path $ACQ -Recurse -File -Name
         $i = 0
         foreach ($f in $files) {

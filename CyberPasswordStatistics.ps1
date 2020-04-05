@@ -18,7 +18,7 @@ $Host.UI.RawUI.WindowTitle = "Cyber Audit Tool 2020 - Password Statistics"
 try {Import-Module ImportExcel.psd1} catch {throw ; return}
 
 try{
-    $c= Get-Process -Name EXCEL | Select-Object -Property id,MainWindowTitle
+    $c= Get-Process -Name EXCEL -ErrorAction SilentlyContinue | Select-Object -Property id,MainWindowTitle
     foreach($a in $c) {
         if($a.MainWindowTitle.Contains("Cyber")) 
         {
@@ -29,7 +29,7 @@ try{
  catch
      {
         throw
-         return
+        return
      } 
 
 
