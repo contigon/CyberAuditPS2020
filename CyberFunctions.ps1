@@ -163,26 +163,26 @@ function DisableAntimalware(){
     write-host ($AntiVirusProduct | % $_ {write-host "-->" $_.displayname  -ForegroundColor Green})
     $WinEdition = (Get-WmiObject -Class Win32_OperatingSystem -ComputerName .).caption
     if (!$WinEdition.Contains("HOME") -or !$WinEdition.Contains("Education")) {
-    $AntiVirusProduct | % { if($_.DisplayName -match "Windows Defender" -AND (Get-Service -name "sense").Status -cnotmatch "Stopped") 
-            {
-                Write-Host ("We will try to disable Windows Defender real time protection") -ForegroundColor red
-                Set-MpPreference -DisableIntrusionPreventionSystem $true -DisableIOAVProtection $true -DisableRealtimeMonitoring $true -DisableScriptScanning $true -EnableControlledFolderAccess Disabled -EnableNetworkProtection AuditMode -Force -MAPSReporting Disabled -SubmitSamplesConsent NeverSend
-           }
-           elseif ($_.DisplayName -notmatch "Windows Defender") {
-        $note = @"
-        *****************************************************************
-        Read this before continuing with using this software:
+        $AntiVirusName = $AntiVirusProduct.DisplayName
+        if($AntiVirusName -match "Windows Defender" -AND (Get-Service -name "sense").Status -cnotmatch "Stopped") 
+        {
+            Write-Host ("We will try to disable Windows Defender real time protection") -ForegroundColor red
+            Set-MpPreference -DisableIntrusionPreventionSystem $true -DisableIOAVProtection $true -DisableRealtimeMonitoring $true -DisableScriptScanning $true -EnableControlledFolderAccess Disabled -EnableNetworkProtection AuditMode -Force -MAPSReporting Disabled -SubmitSamplesConsent NeverSend
+        }
+        elseif ($AntiVirusName -notmatch "Windows Defender") {
+            $note = @"
+            *****************************************************************
+            Read this before continuing with using this software:
 
-        In order to install and run some scripts such as sharphound
-        which is safe but can be used also as malicious by hackers
-        all antivirus & antimalware real time scanning should be stopped.
-        *****************************************************************
+            In order to install and run some scripts such as sharphound
+            which is safe but can be used also as malicious by hackers
+            all antivirus & antimalware real time scanning should be stopped.
+            *****************************************************************
 
 "@
-                Write-Host $note -ForegroundColor Yellow
-                write-host ($_.DisplayName + "--> Real time scanning should be stopped") -ForegroundColor Red                
-           }
-       }
+            Write-Host $note -ForegroundColor Yellow
+            write-host ($AntiVirusName + "--> Real time scanning should be stopped") -ForegroundColor Red                
+        }
     }
     else {
         $note = @"
@@ -201,7 +201,8 @@ function DisableAntimalware(){
 "@
         Write-Host $note -ForegroundColor Yellow
     }
-}
+} 
+
 
 function pro {notepad $profile}
 function gg {git add .;git commit -m "new app";git push}
