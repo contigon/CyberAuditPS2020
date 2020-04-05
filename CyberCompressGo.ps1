@@ -53,7 +53,7 @@ $compress = @{
 }
 
 $compressUpdates = @{
-  Path = "$PSScriptRoot\cyberAnalysers.ps1",
+  Path = "$PSScriptRoot\cyberAnalyzers.ps1",
           "$PSScriptRoot\cyberAudit.ps1",
           "$PSScriptRoot\cyberBuild.ps1",
           "$PSScriptRoot\CyberCollectNetworkConfig.ps1",
