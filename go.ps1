@@ -140,18 +140,28 @@ Function Get-Folder($initialDirectory) {
 }
 
 Write-Host "Browse and Create a new path for the installation..."
-do  {
-    $BasePath = Get-Folder
-    if ([bool](Get-ChildItem $BasePath)) {
-        write-host "[Fail] The folder $BasePath is not empty, Browse and Create a new folder (or Press Ctrl+C to quit)" -ForegroundColor Red
+$BasePath = Get-Folder
+While([bool](Get-ChildItem $BasePath)){
+    if ([string]::IsNullOrEmpty($BasePath)) {
+        exit
     }
-    else {
-        write-host "[Success] The folder $BasePath is empty" -ForegroundColor Green
-        Set-Location $BasePath
-        break
+    write-host "[Fail] The folder $BasePath is not empty" -ForegroundColor Red
+    Write-Host "Would you like to empty the chosen folder?(y\[N]) If the answer is No, you must choose an empty folder" -ForegroundColor Yellow
+    $input = Read-Host 
+    if ($input -eq "y"){
+        Get-ChildItem -Path $BasePath | foreach { rm -Recurse $BasePath\$_ -Force}
+        if ([bool](Get-ChildItem $BasePath)) {
+             write-host "[Fail] Failed to delete all files. Please delete manualy" -ForegroundColor Red
+             read-host “Press ENTER to continue (or Ctrl+C to quit)”
+        }
+    } else {
+        Write-Host "Please choose a different folder"
+        $BasePath = ""
+        $BasePath = Get-Folder
     }
 }
-while([bool](Get-ChildItem $BasePath))
+write-host "[Success] The folder $BasePath is empty" -ForegroundColor Green
+Set-Location $BasePath
 
 function Get-UserAgent() {
     return "CyberAuditTool/1.0 (+http://cyberaudittool.c1.biz/) PowerShell/$($PSVersionTable.PSVersion.Major).$($PSVersionTable.PSVersion.Minor) (Windows NT $([System.Environment]::OSVersion.Version.Major).$([System.Environment]::OSVersion.Version.Minor); $(if($env:PROCESSOR_ARCHITECTURE -eq 'AMD64'){'Win64; x64; '})$(if($env:PROCESSOR_ARCHITEW6432 -eq 'AMD64'){'WOW64; '})$PSEdition)"
