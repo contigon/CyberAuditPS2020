@@ -114,9 +114,9 @@ function checkAdmin {
 
 
 function CyberBginfo () {
-    $cmd = "$PSScriptRoot\Bginfo64.exe $PSScriptRoot\CyberBginfo.bgi /silent /accepteula /timer:0"
-    Invoke-Expression $cmd
-}
+    . $PSScriptRoot\Bginfo64.exe $PSScriptRoot\CyberBginfo.bgi /silent /accepteula /timer:0
+} 
+
 
 function ShowINCD() {
 $incd = @"                                                                        
