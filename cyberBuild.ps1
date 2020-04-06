@@ -28,7 +28,7 @@ $DownloadsDir = New-Item -Path $Tools -Name "\Downloads" -ItemType "directory" -
 #Powershell Modules, Utilities and Applications that needs to be installed
 $PSGModules = @("Testimo","VMware.PowerCLI","ImportExcel","Posh-SSH")
 $utilities = @("Net_Framework_Installed_Versions_Getter","oraclejdk","putty","winscp","nmap","rclone","everything","notepadplusplus","googlechrome","firefox","foxit-reader","irfanview","grepwin","sysinternals","nirlauncher","wireshark")
-$CollectorApps = @("ntdsaudit","RemoteExecutionEnablerforPowerShell","PingCastle","ntdsaudit","goddi","SharpHound","Red-Team-Scripts","Scuba-Windows","azscan3","LGPO","grouper2","Outflank-Dumpert")
+$CollectorApps = @("ntdsaudit","RemoteExecutionEnablerforPowerShell","PingCastle","goddi","SharpHound","Red-Team-Scripts","Scuba-Windows","azscan3","LGPO","grouper2","Outflank-Dumpert")
 $AnalyzerApps = @("PolicyAnalyzer","BloodHoundExampleDB","BloodHoundAD","neo4j","ophcrack","vista_proba_free")
 $GPOBaselines = @("Windows10Version1507SecurityBaseline.json","Windows10Version1511SecurityBaseline.json","Windows10Version1607andWindowsServer2016SecurityBaseline.json","Windows10Version1703SecurityBaseline.json","Windows10Version1709SecurityBaseline.json","Windows10Version1803SecurityBaseline.json","Windows10Version1809andWindowsServer2019SecurityBaseline.json","Windows10Version1903andWindowsServerVersion1903SecurityBaseline-Sept2019Update.json","Windows10Version1909andWindowsServerVersion1909SecurityBaseline.json","WindowsServer2012R2SecurityBaseline.json")
 
@@ -226,30 +226,15 @@ switch ($input)
                if ($c[$i-2].ToString() -match "global")
                {
                     Write-Host $c[$i-4].ToString() "--> global app installation failed, we will try to uninstall and reinstall"
+                    scoop uninstall $c[$i-4].ToString() -g
+                    scoop install $c[$i-4].ToString() -g
                 }
                 else
                 {
                     Write-Host $c[$i-3].ToString() "--> app installation failed, we will try to uninstall and reinstall"
+                    scoop uninstall $c[$i-3].ToString()
+                    scoop install $c[$i-3].ToString()
                 }
-            }
-        }
-        $c = scoop list 6>&1
-        $i=0;foreach ($f in $c)
-        {
-            $i++
-            if ($($foreach.current) -match 'failed')
-            {
-              if ($c[$i-2].ToString() -match "global")
-                 {
-                     scoop uninstall $c[$i-4].ToString() -g
-                     scoop install $c[$i-4].ToString() -g
-                 }
-              else
-                {
-                     scoop uninstall $c[$i-3].ToString()
-                     scoop install $c[$i-3].ToString()
-                }
-
             }
         }
      read-host “Press ENTER to continue” 
