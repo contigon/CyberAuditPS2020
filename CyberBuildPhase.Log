@@ -1,0 +1,2194 @@
+﻿**********************
+Windows PowerShell transcript start
+Start time: 20200406173453
+Username: GOLAN\golan
+RunAs User: GOLAN\golan
+Configuration Name: 
+Machine: TEST1 (Microsoft Windows NT 10.0.18363.0)
+Host Application: C:\Windows\system32\WindowsPowerShell\v1.0\PowerShell_ISE.exe
+Process ID: 864
+PSVersion: 5.1.18362.752
+PSEdition: Desktop
+PSCompatibleVersions: 1.0, 2.0, 3.0, 4.0, 5.0, 5.1.18362.752
+BuildVersion: 10.0.18362.752
+CLRVersion: 4.0.30319.42000
+WSManStackVersion: 3.0
+PSRemotingProtocolVersion: 2.3
+SerializationVersion: 1.1.0.1
+**********************
+Transcript started, output file is C:\Users\golan\Documents\CAT\CyberBuildPhase.Log
+
+************************************************************************
+*** Cyber Audit Tool (Powershell Edition) - ISRAEL CYBER DIRECTORATE ***
+************************************************************************
+
+     Build The Application:
+
+     1. OS		| Check Windows version and upgrade it to latest build and update
+     2. PS and .Net	| Check and Update Powershell and .Net framework versions
+     3. RSAT		| Install Microsoft Remote Server Administration Tool
+     4. PSGallery	| Install PowerShell Modules from Powershell gallery
+     5. Scoop		| Install Scoop framework
+     6. Utilities	| Install Buckets and utilities Applications
+     7. Collectors	| Install Collector Applications
+     8. Analyzers	| Install Analyzers and Reporting tools
+     9. Update   	| Update scoop applications and powershell modules
+    10. Licenses   	| Install or Create licenses to/from license files
+    11. Uninstall  	| Uninstall scoop applications and powershell modules
+
+    99. Quit
+
+PS C:\Users\golan\Documents\CAT QA> TerminatingError(): "The pipeline has been stopped."
+>> TerminatingError(): "The pipeline has been stopped."
+>> TerminatingError(): "The pipeline has been stopped."
+>> TerminatingError(): "The pipeline has been stopped."
+>> TerminatingError(): "The pipeline has been stopped."
+>> TerminatingError(): "The pipeline has been stopped."
+>> TerminatingError(): "The pipeline has been stopped."
+>> TerminatingError(): "The pipeline has been stopped."
+>> TerminatingError(): "The pipeline has been stopped."
+>> TerminatingError(): "The pipeline has been stopped."
+>> TerminatingError(): "The pipeline has been stopped."
+>> TerminatingError(): "The pipeline has been stopped."
+>> TerminatingError(): "The pipeline has been stopped."
+PS C:\Users\golan\Documents\CAT QA> CommandInvocation(Set-PSBreakpoint): "Set-PSBreakpoint"
+>> ParameterBinding(Set-PSBreakpoint): name="Script"; value="C:\Users\golan\Documents\CAT\cyberBuild.ps1"
+>> ParameterBinding(Set-PSBreakpoint): name="Line"; value="82"
+
+  ID Script                                                            Line Command                                                           Variable                                                         Action
+  -- ------                                                            ---- -------                                                           --------                                                         ------
+   8 cyberBuild.ps1                                                      82
+
+
+. : The term 'C:\Users\golan\Documents\CAT\Bginfo64.exe' is not recognized as the name of a cmdlet, function, script 
+file, or operable program. Check the spelling of the name, or if a path was included, verify that the path is correct 
+and try again.
+At C:\Users\golan\Documents\CAT\CyberFunctions.ps1:117 char:7
++     . $PSScriptRoot\Bginfo64.exe $PSScriptRoot\CyberBginfo.bgi /silen ...
++       ~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (C:\Users\golan\...AT\Bginfo64.exe:String) [], CommandNotFoundException
+    + FullyQualifiedErrorId : CommandNotFoundException
+. : The term 'C:\Users\golan\Documents\CAT\Bginfo64.exe' is not recognized as the name of a cmdlet, function, script file, or operable program. Check the spelling of the name, or if a path was included, verify that the path is correct and try again.
+At C:\Users\golan\Documents\CAT\CyberFunctions.ps1:117 char:7
++     . $PSScriptRoot\Bginfo64.exe $PSScriptRoot\CyberBginfo.bgi /silen ...
++       ~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (C:\Users\golan\...AT\Bginfo64.exe:String) [], CommandNotFoundException
+    + FullyQualifiedErrorId : CommandNotFoundException
+
+**************************************************************************************
+We will try now to disable the local firewall protection profiles
+@{name=Domain; Enabled=False} @{name=Private; Enabled=False} @{name=Public; Enabled=False}
+**************************************************************************************
+You are running [1] antivirus realtime protection solutions:
+--> Windows Defender
+
+
+Transcript started, output file is C:\Users\golan\Documents\CAT\CyberBuildPhase.Log
+
+************************************************************************
+*** Cyber Audit Tool (Powershell Edition) - ISRAEL CYBER DIRECTORATE ***
+************************************************************************
+
+     Build The Application:
+
+     1. OS		| Check Windows version and upgrade it to latest build and update
+     2. PS and .Net	| Check and Update Powershell and .Net framework versions
+     3. RSAT		| Install Microsoft Remote Server Administration Tool
+     4. PSGallery	| Install PowerShell Modules from Powershell gallery
+     5. Scoop		| Install Scoop framework
+     6. Utilities	| Install Buckets and utilities Applications
+     7. Collectors	| Install Collector Applications
+     8. Analyzers	| Install Analyzers and Reporting tools
+     9. Update   	| Update scoop applications and powershell modules
+    10. Licenses   	| Install or Create licenses to/from license files
+    11. Uninstall  	| Uninstall scoop applications and powershell modules
+
+    99. Quit
+
+PS C:\Users\golan\Documents\CAT QA> CommandInvocation(Get-Item): "Get-Item"
+>> ParameterBinding(Get-Item): name="ErrorAction"; value="Ignore"
+>> ParameterBinding(Get-Item): name="WarningAction"; value="Ignore"
+>> ParameterBinding(Get-Item): name="InformationAction"; value="Ignore"
+>> ParameterBinding(Get-Item): name="Verbose"; value="False"
+>> ParameterBinding(Get-Item): name="Debug"; value="False"
+>> ParameterBinding(Get-Item): name="Path"; value="variable:*"
+>> CommandInvocation(Sort-Object): "Sort-Object"
+>> ParameterBinding(Sort-Object): name="ErrorAction"; value="Ignore"
+>> ParameterBinding(Sort-Object): name="WarningAction"; value="Ignore"
+>> ParameterBinding(Sort-Object): name="InformationAction"; value="Ignore"
+>> ParameterBinding(Sort-Object): name="Verbose"; value="False"
+>> ParameterBinding(Sort-Object): name="Debug"; value="False"
+>> ParameterBinding(Sort-Object): name="Property"; value="Name"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.NullVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.SessionStateCapacityVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.SessionStateCapacityVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.SessionStateCapacityVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.SessionStateCapacityVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.SessionStateCapacityVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.LocalVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.LocalVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.LocalVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.LocalVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.LocalVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.LocalVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.LocalVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.LocalVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.LocalVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.LocalVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.LocalVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.LocalVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.LocalVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.QuestionMarkVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.LocalVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.LocalVariable"
+PS C:\Users\golan\Documents\CAT QA> CommandInvocation(Get-Item): "Get-Item"
+>> ParameterBinding(Get-Item): name="ErrorAction"; value="Ignore"
+>> ParameterBinding(Get-Item): name="WarningAction"; value="Ignore"
+>> ParameterBinding(Get-Item): name="InformationAction"; value="Ignore"
+>> ParameterBinding(Get-Item): name="Verbose"; value="False"
+>> ParameterBinding(Get-Item): name="Debug"; value="False"
+>> ParameterBinding(Get-Item): name="Path"; value="env:*"
+>> CommandInvocation(Sort-Object): "Sort-Object"
+>> ParameterBinding(Sort-Object): name="ErrorAction"; value="Ignore"
+>> ParameterBinding(Sort-Object): name="WarningAction"; value="Ignore"
+>> ParameterBinding(Sort-Object): name="InformationAction"; value="Ignore"
+>> ParameterBinding(Sort-Object): name="Verbose"; value="False"
+>> ParameterBinding(Sort-Object): name="Debug"; value="False"
+>> ParameterBinding(Sort-Object): name="Property"; value="Key"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+PS C:\Users\golan\Documents\CAT QA> CommandInvocation(Get-PSDrive): "Get-PSDrive"
+>> ParameterBinding(Get-PSDrive): name="ErrorAction"; value="Ignore"
+>> ParameterBinding(Get-PSDrive): name="WarningAction"; value="Ignore"
+>> ParameterBinding(Get-PSDrive): name="InformationAction"; value="Ignore"
+>> ParameterBinding(Get-PSDrive): name="Verbose"; value="False"
+>> ParameterBinding(Get-PSDrive): name="Debug"; value="False"
+>> ParameterBinding(Get-PSDrive): name="Name"; value="*"
+>> CommandInvocation(Sort-Object): "Sort-Object"
+>> ParameterBinding(Sort-Object): name="ErrorAction"; value="Ignore"
+>> ParameterBinding(Sort-Object): name="WarningAction"; value="Ignore"
+>> ParameterBinding(Sort-Object): name="InformationAction"; value="Ignore"
+>> ParameterBinding(Sort-Object): name="Verbose"; value="False"
+>> ParameterBinding(Sort-Object): name="Debug"; value="False"
+>> ParameterBinding(Sort-Object): name="Property"; value="Name"
+PS C:\Users\golan\Documents\CAT QA> ParameterBinding(Sort-Object): name="InputObject"; value="AD"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="Alias"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="C"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="Cert"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="D"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="Env"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="Function"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="HKCU"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="HKLM"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="Variable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="vi"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="vis"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="vmstore"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="vmstores"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="WSMan"
+PS C:\Users\golan\Documents\CAT QA> $AnalyzerApps
+>> CommandInvocation(Out-String): "Out-String"
+>> ParameterBinding(Out-String): name="Stream"; value="True"
+>> ParameterBinding(Out-String): name="InputObject"; value="PolicyAnalyzer"
+>> ParameterBinding(Out-String): name="InputObject"; value="BloodHoundExampleDB"
+>> ParameterBinding(Out-String): name="InputObject"; value="BloodHoundAD"
+>> ParameterBinding(Out-String): name="InputObject"; value="neo4j"
+>> ParameterBinding(Out-String): name="InputObject"; value="ophcrack"
+>> ParameterBinding(Out-String): name="InputObject"; value="vista_proba_free"
+Installing 'PolicyAnalyzer' (5-23-2019) [64bit]
+Downloading https://download.microsoft.com/download/8/5/C/85C25433-A1B0-4FFA-9429-7E023E7DA8D8/PolicyAnalyzer.zip (1.6 MB)...
+WARN  Warning: No hash in manifest. SHA256 for 'PolicyAnalyzer.zip' is:
+    f09f46ee13d5bbac0bae657f92a91bcb2e377e8de36f538b1a9e676e944a9997
+Extracting
+PolicyAnalyzer.zip
+ ...
+done.
+Linking ~\Documents\CAT QA\Tools\GlobalScoopApps\apps\PolicyAnalyzer\current => ~\Documents\CAT QA\Tools\GlobalScoopApps\apps\PolicyAnalyzer\5-23-2019
+Creating shim for 'PolicyAnalyzer'.
+'PolicyAnalyzer' (5-23-2019) was installed successfully!
+Installing 'BloodHoundExampleDB' (1.0) [64bit]
+Downloading https://github.com/BloodHoundAD/BloodHound/archive/master.zip#/BloodHoundExampleDB.zip (-1 B)...
+WARN  Warning: No hash in manifest. SHA256 for 'BloodHoundExampleDB.zip' is:
+    64f3f6392082a1dd81b76aa2a873fea0e97e4c9d45ff3aa81a3e36a79b7ae89b
+Extracting
+BloodHoundExampleDB.zip
+ ...
+done.
+Linking ~\Documents\CAT QA\Tools\GlobalScoopApps\apps\BloodHoundExampleDB\current => ~\Documents\CAT QA\Tools\GlobalScoopApps\apps\BloodHoundExampleDB\1.0
+'BloodHoundExampleDB' (1.0) was installed successfully!
+Installing 'BloodHoundAD' (2.2.1) [64bit]
+Downloading https://github.com/BloodHoundAD/BloodHound/releases/download/2.2.1/BloodHound-win32-x64.zip#/BloodHoundAD.zip (77.0 MB)...
+Checking hash of
+BloodHound-win32-x64.zip
+ ...
+ok.
+Extracting
+BloodHoundAD.zip
+ ...
+done.
+Linking ~\Documents\CAT QA\Tools\GlobalScoopApps\apps\BloodHoundAD\current => ~\Documents\CAT QA\Tools\GlobalScoopApps\apps\BloodHoundAD\2.2.1
+Creating shim for 'BloodHound'.
+'BloodHoundAD' (2.2.1) was installed successfully!
+Installing 'neo4j' (3.5.11) [64bit]
+Downloading https://neo4j.com/artifact.php?name=neo4j-community-3.5.11-windows.zip#/neo4j-community.zip#/neo4j.zip (147.3 MB)...
+Checking hash of
+neo4j-community-3.5.11-windows.zip
+ ...
+ok.
+Extracting
+neo4j.zip
+ ...
+done.
+Linking ~\Documents\CAT QA\Tools\GlobalScoopApps\apps\neo4j\current => ~\Documents\CAT QA\Tools\GlobalScoopApps\apps\neo4j\3.5.11
+Creating shim for 'neo4j'.
+'neo4j' (3.5.11) was installed successfully!
+PS C:\Users\golan\Documents\CAT QA> if ($input -is [System.Collections.IEnumerator]) 
+                    { 
+                        'System.Collections.IEnumerator'
+                    }
+                    else
+                    { 
+                        $input 
+                    }
+                    
+>> CommandInvocation(Out-String): "Out-String"
+>> ParameterBinding(Out-String): name="InputObject"; value="System.Collections.IEnumerator"
+System.Collections.IEnumerator
+Updating Scoop...
+Updating 'CyberAuditBucket' bucket...
+ * 29d8a30 Create Rockyou.json                                           3 hours ago
+Updating 'extras' bucket...
+ * 9fab274f firefox-nightly: Update to version 76.0a1.20200406092400     3 hours ago
+Updating 'java' bucket...
+Updating 'main' bucket...
+ * b5f30791 cygwin@2.904: Hash fix (#984)                                86 minutes ago
+ * 92015210 trid: Update to version 2.24-20.04.06                        2 hours ago
+Scoop was updated successfully!
+Installing 'ophcrack' (3.8.0) [64bit]
+Downloading https://downloads.sourceforge.net/project/ophcrack/ophcrack/3.8.0/ophcrack-3.8.0-bin.zip (15.1 MB)...
+Checking hash of
+ophcrack-3.8.0-bin.zip
+ ...
+ok.
+Extracting
+ophcrack-3.8.0-bin.zip
+ ...
+done.
+Linking ~\Documents\CAT QA\Tools\GlobalScoopApps\apps\ophcrack\current => ~\Documents\CAT QA\Tools\GlobalScoopApps\apps\ophcrack\3.8.0
+Creating shim for 'ophcrack'.
+'ophcrack' (3.8.0) was installed successfully!
+Installing 'vista_proba_free' (1.0) [64bit]
+Downloading https://downloads.sourceforge.net/project/ophcrack/tables/Vista%20proba%20free/vista_proba_free.zip (581.3 MB)...
+WARN  Warning: No hash in manifest. SHA256 for 'vista_proba_free.zipvista_proba_free.zip' is:
+    0a5e77327b0e413bd1595329e5269e326240f28a3c51252136beaa4c7a7f24cb
+Extracting
+vista_proba_free.zipvista_proba_free.zip
+ ...
+done.
+Linking ~\Documents\CAT QA\Tools\GlobalScoopApps\apps\vista_proba_free\current => ~\Documents\CAT QA\Tools\GlobalScoopApps\apps\vista_proba_free\1.0
+'vista_proba_free' (1.0) was installed successfully!
+PS C:\Users\golan\Documents\CAT QA> CommandInvocation(Get-Item): "Get-Item"
+>> ParameterBinding(Get-Item): name="ErrorAction"; value="Ignore"
+>> ParameterBinding(Get-Item): name="WarningAction"; value="Ignore"
+>> ParameterBinding(Get-Item): name="InformationAction"; value="Ignore"
+>> ParameterBinding(Get-Item): name="Verbose"; value="False"
+>> ParameterBinding(Get-Item): name="Debug"; value="False"
+>> ParameterBinding(Get-Item): name="Path"; value="variable:*"
+>> CommandInvocation(Sort-Object): "Sort-Object"
+>> ParameterBinding(Sort-Object): name="ErrorAction"; value="Ignore"
+>> ParameterBinding(Sort-Object): name="WarningAction"; value="Ignore"
+>> ParameterBinding(Sort-Object): name="InformationAction"; value="Ignore"
+>> ParameterBinding(Sort-Object): name="Verbose"; value="False"
+>> ParameterBinding(Sort-Object): name="Debug"; value="False"
+>> ParameterBinding(Sort-Object): name="Property"; value="Name"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.NullVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.SessionStateCapacityVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.SessionStateCapacityVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.SessionStateCapacityVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.SessionStateCapacityVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.SessionStateCapacityVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.LocalVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.LocalVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.LocalVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.LocalVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.LocalVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.LocalVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.LocalVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.LocalVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.LocalVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.LocalVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.LocalVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.LocalVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.LocalVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.QuestionMarkVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.LocalVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.LocalVariable"
+PS C:\Users\golan\Documents\CAT QA> CommandInvocation(Get-Item): "Get-Item"
+>> ParameterBinding(Get-Item): name="ErrorAction"; value="Ignore"
+>> ParameterBinding(Get-Item): name="WarningAction"; value="Ignore"
+>> ParameterBinding(Get-Item): name="InformationAction"; value="Ignore"
+>> ParameterBinding(Get-Item): name="Verbose"; value="False"
+>> ParameterBinding(Get-Item): name="Debug"; value="False"
+>> ParameterBinding(Get-Item): name="Path"; value="env:*"
+>> CommandInvocation(Sort-Object): "Sort-Object"
+>> ParameterBinding(Sort-Object): name="ErrorAction"; value="Ignore"
+>> ParameterBinding(Sort-Object): name="WarningAction"; value="Ignore"
+>> ParameterBinding(Sort-Object): name="InformationAction"; value="Ignore"
+>> ParameterBinding(Sort-Object): name="Verbose"; value="False"
+>> ParameterBinding(Sort-Object): name="Debug"; value="False"
+>> ParameterBinding(Sort-Object): name="Property"; value="Key"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+PS C:\Users\golan\Documents\CAT QA> CommandInvocation(Get-PSDrive): "Get-PSDrive"
+>> ParameterBinding(Get-PSDrive): name="ErrorAction"; value="Ignore"
+>> ParameterBinding(Get-PSDrive): name="WarningAction"; value="Ignore"
+>> ParameterBinding(Get-PSDrive): name="InformationAction"; value="Ignore"
+>> ParameterBinding(Get-PSDrive): name="Verbose"; value="False"
+>> ParameterBinding(Get-PSDrive): name="Debug"; value="False"
+>> ParameterBinding(Get-PSDrive): name="Name"; value="*"
+>> CommandInvocation(Sort-Object): "Sort-Object"
+>> ParameterBinding(Sort-Object): name="ErrorAction"; value="Ignore"
+>> ParameterBinding(Sort-Object): name="WarningAction"; value="Ignore"
+>> ParameterBinding(Sort-Object): name="InformationAction"; value="Ignore"
+>> ParameterBinding(Sort-Object): name="Verbose"; value="False"
+>> ParameterBinding(Sort-Object): name="Debug"; value="False"
+>> ParameterBinding(Sort-Object): name="Property"; value="Name"
+PS C:\Users\golan\Documents\CAT QA> ParameterBinding(Sort-Object): name="InputObject"; value="AD"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="Alias"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="C"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="Cert"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="D"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="Env"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="Function"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="HKCU"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="HKLM"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="Variable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="vi"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="vis"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="vmstore"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="vmstores"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="WSMan"
+PS C:\Users\golan\Documents\CAT QA> $GPOBaselines
+>> CommandInvocation(Out-String): "Out-String"
+>> ParameterBinding(Out-String): name="Stream"; value="True"
+>> ParameterBinding(Out-String): name="InputObject"; value="Windows10Version1507SecurityBaseline.json"
+>> ParameterBinding(Out-String): name="InputObject"; value="Windows10Version1511SecurityBaseline.json"
+>> ParameterBinding(Out-String): name="InputObject"; value="Windows10Version1607andWindowsServer2016SecurityBaseline.json"
+>> ParameterBinding(Out-String): name="InputObject"; value="Windows10Version1703SecurityBaseline.json"
+>> ParameterBinding(Out-String): name="InputObject"; value="Windows10Version1709SecurityBaseline.json"
+>> ParameterBinding(Out-String): name="InputObject"; value="Windows10Version1803SecurityBaseline.json"
+>> ParameterBinding(Out-String): name="InputObject"; value="Windows10Version1809andWindowsServer2019SecurityBaseline.json"
+>> ParameterBinding(Out-String): name="InputObject"; value="Windows10Version1903andWindowsServerVersion1903SecurityBaseline-Sept2019Update.json"
+>> ParameterBinding(Out-String): name="InputObject"; value="Windows10Version1909andWindowsServerVersion1909SecurityBaseline.json"
+>> ParameterBinding(Out-String): name="InputObject"; value="WindowsServer2012R2SecurityBaseline.json"
+Couldn't find manifest for 'Windows10Version1507SecurityBaseline.json'.
+Couldn't find manifest for 'Windows10Version1511SecurityBaseline.json'.
+Couldn't find manifest for 'Windows10Version1607andWindowsServer2016SecurityBaseline.json'.
+Couldn't find manifest for 'Windows10Version1703SecurityBaseline.json'.
+Couldn't find manifest for 'Windows10Version1709SecurityBaseline.json'.
+Couldn't find manifest for 'Windows10Version1803SecurityBaseline.json'.
+Couldn't find manifest for 'Windows10Version1809andWindowsServer2019SecurityBaseline.json'.
+Couldn't find manifest for 'Windows10Version1903andWindowsServerVersion1903SecurityBaseline-Sept2019Update.json'.
+Couldn't find manifest for 'Windows10Version1909andWindowsServerVersion1909SecurityBaseline.json'.
+Couldn't find manifest for 'WindowsServer2012R2SecurityBaseline.json'.
+Installed apps:
+  7zip
+19.00
+ *global*
+
+  aria2
+1.35.0-1
+ *global*
+
+  azscan3
+3.07.0122
+ [C:\Users\golan\Documents\CyberAuditBucket\azscan3.json]
+
+  azscan3
+
+ *global*
+ *failed*
+
+  BloodHoundAD
+2.2.1
+ *global*
+ [CyberAuditBucket]
+
+  BloodHoundExampleDB
+1.0
+ *global*
+ [CyberAuditBucket]
+
+  dark
+3.11.2
+ *global*
+
+  everything
+1.4.1.969
+ *global*
+ [extras]
+
+  firefox
+74.0.1
+ *global*
+ [extras]
+
+  foxit-reader
+9.7.1.29511
+ *global*
+ [extras]
+
+  git
+2.26.0.windows.1
+ *global*
+
+  goddi
+1.2
+ *global*
+ [CyberAuditBucket]
+
+  googlechrome
+80.0.3987.163
+ *global*
+ [extras]
+
+  grepwin
+1.9.2
+ *global*
+ [CyberAuditBucket]
+
+  grouper2
+0.9.62
+ *global*
+ [CyberAuditBucket]
+
+  innounp
+0.49
+ *global*
+
+  irfanview
+4.54
+ *global*
+ [extras]
+
+  lessmsi
+1.6.91
+ *global*
+
+  LGPO
+1.0
+ *global*
+ [CyberAuditBucket]
+
+  neo4j
+3.5.11
+ *global*
+ [CyberAuditBucket]
+
+  Net_Framework_Installed_Versions_Getter
+1.0
+ *global*
+ [CyberAuditBucket]
+
+  nirlauncher
+1.23.17
+ *global*
+ [extras]
+
+  nmap
+7.80
+ *global*
+
+  notepadplusplus
+7.8.5
+ *global*
+ [extras]
+
+  ntdsaudit
+2.0.7
+ *global*
+ [CyberAuditBucket]
+
+  OpenSSH
+8.2p1-1
+ *global*
+
+  ophcrack
+3.8.0
+ *global*
+ [CyberAuditBucket]
+
+  oraclejdk
+14-36
+ *global*
+ [java]
+
+  Outflank-Dumpert
+1.0
+ *global*
+ [CyberAuditBucket]
+
+  PingCastle
+2.7.1.1
+ *global*
+ [CyberAuditBucket]
+
+  PolicyAnalyzer
+5-23-2019
+ *global*
+ [CyberAuditBucket]
+
+  putty
+0.73
+ *global*
+ [extras]
+
+  rclone
+1.51.0
+ *global*
+
+  Red-Team-Scripts
+1.0
+ *global*
+ [CyberAuditBucket]
+
+  RemoteExecutionEnablerforPowerShell
+1.0
+ *global*
+ [CyberAuditBucket]
+
+  Scuba-Windows
+
+ *global*
+ *failed*
+
+  Scuba-Windows
+1.0
+ [C:\Users\golan\Documents\CyberAuditBucket\Scuba-Windows.json]
+
+  SharpHound
+3.0.2
+ [C:\Users\golan\Documents\CyberAuditBucket\SharpHound.json]
+
+  sysinternals
+December.18.2019
+ *global*
+ [extras]
+
+  vista_proba_free
+1.0
+ *global*
+ [CyberAuditBucket]
+
+  winscp
+5.17.3
+ *global*
+ [extras]
+
+  wireshark
+3.2.2
+ *global*
+ [extras]
+
+
+PS C:\Users\golan\Documents\CAT QA> CommandInvocation(Get-Item): "Get-Item"
+>> ParameterBinding(Get-Item): name="ErrorAction"; value="Ignore"
+>> ParameterBinding(Get-Item): name="WarningAction"; value="Ignore"
+>> ParameterBinding(Get-Item): name="InformationAction"; value="Ignore"
+>> ParameterBinding(Get-Item): name="Verbose"; value="False"
+>> ParameterBinding(Get-Item): name="Debug"; value="False"
+>> ParameterBinding(Get-Item): name="Path"; value="variable:*"
+>> CommandInvocation(Sort-Object): "Sort-Object"
+>> ParameterBinding(Sort-Object): name="ErrorAction"; value="Ignore"
+>> ParameterBinding(Sort-Object): name="WarningAction"; value="Ignore"
+>> ParameterBinding(Sort-Object): name="InformationAction"; value="Ignore"
+>> ParameterBinding(Sort-Object): name="Verbose"; value="False"
+>> ParameterBinding(Sort-Object): name="Debug"; value="False"
+>> ParameterBinding(Sort-Object): name="Property"; value="Name"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.NullVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.SessionStateCapacityVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.SessionStateCapacityVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.SessionStateCapacityVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.SessionStateCapacityVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.SessionStateCapacityVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.LocalVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.LocalVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.LocalVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.LocalVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.LocalVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.LocalVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.LocalVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.LocalVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.LocalVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.LocalVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.LocalVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.LocalVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.LocalVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.QuestionMarkVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.LocalVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.LocalVariable"
+PS C:\Users\golan\Documents\CAT QA> CommandInvocation(Get-Item): "Get-Item"
+>> ParameterBinding(Get-Item): name="ErrorAction"; value="Ignore"
+>> ParameterBinding(Get-Item): name="WarningAction"; value="Ignore"
+>> ParameterBinding(Get-Item): name="InformationAction"; value="Ignore"
+>> ParameterBinding(Get-Item): name="Verbose"; value="False"
+>> ParameterBinding(Get-Item): name="Debug"; value="False"
+>> ParameterBinding(Get-Item): name="Path"; value="env:*"
+>> CommandInvocation(Sort-Object): "Sort-Object"
+>> ParameterBinding(Sort-Object): name="ErrorAction"; value="Ignore"
+>> ParameterBinding(Sort-Object): name="WarningAction"; value="Ignore"
+>> ParameterBinding(Sort-Object): name="InformationAction"; value="Ignore"
+>> ParameterBinding(Sort-Object): name="Verbose"; value="False"
+>> ParameterBinding(Sort-Object): name="Debug"; value="False"
+>> ParameterBinding(Sort-Object): name="Property"; value="Key"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+PS C:\Users\golan\Documents\CAT QA> CommandInvocation(Get-PSDrive): "Get-PSDrive"
+>> ParameterBinding(Get-PSDrive): name="ErrorAction"; value="Ignore"
+>> ParameterBinding(Get-PSDrive): name="WarningAction"; value="Ignore"
+>> ParameterBinding(Get-PSDrive): name="InformationAction"; value="Ignore"
+>> ParameterBinding(Get-PSDrive): name="Verbose"; value="False"
+>> ParameterBinding(Get-PSDrive): name="Debug"; value="False"
+>> ParameterBinding(Get-PSDrive): name="Name"; value="*"
+>> CommandInvocation(Sort-Object): "Sort-Object"
+>> ParameterBinding(Sort-Object): name="ErrorAction"; value="Ignore"
+>> ParameterBinding(Sort-Object): name="WarningAction"; value="Ignore"
+>> ParameterBinding(Sort-Object): name="InformationAction"; value="Ignore"
+>> ParameterBinding(Sort-Object): name="Verbose"; value="False"
+>> ParameterBinding(Sort-Object): name="Debug"; value="False"
+>> ParameterBinding(Sort-Object): name="Property"; value="Name"
+PS C:\Users\golan\Documents\CAT QA> ParameterBinding(Sort-Object): name="InputObject"; value="AD"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="Alias"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="C"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="Cert"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="D"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="Env"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="Function"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="HKCU"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="HKLM"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="Variable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="vi"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="vis"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="vmstore"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="vmstores"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="WSMan"
+PS C:\Users\golan\Documents\CAT QA> $c
+>> CommandInvocation(Out-String): "Out-String"
+>> ParameterBinding(Out-String): name="Stream"; value="True"
+>> ParameterBinding(Out-String): name="InputObject"; value="Installed apps: 
+"
+>> ParameterBinding(Out-String): name="InputObject"; value="  7zip "
+>> ParameterBinding(Out-String): name="InputObject"; value="19.00"
+>> ParameterBinding(Out-String): name="InputObject"; value=" *global*"
+>> ParameterBinding(Out-String): name="InputObject"; value=""
+>> ParameterBinding(Out-String): name="InputObject"; value="  aria2 "
+>> ParameterBinding(Out-String): name="InputObject"; value="1.35.0-1"
+>> ParameterBinding(Out-String): name="InputObject"; value=" *global*"
+>> ParameterBinding(Out-String): name="InputObject"; value=""
+>> ParameterBinding(Out-String): name="InputObject"; value="  azscan3 "
+>> ParameterBinding(Out-String): name="InputObject"; value="3.07.0122"
+>> ParameterBinding(Out-String): name="InputObject"; value=" [C:\Users\golan\Documents\CyberAuditBucket\azscan3.json]"
+>> ParameterBinding(Out-String): name="InputObject"; value=""
+>> ParameterBinding(Out-String): name="InputObject"; value="  azscan3 "
+>> ParameterBinding(Out-String): name="InputObject"; value=""
+>> ParameterBinding(Out-String): name="InputObject"; value=" *global*"
+>> ParameterBinding(Out-String): name="InputObject"; value=" *failed*"
+>> ParameterBinding(Out-String): name="InputObject"; value=""
+>> ParameterBinding(Out-String): name="InputObject"; value="  BloodHoundAD "
+>> ParameterBinding(Out-String): name="InputObject"; value="2.2.1"
+>> ParameterBinding(Out-String): name="InputObject"; value=" *global*"
+>> ParameterBinding(Out-String): name="InputObject"; value=" [CyberAuditBucket]"
+>> ParameterBinding(Out-String): name="InputObject"; value=""
+>> ParameterBinding(Out-String): name="InputObject"; value="  BloodHoundExampleDB "
+>> ParameterBinding(Out-String): name="InputObject"; value="1.0"
+>> ParameterBinding(Out-String): name="InputObject"; value=" *global*"
+>> ParameterBinding(Out-String): name="InputObject"; value=" [CyberAuditBucket]"
+>> ParameterBinding(Out-String): name="InputObject"; value=""
+>> ParameterBinding(Out-String): name="InputObject"; value="  dark "
+>> ParameterBinding(Out-String): name="InputObject"; value="3.11.2"
+>> ParameterBinding(Out-String): name="InputObject"; value=" *global*"
+>> ParameterBinding(Out-String): name="InputObject"; value=""
+>> ParameterBinding(Out-String): name="InputObject"; value="  everything "
+>> ParameterBinding(Out-String): name="InputObject"; value="1.4.1.969"
+>> ParameterBinding(Out-String): name="InputObject"; value=" *global*"
+>> ParameterBinding(Out-String): name="InputObject"; value=" [extras]"
+>> ParameterBinding(Out-String): name="InputObject"; value=""
+>> ParameterBinding(Out-String): name="InputObject"; value="  firefox "
+>> ParameterBinding(Out-String): name="InputObject"; value="74.0.1"
+>> ParameterBinding(Out-String): name="InputObject"; value=" *global*"
+>> ParameterBinding(Out-String): name="InputObject"; value=" [extras]"
+>> ParameterBinding(Out-String): name="InputObject"; value=""
+>> ParameterBinding(Out-String): name="InputObject"; value="  foxit-reader "
+>> ParameterBinding(Out-String): name="InputObject"; value="9.7.1.29511"
+>> ParameterBinding(Out-String): name="InputObject"; value=" *global*"
+>> ParameterBinding(Out-String): name="InputObject"; value=" [extras]"
+>> ParameterBinding(Out-String): name="InputObject"; value=""
+>> ParameterBinding(Out-String): name="InputObject"; value="  git "
+>> ParameterBinding(Out-String): name="InputObject"; value="2.26.0.windows.1"
+>> ParameterBinding(Out-String): name="InputObject"; value=" *global*"
+>> ParameterBinding(Out-String): name="InputObject"; value=""
+>> ParameterBinding(Out-String): name="InputObject"; value="  goddi "
+>> ParameterBinding(Out-String): name="InputObject"; value="1.2"
+>> ParameterBinding(Out-String): name="InputObject"; value=" *global*"
+>> ParameterBinding(Out-String): name="InputObject"; value=" [CyberAuditBucket]"
+>> ParameterBinding(Out-String): name="InputObject"; value=""
+>> ParameterBinding(Out-String): name="InputObject"; value="  googlechrome "
+>> ParameterBinding(Out-String): name="InputObject"; value="80.0.3987.163"
+>> ParameterBinding(Out-String): name="InputObject"; value=" *global*"
+>> ParameterBinding(Out-String): name="InputObject"; value=" [extras]"
+>> ParameterBinding(Out-String): name="InputObject"; value=""
+>> ParameterBinding(Out-String): name="InputObject"; value="  grepwin "
+>> ParameterBinding(Out-String): name="InputObject"; value="1.9.2"
+>> ParameterBinding(Out-String): name="InputObject"; value=" *global*"
+>> ParameterBinding(Out-String): name="InputObject"; value=" [CyberAuditBucket]"
+>> ParameterBinding(Out-String): name="InputObject"; value=""
+>> ParameterBinding(Out-String): name="InputObject"; value="  grouper2 "
+>> ParameterBinding(Out-String): name="InputObject"; value="0.9.62"
+>> ParameterBinding(Out-String): name="InputObject"; value=" *global*"
+>> ParameterBinding(Out-String): name="InputObject"; value=" [CyberAuditBucket]"
+>> ParameterBinding(Out-String): name="InputObject"; value=""
+>> ParameterBinding(Out-String): name="InputObject"; value="  innounp "
+>> ParameterBinding(Out-String): name="InputObject"; value="0.49"
+>> ParameterBinding(Out-String): name="InputObject"; value=" *global*"
+>> ParameterBinding(Out-String): name="InputObject"; value=""
+>> ParameterBinding(Out-String): name="InputObject"; value="  irfanview "
+>> ParameterBinding(Out-String): name="InputObject"; value="4.54"
+>> ParameterBinding(Out-String): name="InputObject"; value=" *global*"
+>> ParameterBinding(Out-String): name="InputObject"; value=" [extras]"
+>> ParameterBinding(Out-String): name="InputObject"; value=""
+>> ParameterBinding(Out-String): name="InputObject"; value="  lessmsi "
+>> ParameterBinding(Out-String): name="InputObject"; value="1.6.91"
+>> ParameterBinding(Out-String): name="InputObject"; value=" *global*"
+>> ParameterBinding(Out-String): name="InputObject"; value=""
+>> ParameterBinding(Out-String): name="InputObject"; value="  LGPO "
+>> ParameterBinding(Out-String): name="InputObject"; value="1.0"
+>> ParameterBinding(Out-String): name="InputObject"; value=" *global*"
+>> ParameterBinding(Out-String): name="InputObject"; value=" [CyberAuditBucket]"
+>> ParameterBinding(Out-String): name="InputObject"; value=""
+>> ParameterBinding(Out-String): name="InputObject"; value="  neo4j "
+>> ParameterBinding(Out-String): name="InputObject"; value="3.5.11"
+>> ParameterBinding(Out-String): name="InputObject"; value=" *global*"
+>> ParameterBinding(Out-String): name="InputObject"; value=" [CyberAuditBucket]"
+>> ParameterBinding(Out-String): name="InputObject"; value=""
+>> ParameterBinding(Out-String): name="InputObject"; value="  Net_Framework_Installed_Versions_Getter "
+>> ParameterBinding(Out-String): name="InputObject"; value="1.0"
+>> ParameterBinding(Out-String): name="InputObject"; value=" *global*"
+>> ParameterBinding(Out-String): name="InputObject"; value=" [CyberAuditBucket]"
+>> ParameterBinding(Out-String): name="InputObject"; value=""
+>> ParameterBinding(Out-String): name="InputObject"; value="  nirlauncher "
+>> ParameterBinding(Out-String): name="InputObject"; value="1.23.17"
+>> ParameterBinding(Out-String): name="InputObject"; value=" *global*"
+>> ParameterBinding(Out-String): name="InputObject"; value=" [extras]"
+>> ParameterBinding(Out-String): name="InputObject"; value=""
+>> ParameterBinding(Out-String): name="InputObject"; value="  nmap "
+>> ParameterBinding(Out-String): name="InputObject"; value="7.80"
+>> ParameterBinding(Out-String): name="InputObject"; value=" *global*"
+>> ParameterBinding(Out-String): name="InputObject"; value=""
+>> ParameterBinding(Out-String): name="InputObject"; value="  notepadplusplus "
+>> ParameterBinding(Out-String): name="InputObject"; value="7.8.5"
+>> ParameterBinding(Out-String): name="InputObject"; value=" *global*"
+>> ParameterBinding(Out-String): name="InputObject"; value=" [extras]"
+>> ParameterBinding(Out-String): name="InputObject"; value=""
+>> ParameterBinding(Out-String): name="InputObject"; value="  ntdsaudit "
+>> ParameterBinding(Out-String): name="InputObject"; value="2.0.7"
+>> ParameterBinding(Out-String): name="InputObject"; value=" *global*"
+>> ParameterBinding(Out-String): name="InputObject"; value=" [CyberAuditBucket]"
+>> ParameterBinding(Out-String): name="InputObject"; value=""
+>> ParameterBinding(Out-String): name="InputObject"; value="  OpenSSH "
+>> ParameterBinding(Out-String): name="InputObject"; value="8.2p1-1"
+>> ParameterBinding(Out-String): name="InputObject"; value=" *global*"
+>> ParameterBinding(Out-String): name="InputObject"; value=""
+>> ParameterBinding(Out-String): name="InputObject"; value="  ophcrack "
+>> ParameterBinding(Out-String): name="InputObject"; value="3.8.0"
+>> ParameterBinding(Out-String): name="InputObject"; value=" *global*"
+>> ParameterBinding(Out-String): name="InputObject"; value=" [CyberAuditBucket]"
+>> ParameterBinding(Out-String): name="InputObject"; value=""
+>> ParameterBinding(Out-String): name="InputObject"; value="  oraclejdk "
+>> ParameterBinding(Out-String): name="InputObject"; value="14-36"
+>> ParameterBinding(Out-String): name="InputObject"; value=" *global*"
+>> ParameterBinding(Out-String): name="InputObject"; value=" [java]"
+>> ParameterBinding(Out-String): name="InputObject"; value=""
+>> ParameterBinding(Out-String): name="InputObject"; value="  Outflank-Dumpert "
+>> ParameterBinding(Out-String): name="InputObject"; value="1.0"
+>> ParameterBinding(Out-String): name="InputObject"; value=" *global*"
+>> ParameterBinding(Out-String): name="InputObject"; value=" [CyberAuditBucket]"
+>> ParameterBinding(Out-String): name="InputObject"; value=""
+>> ParameterBinding(Out-String): name="InputObject"; value="  PingCastle "
+>> ParameterBinding(Out-String): name="InputObject"; value="2.7.1.1"
+>> ParameterBinding(Out-String): name="InputObject"; value=" *global*"
+>> ParameterBinding(Out-String): name="InputObject"; value=" [CyberAuditBucket]"
+>> ParameterBinding(Out-String): name="InputObject"; value=""
+>> ParameterBinding(Out-String): name="InputObject"; value="  PolicyAnalyzer "
+>> ParameterBinding(Out-String): name="InputObject"; value="5-23-2019"
+>> ParameterBinding(Out-String): name="InputObject"; value=" *global*"
+>> ParameterBinding(Out-String): name="InputObject"; value=" [CyberAuditBucket]"
+>> ParameterBinding(Out-String): name="InputObject"; value=""
+>> ParameterBinding(Out-String): name="InputObject"; value="  putty "
+>> ParameterBinding(Out-String): name="InputObject"; value="0.73"
+>> ParameterBinding(Out-String): name="InputObject"; value=" *global*"
+>> ParameterBinding(Out-String): name="InputObject"; value=" [extras]"
+>> ParameterBinding(Out-String): name="InputObject"; value=""
+>> ParameterBinding(Out-String): name="InputObject"; value="  rclone "
+>> ParameterBinding(Out-String): name="InputObject"; value="1.51.0"
+>> ParameterBinding(Out-String): name="InputObject"; value=" *global*"
+>> ParameterBinding(Out-String): name="InputObject"; value=""
+>> ParameterBinding(Out-String): name="InputObject"; value="  Red-Team-Scripts "
+>> ParameterBinding(Out-String): name="InputObject"; value="1.0"
+>> ParameterBinding(Out-String): name="InputObject"; value=" *global*"
+>> ParameterBinding(Out-String): name="InputObject"; value=" [CyberAuditBucket]"
+>> ParameterBinding(Out-String): name="InputObject"; value=""
+>> ParameterBinding(Out-String): name="InputObject"; value="  RemoteExecutionEnablerforPowerShell "
+>> ParameterBinding(Out-String): name="InputObject"; value="1.0"
+>> ParameterBinding(Out-String): name="InputObject"; value=" *global*"
+>> ParameterBinding(Out-String): name="InputObject"; value=" [CyberAuditBucket]"
+>> ParameterBinding(Out-String): name="InputObject"; value=""
+>> ParameterBinding(Out-String): name="InputObject"; value="  Scuba-Windows "
+>> ParameterBinding(Out-String): name="InputObject"; value=""
+>> ParameterBinding(Out-String): name="InputObject"; value=" *global*"
+>> ParameterBinding(Out-String): name="InputObject"; value=" *failed*"
+>> ParameterBinding(Out-String): name="InputObject"; value=""
+>> ParameterBinding(Out-String): name="InputObject"; value="  Scuba-Windows "
+>> ParameterBinding(Out-String): name="InputObject"; value="1.0"
+>> ParameterBinding(Out-String): name="InputObject"; value=" [C:\Users\golan\Documents\CyberAuditBucket\Scuba-Windows.json]"
+>> ParameterBinding(Out-String): name="InputObject"; value=""
+>> ParameterBinding(Out-String): name="InputObject"; value="  SharpHound "
+>> ParameterBinding(Out-String): name="InputObject"; value="3.0.2"
+>> ParameterBinding(Out-String): name="InputObject"; value=" [C:\Users\golan\Documents\CyberAuditBucket\SharpHound.json]"
+>> ParameterBinding(Out-String): name="InputObject"; value=""
+>> ParameterBinding(Out-String): name="InputObject"; value="  sysinternals "
+>> ParameterBinding(Out-String): name="InputObject"; value="December.18.2019"
+>> ParameterBinding(Out-String): name="InputObject"; value=" *global*"
+>> ParameterBinding(Out-String): name="InputObject"; value=" [extras]"
+>> ParameterBinding(Out-String): name="InputObject"; value=""
+>> ParameterBinding(Out-String): name="InputObject"; value="  vista_proba_free "
+>> ParameterBinding(Out-String): name="InputObject"; value="1.0"
+>> ParameterBinding(Out-String): name="InputObject"; value=" *global*"
+>> ParameterBinding(Out-String): name="InputObject"; value=" [CyberAuditBucket]"
+>> ParameterBinding(Out-String): name="InputObject"; value=""
+>> ParameterBinding(Out-String): name="InputObject"; value="  winscp "
+>> ParameterBinding(Out-String): name="InputObject"; value="5.17.3"
+>> ParameterBinding(Out-String): name="InputObject"; value=" *global*"
+>> ParameterBinding(Out-String): name="InputObject"; value=" [extras]"
+>> ParameterBinding(Out-String): name="InputObject"; value=""
+>> ParameterBinding(Out-String): name="InputObject"; value="  wireshark "
+>> ParameterBinding(Out-String): name="InputObject"; value="3.2.2"
+>> ParameterBinding(Out-String): name="InputObject"; value=" *global*"
+>> ParameterBinding(Out-String): name="InputObject"; value=" [extras]"
+>> ParameterBinding(Out-String): name="InputObject"; value=""
+>> ParameterBinding(Out-String): name="InputObject"; value=""
+PS C:\Users\golan\Documents\CAT QA> if ($GPOBaselines -is [System.Collections.IEnumerator]) 
+                    { 
+                        'System.Collections.IEnumerator'
+                    }
+                    else
+                    { 
+                        $GPOBaselines 
+                    }
+                    
+>> CommandInvocation(Out-String): "Out-String"
+>> ParameterBinding(Out-String): name="InputObject"; value="Windows10Version1507SecurityBaseline.json"
+>> ParameterBinding(Out-String): name="InputObject"; value="Windows10Version1511SecurityBaseline.json"
+>> ParameterBinding(Out-String): name="InputObject"; value="Windows10Version1607andWindowsServer2016SecurityBaseline.json"
+>> ParameterBinding(Out-String): name="InputObject"; value="Windows10Version1703SecurityBaseline.json"
+>> ParameterBinding(Out-String): name="InputObject"; value="Windows10Version1709SecurityBaseline.json"
+>> ParameterBinding(Out-String): name="InputObject"; value="Windows10Version1803SecurityBaseline.json"
+>> ParameterBinding(Out-String): name="InputObject"; value="Windows10Version1809andWindowsServer2019SecurityBaseline.json"
+>> ParameterBinding(Out-String): name="InputObject"; value="Windows10Version1903andWindowsServerVersion1903SecurityBaseline-Sept2019Update.json"
+>> ParameterBinding(Out-String): name="InputObject"; value="Windows10Version1909andWindowsServerVersion1909SecurityBaseline.json"
+>> ParameterBinding(Out-String): name="InputObject"; value="WindowsServer2012R2SecurityBaseline.json"
+Windows10Version1507SecurityBaseline.json
+Windows10Version1511SecurityBaseline.json
+Windows10Version1607andWindowsServer2016SecurityBaseline.json
+Windows10Version1703SecurityBaseline.json
+Windows10Version1709SecurityBaseline.json
+Windows10Version1803SecurityBaseline.json
+Windows10Version1809andWindowsServer2019SecurityBaseline.json
+Windows10Version1903andWindowsServerVersion1903SecurityBaseline-Sept2019Update.json
+Windows10Version1909andWindowsServerVersion1909SecurityBaseline.json
+WindowsServer2012R2SecurityBaseline.json
+PS C:\Users\golan\Documents\CAT QA> CommandInvocation(Get-Item): "Get-Item"
+>> ParameterBinding(Get-Item): name="ErrorAction"; value="Ignore"
+>> ParameterBinding(Get-Item): name="WarningAction"; value="Ignore"
+>> ParameterBinding(Get-Item): name="InformationAction"; value="Ignore"
+>> ParameterBinding(Get-Item): name="Verbose"; value="False"
+>> ParameterBinding(Get-Item): name="Debug"; value="False"
+>> ParameterBinding(Get-Item): name="Path"; value="variable:*"
+>> CommandInvocation(Sort-Object): "Sort-Object"
+>> ParameterBinding(Sort-Object): name="ErrorAction"; value="Ignore"
+>> ParameterBinding(Sort-Object): name="WarningAction"; value="Ignore"
+>> ParameterBinding(Sort-Object): name="InformationAction"; value="Ignore"
+>> ParameterBinding(Sort-Object): name="Verbose"; value="False"
+>> ParameterBinding(Sort-Object): name="Debug"; value="False"
+>> ParameterBinding(Sort-Object): name="Property"; value="Name"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.NullVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.SessionStateCapacityVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.SessionStateCapacityVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.SessionStateCapacityVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.SessionStateCapacityVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.SessionStateCapacityVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.LocalVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.LocalVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.LocalVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.LocalVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.LocalVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.LocalVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.LocalVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.LocalVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.LocalVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.LocalVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.LocalVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.LocalVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.LocalVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.QuestionMarkVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.LocalVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.LocalVariable"
+PS C:\Users\golan\Documents\CAT QA> CommandInvocation(Get-Item): "Get-Item"
+>> ParameterBinding(Get-Item): name="ErrorAction"; value="Ignore"
+>> ParameterBinding(Get-Item): name="WarningAction"; value="Ignore"
+>> ParameterBinding(Get-Item): name="InformationAction"; value="Ignore"
+>> ParameterBinding(Get-Item): name="Verbose"; value="False"
+>> ParameterBinding(Get-Item): name="Debug"; value="False"
+>> ParameterBinding(Get-Item): name="Path"; value="env:*"
+>> CommandInvocation(Sort-Object): "Sort-Object"
+>> ParameterBinding(Sort-Object): name="ErrorAction"; value="Ignore"
+>> ParameterBinding(Sort-Object): name="WarningAction"; value="Ignore"
+>> ParameterBinding(Sort-Object): name="InformationAction"; value="Ignore"
+>> ParameterBinding(Sort-Object): name="Verbose"; value="False"
+>> ParameterBinding(Sort-Object): name="Debug"; value="False"
+>> ParameterBinding(Sort-Object): name="Property"; value="Key"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+PS C:\Users\golan\Documents\CAT QA> CommandInvocation(Get-PSDrive): "Get-PSDrive"
+>> ParameterBinding(Get-PSDrive): name="ErrorAction"; value="Ignore"
+>> ParameterBinding(Get-PSDrive): name="WarningAction"; value="Ignore"
+>> ParameterBinding(Get-PSDrive): name="InformationAction"; value="Ignore"
+>> ParameterBinding(Get-PSDrive): name="Verbose"; value="False"
+>> ParameterBinding(Get-PSDrive): name="Debug"; value="False"
+>> ParameterBinding(Get-PSDrive): name="Name"; value="*"
+>> CommandInvocation(Sort-Object): "Sort-Object"
+>> ParameterBinding(Sort-Object): name="ErrorAction"; value="Ignore"
+>> ParameterBinding(Sort-Object): name="WarningAction"; value="Ignore"
+>> ParameterBinding(Sort-Object): name="InformationAction"; value="Ignore"
+>> ParameterBinding(Sort-Object): name="Verbose"; value="False"
+>> ParameterBinding(Sort-Object): name="Debug"; value="False"
+>> ParameterBinding(Sort-Object): name="Property"; value="Name"
+PS C:\Users\golan\Documents\CAT QA> ParameterBinding(Sort-Object): name="InputObject"; value="AD"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="Alias"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="C"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="Cert"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="D"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="Env"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="Function"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="HKCU"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="HKLM"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="Variable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="vi"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="vis"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="vmstore"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="vmstores"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="WSMan"
+PS C:\Users\golan\Documents\CAT QA> CommandInvocation(Get-Item): "Get-Item"
+>> ParameterBinding(Get-Item): name="ErrorAction"; value="Ignore"
+>> ParameterBinding(Get-Item): name="WarningAction"; value="Ignore"
+>> ParameterBinding(Get-Item): name="InformationAction"; value="Ignore"
+>> ParameterBinding(Get-Item): name="Verbose"; value="False"
+>> ParameterBinding(Get-Item): name="Debug"; value="False"
+>> ParameterBinding(Get-Item): name="Path"; value="variable:*"
+>> CommandInvocation(Sort-Object): "Sort-Object"
+>> ParameterBinding(Sort-Object): name="ErrorAction"; value="Ignore"
+>> ParameterBinding(Sort-Object): name="WarningAction"; value="Ignore"
+>> ParameterBinding(Sort-Object): name="InformationAction"; value="Ignore"
+>> ParameterBinding(Sort-Object): name="Verbose"; value="False"
+>> ParameterBinding(Sort-Object): name="Debug"; value="False"
+>> ParameterBinding(Sort-Object): name="Property"; value="Name"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.NullVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.SessionStateCapacityVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.SessionStateCapacityVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.SessionStateCapacityVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.SessionStateCapacityVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.SessionStateCapacityVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.LocalVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.LocalVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.LocalVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.LocalVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.LocalVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.LocalVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.LocalVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.LocalVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.LocalVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.LocalVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.LocalVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.LocalVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.LocalVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.QuestionMarkVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.LocalVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.LocalVariable"
+PS C:\Users\golan\Documents\CAT QA> CommandInvocation(Get-Item): "Get-Item"
+>> ParameterBinding(Get-Item): name="ErrorAction"; value="Ignore"
+>> ParameterBinding(Get-Item): name="WarningAction"; value="Ignore"
+>> ParameterBinding(Get-Item): name="InformationAction"; value="Ignore"
+>> ParameterBinding(Get-Item): name="Verbose"; value="False"
+>> ParameterBinding(Get-Item): name="Debug"; value="False"
+>> ParameterBinding(Get-Item): name="Path"; value="env:*"
+>> CommandInvocation(Sort-Object): "Sort-Object"
+>> ParameterBinding(Sort-Object): name="ErrorAction"; value="Ignore"
+>> ParameterBinding(Sort-Object): name="WarningAction"; value="Ignore"
+>> ParameterBinding(Sort-Object): name="InformationAction"; value="Ignore"
+>> ParameterBinding(Sort-Object): name="Verbose"; value="False"
+>> ParameterBinding(Sort-Object): name="Debug"; value="False"
+>> ParameterBinding(Sort-Object): name="Property"; value="Key"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+PS C:\Users\golan\Documents\CAT QA> CommandInvocation(Get-PSDrive): "Get-PSDrive"
+>> ParameterBinding(Get-PSDrive): name="ErrorAction"; value="Ignore"
+>> ParameterBinding(Get-PSDrive): name="WarningAction"; value="Ignore"
+>> ParameterBinding(Get-PSDrive): name="InformationAction"; value="Ignore"
+>> ParameterBinding(Get-PSDrive): name="Verbose"; value="False"
+>> ParameterBinding(Get-PSDrive): name="Debug"; value="False"
+>> ParameterBinding(Get-PSDrive): name="Name"; value="*"
+>> CommandInvocation(Sort-Object): "Sort-Object"
+>> ParameterBinding(Sort-Object): name="ErrorAction"; value="Ignore"
+>> ParameterBinding(Sort-Object): name="WarningAction"; value="Ignore"
+>> ParameterBinding(Sort-Object): name="InformationAction"; value="Ignore"
+>> ParameterBinding(Sort-Object): name="Verbose"; value="False"
+>> ParameterBinding(Sort-Object): name="Debug"; value="False"
+>> ParameterBinding(Sort-Object): name="Property"; value="Name"
+PS C:\Users\golan\Documents\CAT QA> ParameterBinding(Sort-Object): name="InputObject"; value="AD"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="Alias"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="C"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="Cert"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="D"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="Env"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="Function"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="HKCU"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="HKLM"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="Variable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="vi"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="vis"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="vmstore"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="vmstores"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="WSMan"
+PS C:\Users\golan\Documents\CAT QA> $GPOBaselines
+>> CommandInvocation(Out-String): "Out-String"
+>> ParameterBinding(Out-String): name="Stream"; value="True"
+>> ParameterBinding(Out-String): name="InputObject"; value="Windows10Version1507SecurityBaseline.json"
+>> ParameterBinding(Out-String): name="InputObject"; value="Windows10Version1511SecurityBaseline.json"
+>> ParameterBinding(Out-String): name="InputObject"; value="Windows10Version1607andWindowsServer2016SecurityBaseline.json"
+>> ParameterBinding(Out-String): name="InputObject"; value="Windows10Version1703SecurityBaseline.json"
+>> ParameterBinding(Out-String): name="InputObject"; value="Windows10Version1709SecurityBaseline.json"
+>> ParameterBinding(Out-String): name="InputObject"; value="Windows10Version1803SecurityBaseline.json"
+>> ParameterBinding(Out-String): name="InputObject"; value="Windows10Version1809andWindowsServer2019SecurityBaseline.json"
+>> ParameterBinding(Out-String): name="InputObject"; value="Windows10Version1903andWindowsServerVersion1903SecurityBaseline-Sept2019Update.json"
+>> ParameterBinding(Out-String): name="InputObject"; value="Windows10Version1909andWindowsServerVersion1909SecurityBaseline.json"
+>> ParameterBinding(Out-String): name="InputObject"; value="WindowsServer2012R2SecurityBaseline.json"
+PS C:\Users\golan\Documents\CAT QA> CommandInvocation(Get-Item): "Get-Item"
+>> ParameterBinding(Get-Item): name="ErrorAction"; value="Ignore"
+>> ParameterBinding(Get-Item): name="WarningAction"; value="Ignore"
+>> ParameterBinding(Get-Item): name="InformationAction"; value="Ignore"
+>> ParameterBinding(Get-Item): name="Verbose"; value="False"
+>> ParameterBinding(Get-Item): name="Debug"; value="False"
+>> ParameterBinding(Get-Item): name="Path"; value="variable:*"
+>> CommandInvocation(Sort-Object): "Sort-Object"
+>> ParameterBinding(Sort-Object): name="ErrorAction"; value="Ignore"
+>> ParameterBinding(Sort-Object): name="WarningAction"; value="Ignore"
+>> ParameterBinding(Sort-Object): name="InformationAction"; value="Ignore"
+>> ParameterBinding(Sort-Object): name="Verbose"; value="False"
+>> ParameterBinding(Sort-Object): name="Debug"; value="False"
+>> ParameterBinding(Sort-Object): name="Property"; value="Name"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.NullVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.SessionStateCapacityVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.SessionStateCapacityVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.SessionStateCapacityVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.SessionStateCapacityVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.SessionStateCapacityVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.LocalVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.LocalVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.LocalVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.LocalVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.LocalVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.LocalVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.LocalVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.LocalVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.LocalVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.LocalVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.LocalVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.LocalVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.LocalVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.QuestionMarkVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.PSVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.LocalVariable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Management.Automation.LocalVariable"
+PS C:\Users\golan\Documents\CAT QA> CommandInvocation(Get-Item): "Get-Item"
+>> ParameterBinding(Get-Item): name="ErrorAction"; value="Ignore"
+>> ParameterBinding(Get-Item): name="WarningAction"; value="Ignore"
+>> ParameterBinding(Get-Item): name="InformationAction"; value="Ignore"
+>> ParameterBinding(Get-Item): name="Verbose"; value="False"
+>> ParameterBinding(Get-Item): name="Debug"; value="False"
+>> ParameterBinding(Get-Item): name="Path"; value="env:*"
+>> CommandInvocation(Sort-Object): "Sort-Object"
+>> ParameterBinding(Sort-Object): name="ErrorAction"; value="Ignore"
+>> ParameterBinding(Sort-Object): name="WarningAction"; value="Ignore"
+>> ParameterBinding(Sort-Object): name="InformationAction"; value="Ignore"
+>> ParameterBinding(Sort-Object): name="Verbose"; value="False"
+>> ParameterBinding(Sort-Object): name="Debug"; value="False"
+>> ParameterBinding(Sort-Object): name="Property"; value="Key"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="System.Collections.DictionaryEntry"
+PS C:\Users\golan\Documents\CAT QA> CommandInvocation(Get-PSDrive): "Get-PSDrive"
+>> ParameterBinding(Get-PSDrive): name="ErrorAction"; value="Ignore"
+>> ParameterBinding(Get-PSDrive): name="WarningAction"; value="Ignore"
+>> ParameterBinding(Get-PSDrive): name="InformationAction"; value="Ignore"
+>> ParameterBinding(Get-PSDrive): name="Verbose"; value="False"
+>> ParameterBinding(Get-PSDrive): name="Debug"; value="False"
+>> ParameterBinding(Get-PSDrive): name="Name"; value="*"
+>> CommandInvocation(Sort-Object): "Sort-Object"
+>> ParameterBinding(Sort-Object): name="ErrorAction"; value="Ignore"
+>> ParameterBinding(Sort-Object): name="WarningAction"; value="Ignore"
+>> ParameterBinding(Sort-Object): name="InformationAction"; value="Ignore"
+>> ParameterBinding(Sort-Object): name="Verbose"; value="False"
+>> ParameterBinding(Sort-Object): name="Debug"; value="False"
+>> ParameterBinding(Sort-Object): name="Property"; value="Name"
+PS C:\Users\golan\Documents\CAT QA> ParameterBinding(Sort-Object): name="InputObject"; value="AD"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="Alias"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="C"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="Cert"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="D"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="Env"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="Function"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="HKCU"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="HKLM"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="Variable"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="vi"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="vis"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="vmstore"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="vmstores"
+>> ParameterBinding(Sort-Object): name="InputObject"; value="WSMan"
+PS C:\Users\golan\Documents\CAT QA> $GPOBaseline
+>> CommandInvocation(Out-String): "Out-String"
+>> ParameterBinding(Out-String): name="Stream"; value="True"
+>> ParameterBinding(Out-String): name="InputObject"; value="WindowsServer2012R2SecurityBaseline.json"
+PS C:\Users\golan\Documents\CAT QA> scoop install $GPOBaseline -g
+>> CommandInvocation(Out-String): "Out-String"
+>> ParameterBinding(Out-String): name="Stream"; value="True"
+PS C:\Users\golan\Documents\CAT QA> ParameterBinding(Out-String): name="InputObject"; value="Couldn't find manifest for 'WindowsServer2012R2SecurityBaseline.json'."
+Couldn't find manifest for 'WindowsServer2012R2SecurityBaseline.json'.
+Couldn't find manifest for 'WindowsServer2012R2SecurityBaseline.json'.
+PS C:\Users\golan\Documents\CAT QA> CommandInvocation(Resolve-Path): "Resolve-Path"
+>> ParameterBinding(Resolve-Path): name="ErrorAction"; value="Ignore"
+>> ParameterBinding(Resolve-Path): name="WarningAction"; value="Ignore"
+>> ParameterBinding(Resolve-Path): name="InformationAction"; value="Ignore"
+>> ParameterBinding(Resolve-Path): name="Verbose"; value="False"
+>> ParameterBinding(Resolve-Path): name="Debug"; value="False"
+>> ParameterBinding(Resolve-Path): name="Path"; value="-*"
+PS C:\Users\golan\Documents\CAT QA> CommandInvocation(Get-ChildItem): "Get-ChildItem"
+>> ParameterBinding(Get-ChildItem): name="ErrorAction"; value="Ignore"
+>> ParameterBinding(Get-ChildItem): name="WarningAction"; value="Ignore"
+>> ParameterBinding(Get-ChildItem): name="InformationAction"; value="Ignore"
+>> ParameterBinding(Get-ChildItem): name="Verbose"; value="False"
+>> ParameterBinding(Get-ChildItem): name="Debug"; value="False"
+>> ParameterBinding(Get-ChildItem): name="Path"; value="-*"
+>> ParameterBinding(Get-ChildItem): name="Hidden"; value="True"
+PS C:\Users\golan\Documents\CAT QA> scoop install WindowsServer2012R2SecurityBaseline.json -g
+>> CommandInvocation(Out-String): "Out-String"
+>> ParameterBinding(Out-String): name="Stream"; value="True"
+PS C:\Users\golan\Documents\CAT QA> ParameterBinding(Out-String): name="InputObject"; value="Couldn't find manifest for 'WindowsServer2012R2SecurityBaseline.json'."
+PS C:\Users\golan\Documents\CAT QA> if ($AnalyzerApp -is [System.Collections.IEnumerator]) 
+                    { 
+                        'System.Collections.IEnumerator'
+                    }
+                    else
+                    { 
+                        $AnalyzerApp 
+                    }
+                    
+>> CommandInvocation(Out-String): "Out-String"
+>> ParameterBinding(Out-String): name="InputObject"; value="vista_proba_free"
+vista_proba_free
+PS C:\Users\golan\Documents\CAT QA> scoop install WindowsServer2012R2SecurityBaseline -g
+>> CommandInvocation(Out-String): "Out-String"
+>> ParameterBinding(Out-String): name="Stream"; value="True"
+PS C:\Users\golan\Documents\CAT QA> ParameterBinding(Out-String): name="InputObject"; value="Installing 'WindowsServer2012R2SecurityBaseline' (2012) [64bit]"
+Installing 'WindowsServer2012R2SecurityBaseline' (2012) [64bit]
+PS C:\Users\golan\Documents\CAT QA> ParameterBinding(Out-String): name="InputObject"; value="Downloading https://download.microsoft.com/download/8/5/C/85C25433-A1B0-4FFA-9429-7E023E7DA8D8/Windows%20Server%202012%20R2%20Security%20Baseline.zip (698.9 KB)..."
+Downloading https://download.microsoft.com/download/8/5/C/85C25433-A1B0-4FFA-9429-7E023E7DA8D8/Windows%20Server%202012%20R2%20Security%20Baseline.zip (698.9 KB)...
+Downloading https://download.microsoft.com/download/8/5/C/85C25433-A1B0-4FFA-9429-7E023E7DA8D8/Windows%20Server%202012%20R2%20Security%20Baseline.zip (698.9 KB)...
+PS C:\Users\golan\Documents\CAT QA> ParameterBinding(Out-String): name="InputObject"; value="WARN  Warning: No hash in manifest. SHA256 for 'Windows%20Server%202012%20R2%20Security%20Baseline.zip' is:
+    b5a52d5639ab5e64191efa5a3d853437a94cd44f8ca208f601f3cf8651c8d3b4"
+WARN  Warning: No hash in manifest. SHA256 for 'Windows%20Server%202012%20R2%20Security%20Baseline.zip' is:
+    b5a52d5639ab5e64191efa5a3d853437a94cd44f8ca208f601f3cf8651c8d3b4
+WARN  Warning: No hash in manifest. SHA256 for 'Windows%20Server%202012%20R2%20Security%20Baseline.zip' is:
+    b5a52d5639ab5e64191efa5a3d853437a94cd44f8ca208f601f3cf8651c8d3b4
+PS C:\Users\golan\Documents\CAT QA> ParameterBinding(Out-String): name="InputObject"; value="Extracting "
+Extracting
+Extracting
+PS C:\Users\golan\Documents\CAT QA> ParameterBinding(Out-String): name="InputObject"; value="Windows%20Server%202012%20R2%20Security%20Baseline.zip"
+Windows%20Server%202012%20R2%20Security%20Baseline.zip
+Windows%20Server%202012%20R2%20Security%20Baseline.zip
+PS C:\Users\golan\Documents\CAT QA> ParameterBinding(Out-String): name="InputObject"; value=" ... "
+ ...
+ ...
+PS C:\Users\golan\Documents\CAT QA> ParameterBinding(Out-String): name="InputObject"; value="done."
+done.
+done.
+PS C:\Users\golan\Documents\CAT QA> ParameterBinding(Out-String): name="InputObject"; value="Linking ~\Documents\CAT QA\Tools\GlobalScoopApps\apps\WindowsServer2012R2SecurityBaseline\current => ~\Documents\CAT QA\Tools\GlobalScoopApps\apps\WindowsServer2012R2SecurityBaseline\2012"
+Linking ~\Documents\CAT QA\Tools\GlobalScoopApps\apps\WindowsServer2012R2SecurityBaseline\current => ~\Documents\CAT QA\Tools\GlobalScoopApps\apps\WindowsServer2012R2SecurityBaseline\2012
+Linking ~\Documents\CAT QA\Tools\GlobalScoopApps\apps\WindowsServer2012R2SecurityBaseline\current => ~\Documents\CAT QA\Tools\GlobalScoopApps\apps\WindowsServer2012R2SecurityBaseline\2012
+PS C:\Users\golan\Documents\CAT QA> ParameterBinding(Out-String): name="InputObject"; value="'WindowsServer2012R2SecurityBaseline' (2012) was installed successfully!"
+'WindowsServer2012R2SecurityBaseline' (2012) was installed successfully!
+'WindowsServer2012R2SecurityBaseline' (2012) was installed successfully!
+PS C:\Users\golan\Documents\CAT QA> CommandInvocation(Set-PSBreakpoint): "Set-PSBreakpoint"
+>> ParameterBinding(Set-PSBreakpoint): name="Script"; value="C:\Users\golan\Documents\CAT\cyberBuild.ps1"
+>> ParameterBinding(Set-PSBreakpoint): name="Line"; value="264"
+
+  ID Script                                                            Line Command                                                           Variable                                                         Action
+  -- ------                                                            ---- -------                                                           --------                                                         ------
+   9 cyberBuild.ps1                                                     264
+
+
+. : The term 'C:\Users\golan\Documents\CAT\Bginfo64.exe' is not recognized as the name of a cmdlet, function, script 
+file, or operable program. Check the spelling of the name, or if a path was included, verify that the path is correct 
+and try again.
+At C:\Users\golan\Documents\CAT\CyberFunctions.ps1:117 char:7
++     . $PSScriptRoot\Bginfo64.exe $PSScriptRoot\CyberBginfo.bgi /silen ...
++       ~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (C:\Users\golan\...AT\Bginfo64.exe:String) [], CommandNotFoundException
+    + FullyQualifiedErrorId : CommandNotFoundException
+. : The term 'C:\Users\golan\Documents\CAT\Bginfo64.exe' is not recognized as the name of a cmdlet, function, script file, or operable program. Check the spelling of the name, or if a path was included, verify that the path is correct and try again.
+At C:\Users\golan\Documents\CAT\CyberFunctions.ps1:117 char:7
++     . $PSScriptRoot\Bginfo64.exe $PSScriptRoot\CyberBginfo.bgi /silen ...
++       ~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (C:\Users\golan\...AT\Bginfo64.exe:String) [], CommandNotFoundException
+    + FullyQualifiedErrorId : CommandNotFoundException
+
+**************************************************************************************
+We will try now to disable the local firewall protection profiles
+@{name=Domain; Enabled=False} @{name=Private; Enabled=False} @{name=Public; Enabled=False}
+**************************************************************************************
+You are running [1] antivirus realtime protection solutions:
+--> Windows Defender
+
+
+Transcript started, output file is C:\Users\golan\Documents\CAT\CyberBuildPhase.Log
+
+************************************************************************
+*** Cyber Audit Tool (Powershell Edition) - ISRAEL CYBER DIRECTORATE ***
+************************************************************************
+
+     Build The Application:
+
+     1. OS		| Check Windows version and upgrade it to latest build and update
+     2. PS and .Net	| Check and Update Powershell and .Net framework versions
+     3. RSAT		| Install Microsoft Remote Server Administration Tool
+     4. PSGallery	| Install PowerShell Modules from Powershell gallery
+     5. Scoop		| Install Scoop framework
+     6. Utilities	| Install Buckets and utilities Applications
+     7. Collectors	| Install Collector Applications
+     8. Analyzers	| Install Analyzers and Reporting tools
+     9. Update   	| Update scoop applications and powershell modules
+    10. Licenses   	| Install or Create licenses to/from license files
+    11. Uninstall  	| Uninstall scoop applications and powershell modules
+
+    99. Quit
+
+WARN  'PolicyAnalyzer' (5-23-2019) is already installed.
+Use 'scoop update PolicyAnalyzer --global' to install a new version.
+WARN  'BloodHoundExampleDB' (1.0) is already installed.
+Use 'scoop update BloodHoundExampleDB --global' to install a new version.
+WARN  'BloodHoundAD' (2.2.1) is already installed.
+Use 'scoop update BloodHoundAD --global' to install a new version.
+WARN  'neo4j' (3.5.11) is already installed.
+Use 'scoop update neo4j --global' to install a new version.
+WARN  'ophcrack' (3.8.0) is already installed.
+Use 'scoop update ophcrack --global' to install a new version.
+WARN  'vista_proba_free' (1.0) is already installed.
+Use 'scoop update vista_proba_free --global' to install a new version.
+WARN  'Windows10Version1507SecurityBaseline' (1507) is already installed.
+Use 'scoop update Windows10Version1507SecurityBaseline --global' to install a new version.
+Installing 'Windows10Version1511SecurityBaseline' (1511) [64bit]
+PS C:\Users\golan\Documents\CAT QA> TerminatingError(): "Exception calling "GetResponse" with "0" argument(s): "The operation has timed out""
+>> TerminatingError(): "The operation has timed out"
+>> TerminatingError(): "The operation has timed out"
+The operation has timed out
+URL https://download.microsoft.com/download/8/5/C/85C25433-A1B0-4FFA-9429-7E023E7DA8D8/Windows%2010%20Version%201511%20Security%20Baseline.zip is not valid
+PS C:\Users\golan\Documents\CAT QA> TerminatingError(): "System error."
+Installing 'Windows10Version1607andWindowsServer2016SecurityBaseline' (1607) [64bit]
+Downloading https://download.microsoft.com/download/8/5/C/85C25433-A1B0-4FFA-9429-7E023E7DA8D8/Windows%2010%20Version%201607%20and%20Windows%20Server%202016%20Security%20Baseline.zip (1.5 MB)...
+PS C:\Users\golan\Documents\CAT QA> TerminatingError(): "Exception calling "OpenWrite" with "1" argument(s): "Could not find a part of the path 'C:\Users\golan\Documents\CAT QA\Tools\Scoop\cache\Windows10Version1607andWindowsServer2016SecurityBaseline#1607#https_download.microsoft.com_download_8_5_C_85C25433-A1B0-4FFA-9429-7E023E7DA8D8_Windows_2010_20Version_201607_20and_20Windows_20Server_202016_20Security_20Baseline.zip.download'.""
+>> TerminatingError(): "Could not find a part of the path 'C:\Users\golan\Documents\CAT QA\Tools\Scoop\cache\Windows10Version1607andWindowsServer2016SecurityBaseline#1607#https_download.microsoft.com_download_8_5_C_85C25433-A1B0-4FFA-9429-7E023E7DA8D8_Windows_2010_20Version_201607_20and_20Windows_20Server_202016_20Security_20Baseline.zip.download'."
+>> TerminatingError(): "Could not find a part of the path 'C:\Users\golan\Documents\CAT QA\Tools\Scoop\cache\Windows10Version1607andWindowsServer2016SecurityBaseline#1607#https_download.microsoft.com_download_8_5_C_85C25433-A1B0-4FFA-9429-7E023E7DA8D8_Windows_2010_20Version_201607_20and_20Windows_20Server_202016_20Security_20Baseline.zip.download'."
+Could not find a part of the path 'C:\Users\golan\Documents\CAT QA\Tools\Scoop\cache\Windows10Version1607andWindowsServer2016SecurityBaseline#1607#https_download.microsoft.com_download_8_5_C_85C25433-A1B0-4FFA-9429-7E023E7DA8D8_Windows_2010_20Version_201607_20and_20Windows_20Server_202016_20Security_20Baseline.zip.download'.
+URL https://download.microsoft.com/download/8/5/C/85C25433-A1B0-4FFA-9429-7E023E7DA8D8/Windows%2010%20Version%201607%20and%20Windows%20Server%202016%20Security%20Baseline.zip is not valid
+PS C:\Users\golan\Documents\CAT QA> TerminatingError(): "System error."
+Installing 'Windows10Version1703SecurityBaseline' (1703) [64bit]
+Downloading https://download.microsoft.com/download/8/5/C/85C25433-A1B0-4FFA-9429-7E023E7DA8D8/Windows%2010%20Version%201703%20Security%20Baseline.zip (1,010.1 KB)...
+WARN  Warning: No hash in manifest. SHA256 for 'Windows%2010%20Version%201703%20Security%20Baseline.zip' is:
+    8a5c8e782097518d2a5233ecfb18b1e04ce2d0093e7a6b6ce620fc30248e003a
+Extracting
+Windows%2010%20Version%201703%20Security%20Baseline.zip
+ ...
+done.
+Linking ~\Documents\CAT QA\Tools\GlobalScoopApps\apps\Windows10Version1703SecurityBaseline\current => ~\Documents\CAT QA\Tools\GlobalScoopApps\apps\Windows10Version1703SecurityBaseline\1703
+'Windows10Version1703SecurityBaseline' (1703) was installed successfully!
+Installing 'Windows10Version1709SecurityBaseline' (1709) [64bit]
+Downloading https://download.microsoft.com/download/8/5/C/85C25433-A1B0-4FFA-9429-7E023E7DA8D8/Windows%2010%20Version%201709%20Security%20Baseline.zip (1.0 MB)...
+WARN  Warning: No hash in manifest. SHA256 for 'Windows%2010%20Version%201709%20Security%20Baseline.zip' is:
+    38530af9e64122c24efa4b14d204ec6a24e6c445b4281b778922a3f649aff575
+Extracting
+Windows%2010%20Version%201709%20Security%20Baseline.zip
+ ...
+done.
+Linking ~\Documents\CAT QA\Tools\GlobalScoopApps\apps\Windows10Version1709SecurityBaseline\current => ~\Documents\CAT QA\Tools\GlobalScoopApps\apps\Windows10Version1709SecurityBaseline\1709
+'Windows10Version1709SecurityBaseline' (1709) was installed successfully!
+Installing 'Windows10Version1803SecurityBaseline' (1803) [64bit]
+Downloading https://download.microsoft.com/download/8/5/C/85C25433-A1B0-4FFA-9429-7E023E7DA8D8/Windows%2010%20Version%201803%20Security%20Baseline.zip (1.1 MB)...
+WARN  Warning: No hash in manifest. SHA256 for 'Windows%2010%20Version%201803%20Security%20Baseline.zip' is:
+    50481181b0b92e9c44b715699ecab2cd656b9a558a5266d840b3eea86e522523
+Extracting
+Windows%2010%20Version%201803%20Security%20Baseline.zip
+ ...
+done.
+Linking ~\Documents\CAT QA\Tools\GlobalScoopApps\apps\Windows10Version1803SecurityBaseline\current => ~\Documents\CAT QA\Tools\GlobalScoopApps\apps\Windows10Version1803SecurityBaseline\1803
+'Windows10Version1803SecurityBaseline' (1803) was installed successfully!
+Installing 'Windows10Version1809andWindowsServer2019SecurityBaseline' (1809) [64bit]
+Downloading https://download.microsoft.com/download/8/5/C/85C25433-A1B0-4FFA-9429-7E023E7DA8D8/Windows%2010%20Version%201809%20and%20Windows%20Server%202019%20Security%20Baseline.zip (1.3 MB)...
+PS C:\Users\golan\Documents\CAT QA> TerminatingError(): "Exception calling "OpenWrite" with "1" argument(s): "Could not find a part of the path 'C:\Users\golan\Documents\CAT QA\Tools\Scoop\cache\Windows10Version1809andWindowsServer2019SecurityBaseline#1809#https_download.microsoft.com_download_8_5_C_85C25433-A1B0-4FFA-9429-7E023E7DA8D8_Windows_2010_20Version_201809_20and_20Windows_20Server_202019_20Security_20Baseline.zip.download'.""
+>> TerminatingError(): "Could not find a part of the path 'C:\Users\golan\Documents\CAT QA\Tools\Scoop\cache\Windows10Version1809andWindowsServer2019SecurityBaseline#1809#https_download.microsoft.com_download_8_5_C_85C25433-A1B0-4FFA-9429-7E023E7DA8D8_Windows_2010_20Version_201809_20and_20Windows_20Server_202019_20Security_20Baseline.zip.download'."
+>> TerminatingError(): "Could not find a part of the path 'C:\Users\golan\Documents\CAT QA\Tools\Scoop\cache\Windows10Version1809andWindowsServer2019SecurityBaseline#1809#https_download.microsoft.com_download_8_5_C_85C25433-A1B0-4FFA-9429-7E023E7DA8D8_Windows_2010_20Version_201809_20and_20Windows_20Server_202019_20Security_20Baseline.zip.download'."
+Could not find a part of the path 'C:\Users\golan\Documents\CAT QA\Tools\Scoop\cache\Windows10Version1809andWindowsServer2019SecurityBaseline#1809#https_download.microsoft.com_download_8_5_C_85C25433-A1B0-4FFA-9429-7E023E7DA8D8_Windows_2010_20Version_201809_20and_20Windows_20Server_202019_20Security_20Baseline.zip.download'.
+URL https://download.microsoft.com/download/8/5/C/85C25433-A1B0-4FFA-9429-7E023E7DA8D8/Windows%2010%20Version%201809%20and%20Windows%20Server%202019%20Security%20Baseline.zip is not valid
+PS C:\Users\golan\Documents\CAT QA> TerminatingError(): "System error."
+Installing 'Windows10Version1903andWindowsServerVersion1903SecurityBaseline-Sept2019Update' (1903) [64bit]
+Downloading https://download.microsoft.com/download/8/5/C/85C25433-A1B0-4FFA-9429-7E023E7DA8D8/Windows%2010%20Version%201903%20and%20Windows%20Server%20Version%201903%20Security%20Baseline%20-%20Sept2019Update.zip (1.3 MB)...
+PS C:\Users\golan\Documents\CAT QA> TerminatingError(): "Exception calling "OpenWrite" with "1" argument(s): "The specified path, file name, or both are too long. The fully qualified file name must be less than 260 characters, and the directory name must be less than 248 characters.""
+>> TerminatingError(): "The specified path, file name, or both are too long. The fully qualified file name must be less than 260 characters, and the directory name must be less than 248 characters."
+>> TerminatingError(): "The specified path, file name, or both are too long. The fully qualified file name must be less than 260 characters, and the directory name must be less than 248 characters."
+The specified path, file name, or both are too long. The fully qualified file name must be less than 260 characters, and the directory name must be less than 248 characters.
+URL https://download.microsoft.com/download/8/5/C/85C25433-A1B0-4FFA-9429-7E023E7DA8D8/Windows%2010%20Version%201903%20and%20Windows%20Server%20Version%201903%20Security%20Baseline%20-%20Sept2019Update.zip is not valid
+PS C:\Users\golan\Documents\CAT QA> TerminatingError(): "System error."
+PS C:\Users\golan\Documents\CAT QA> scoop install W10V1903WinSerV1903SecBase -g
+Couldn't find manifest for 'W10V1903WinSerV1903SecBase'.
