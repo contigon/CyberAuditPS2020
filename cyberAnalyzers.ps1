@@ -1,4 +1,4 @@
-ï»¿<#	
+<#	
 	.NOTES
 	===========================================================================
 	 Created on:   	2/24/2020 1:11 PM
@@ -56,9 +56,10 @@ Write-Host "     Root aquisition folder is $AcqABaseFolder (Press [0] To change 
 Write-Host ""
 Write-Host "     1. Pwdump         | Process NTDS/SYSTEM files and export pwdump/ophcrack files    " -ForegroundColor White
 Write-Host "     2. Ophcrack       | Password cracker based on rainbow tables                      " -ForegroundColor White
-Write-Host "     3. BloodHound     | Find attack vectors within Active Directory                   " -ForegroundColor White
-Write-Host "     4. PolicyAnalizer | Compare GPO to Microdoft Security configuration baselines     " -ForegroundColor White
-Write-Host "     5. statistics     | Cracked Enterprise & Domain Admin pas0swords statistics       " -ForegroundColor White
+Write-Host "     3. Hashcat        | Password cracker based on dictionaries                        " -ForegroundColor White
+Write-Host "     4. BloodHound     | Find attack vectors within Active Directory                   " -ForegroundColor White
+Write-Host "     5. PolicyAnalizer | Compare GPO to Microdoft Security configuration baselines     " -ForegroundColor White
+Write-Host "     6. statistics     | Cracked Enterprise & Domain Admin passwords statistics        " -ForegroundColor White
 Write-Host ""
 Write-Host "    99. Quit                                                                            " -ForegroundColor White
 Write-Host ""
@@ -74,7 +75,7 @@ switch ($input) {
         Import-Module DSInternals
         $bk=Get-BootKey -SystemHivePath $ACQ\SYSTEM
         Get-ADDBAccount -All -DBPath $ACQ\ntds.dit -BootKey $bk|Format-Custom -View Ophcrack|Out-File $ACQ\hashes-Ophcrack.txt -Encoding ASCII
-        read-host â€œPress ENTER to continueâ€
+        read-host “Press ENTER to continue”
         $null = start-Process -PassThru explorer $ACQ
      }
      #Ophcrack
@@ -100,10 +101,48 @@ switch ($input) {
         {
             Write-Host "[Failed] The file $ACQ\hashes-Ophcrack.txt was not found, please check and try again" -ForegroundColor Red
         }
-        read-host â€œPress ENTER to continueâ€
+        read-host “Press ENTER to continue”
+     }
+       #hashcat
+     3 {
+        CLS
+        $ACQ = ACQ("NTDS")
+        $hashcatPath = scoop prefix hashcat
+        Push-Location $hashcatPath
+        $help = @"
+        
+        hashcat will be using the Rockyou.txt dictionary file.
+
+        More dictionaries can be downloaded from:
+        https://github.com/danielmiessler/SecLists/tree/master/Passwords
+        https://www.blacktraffic.co.uk/pw-dict-public/dict/
+
+        More rules can be downloaded from:
+
+
+        Automatic tool that Guesses hash types, picks some sensible dictionaries and rules for hashcat:
+        https://github.com/nccgroup/hashcrack
+
+"@
+        write-host $help -ForegroundColor Yellow
+        if (Test-Path -Path $ACQ\pwdump.txt)
+        {
+            Write-Host "[Success] The file $ACQ\pwdump.txt was found" -ForegroundColor Green
+            $cmd = "hashcat -a0 -m 1000 --username $ACQ\pwdump.txt c:\temp\golan\rockyou.txt -r c:\temp\golan\l33tpasspro.rule.txt  --loopback  -O -w3 --force  -o cracked.txt  --potfile-path hashcat-rockyou-lm.pot"
+
+            $cmd = "hashcat -a0 -m 1000 --username c:\temp\golan\pwdump.txt c:\temp\golan\rockyou.txt -r c:\temp\golan\l33tpasspro.rule.txt  --loopback  -O -w3 --force  -o cracked.txt  --potfile-path hashcat-rockyou-lm.pot  --show"
+            $cmd = "ophcrack -d $appsDir\vista_proba_free\current -t $appsDir\vista_proba_free\current -f $ACQ\hashes-Ophcrack.txt -n 4"
+            Invoke-Expression $cmd
+        }
+        else 
+        {
+            Write-Host "[Failed] The file $ACQ\hashes-Ophcrack.txt was not found, please check and try again" -ForegroundColor Red
+        }
+        read-host “Press ENTER to continue”
+        Pop-Location
      }
      #BloodHound
-     3 {
+     4 {
         CLS
         $ACQ = ACQA("Sharphound")
         $help = @"
@@ -141,10 +180,10 @@ switch ($input) {
                 invoke-expression "BloodHound"
         }
         Start-Process iexplore $ACQ
-        read-host â€œPress ENTER to continueâ€
+        read-host “Press ENTER to continue”
      }
      #Ophcrack
-     4 {
+     5 {
         CLS
         $ACQ = ACQA("GPO")
         $help = @"
@@ -159,10 +198,10 @@ switch ($input) {
         write-host $help -ForegroundColor Yellow
         $cmd = "policyanalyzer"
         Invoke-Expression $cmd
-        read-host â€œPress ENTER to continueâ€     
+        read-host “Press ENTER to continue”     
      }
      #Statistics
-     5 {     
+     6 {     
         $ACQ = ACQA("Statistics")
         $help = @"
         
@@ -210,7 +249,7 @@ switch ($input) {
             Write-Host "[Failed] Check that all files are copied to the $ACQ folder and try again" -ForegroundColor Red
             Start-Process iexplore $ACQ
         }
-        read-host â€œPress ENTER to continueâ€
+        read-host “Press ENTER to continue”
      }
     }
  cls
