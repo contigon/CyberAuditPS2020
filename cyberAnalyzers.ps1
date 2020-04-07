@@ -74,7 +74,12 @@ switch ($input) {
         NtdsAudit $ACQ\ntds.dit -s $ACQ\SYSTEM  -p  $ACQ\pwdump.txt -u  $ACQ\user-dump.csv --debug --history-hashes
         Import-Module DSInternals
         $bk=Get-BootKey -SystemHivePath $ACQ\SYSTEM
-        Get-ADDBAccount -All -DBPath $ACQ\ntds.dit -BootKey $bk|Format-Custom -View Ophcrack|Out-File $ACQ\hashes-Ophcrack.txt -Encoding ASCII
+        $fileFormat = @("Ophcrack","HashcatNT","HashcatLM","JohnNT","JohnLM")
+        foreach ($f in $fileFormat) 
+        {
+            Write-Host "[Success] Exporting hashes to $f format" -ForegroundColor Green
+            Get-ADDBAccount -All -DBPath $ACQ\ntds.dit -BootKey $bk|Format-Custom -View $f|Out-File $ACQ\hashes-$f.txt -Encoding ASCII
+        }
         read-host “Press ENTER to continue”
         $null = start-Process -PassThru explorer $ACQ
      }
@@ -107,39 +112,94 @@ switch ($input) {
      3 {
         CLS
         $ACQ = ACQ("NTDS")
-        $hashcatPath = scoop prefix hashcat
-        Push-Location $hashcatPath
-        $help = @"
+        #check if not Virtual Machine
+        $ComputerSystemInfo = Get-WmiObject -Class Win32_ComputerSystem
+        $GPU = (Get-WmiObject Win32_VideoController).VideoProcessor
+        switch ($ComputerSystemInfo.Model) { 
+        # Check for Hyper-V Machine Type 
+        "Virtual Machine" { 
+            $MachineType="VM" 
+            } 
+        # Check for VMware Machine Type 
+        "VMware Virtual Platform" { 
+            $MachineType="VM" 
+            }  
+        # Check for Oracle VM Machine Type 
+        "VirtualBox" { 
+            $MachineType="VM"             } 
+        # Otherwise it is a physical Box 
+        default { 
+            $MachineType="Physical" 
+            } 
+        } 
         
-        hashcat will be using the Rockyou.txt dictionary file.
+        if ($MachineType -ne "Physical")
+        {
+            $help = @"
+
+        [Failed] Your Virtualization graphics adapter is : $GPU
+
+        hashcat needs OpenCL drivers which will operate best on physical GPU
+
+        or try searching for help about GPU passthru for you virtualization environment.
+
+"@
+
+            Write-Host $help -ForegroundColor Red
+        }
+        else
+        {
+            $hashcatPath = scoop prefix hashcat
+            $dumpFile = "pwdump.txt"
+            Push-Location $hashcatPath
+            $help = @"
+        
+        Hashcat will try now to crack the hashes extracted from Active Directory database file.
+
+        You are running hashcat using this GPU: $GPU 
+        It is best using a PC with GPU such as Nvidia 1080Ti GPU for faster cracking.
+        
+        We will be using the Rockyou.txt dictionary file.
 
         More dictionaries can be downloaded from:
         https://github.com/danielmiessler/SecLists/tree/master/Passwords
         https://www.blacktraffic.co.uk/pw-dict-public/dict/
 
+        We will be using the l33tpasspro rule file.
+
         More rules can be downloaded from:
+        https://github.com/nccgroup/hashcrack
 
-
-        Automatic tool that Guesses hash types, picks some sensible dictionaries and rules for hashcat:
+        Other cracking tools recommended:
+        hashcrack - Automatic tool that Guesses hash types, picks some sensible dictionaries and rules for hashcat
         https://github.com/nccgroup/hashcrack
 
 "@
-        write-host $help -ForegroundColor Yellow
-        if (Test-Path -Path $ACQ\pwdump.txt)
-        {
-            Write-Host "[Success] The file $ACQ\pwdump.txt was found" -ForegroundColor Green
-            $cmd = "hashcat -a0 -m 1000 --username $ACQ\pwdump.txt c:\temp\golan\rockyou.txt -r c:\temp\golan\l33tpasspro.rule.txt  --loopback  -O -w3 --force  -o cracked.txt  --potfile-path hashcat-rockyou-lm.pot"
-
-            $cmd = "hashcat -a0 -m 1000 --username c:\temp\golan\pwdump.txt c:\temp\golan\rockyou.txt -r c:\temp\golan\l33tpasspro.rule.txt  --loopback  -O -w3 --force  -o cracked.txt  --potfile-path hashcat-rockyou-lm.pot  --show"
-            $cmd = "ophcrack -d $appsDir\vista_proba_free\current -t $appsDir\vista_proba_free\current -f $ACQ\hashes-Ophcrack.txt -n 4"
-            Invoke-Expression $cmd
+            write-host $help -ForegroundColor Yellow
+            if (Test-Path -Path $ACQ\$dumpFile)
+            {
+                    Write-Host "[Success] The file $ACQ\$dumpFile was found" -ForegroundColor Green
+                    $cmd = "hashcat -a 0 -m 1000 --username $ACQ\$dumpFile $appsDir\rockyou\current\rockyou.txt -r $appsDir\rockyou\current\l33tpasspro.rule.txt  --loopback  -O -w3 --force  -o $ACQ\pwdump_cracked.txt  --potfile-path $ACQ\hashcat-rockyou-lm.pot"
+                    Invoke-Expression $cmd -WarningAction SilentlyContinue
+                    $cmd = "hashcat -a 0 -m 1000 --username $ACQ\$dumpFile $appsDir\rockyou\current\rockyou.txt -r $appsDir\rockyou\current\l33tpasspro.rule.txt  --loopback  -O -w3 --force  -o $ACQ\pwdump_show_cracked.txt  --potfile-path $ACQ\hashcat-rockyou-lm.pot --show"
+                    Invoke-Expression $cmd -WarningAction SilentlyContinue
+                    $cracked = (Get-Content $ACQ\pwdump_show_cracked.txt).Split("\")
+                    for ($i = 1 ; $i -lt (Get-Content .\cracked.txt).count;$i+=2)
+                    {
+                        Add-Content -Path $ACQ\found_cracked.txt  -value $cracked[$i]
+                    }
+                    $a = (Get-Content -Path  $ACQ\$dumpFile).count
+                    $b = (Get-Content -Path  $ACQ\pwdump_show_cracked.txt).count
+                    Add-Content -Path $ACQ\left_uncracked.txt  -value ($a - $b)
+                    Start-Process iexplore $ACQ
+            }
+            else 
+            {
+                Write-Host "[Failed] The file $ACQ\pwdump.txt was not found, please check and try again" -ForegroundColor Red
+            }
         }
-        else 
-        {
-            Write-Host "[Failed] The file $ACQ\hashes-Ophcrack.txt was not found, please check and try again" -ForegroundColor Red
-        }
-        read-host “Press ENTER to continue”
-        Pop-Location
+     Pop-Location
+     read-host “Press ENTER to continue”
      }
      #BloodHound
      4 {
@@ -203,11 +263,25 @@ switch ($input) {
      #Statistics
      6 {     
         $ACQ = ACQA("Statistics")
+
+        Write-Host "Searching for installed Microsoft Excel..."
+        $excelVer = Get-WmiObject win32_product | where{$_.Name -match "Excel"} | select Name,Version
+        if ($excelVer) 
+        {
+            Write-Host "[Success]" $excelVer[0].name "is already installed" -ForegroundColor Green
+        }
+
+        else
+        {
+             Write-Host "[Failure] Please install Microsoft Excel before continuing running this analysis" -ForegroundColor Red
+             read-host “Press [Enter] if you installed Excel (or Ctrl + c to quit)”
+        }
+
         $help = @"
         
         In order to create the password statistics excel we need 4 files
         ----------------------------------------------------------------
-        Files From hashview application after cracking the pwdump file
+        Files From hashview or hashcat application after cracking the pwdump file
         You need export and copy them to $ACQ :
         1 - found_*.txt
         2 - left_*.txt
@@ -220,6 +294,12 @@ switch ($input) {
 "@
 
         $files = @("found_","left_","Domain_Users_Domain Admins.csv","Domain_Users_Enterprise Admins.csv")
+        $hashcat = ACQA("NTDS")
+        $found = $hashcat + "\" + $files[0].ToString()
+        Copy-Item -Path $found*.txt -Destination $ACQ -Force
+        $left = $hashcat + "\" + $files[1].ToString()
+        Copy-Item -Path $left*.txt -Destination $ACQ -Force
+
         $goddi = ACQA("goddi")
         $DomainAdmins = $goddi + "\" + $files[2].ToString()
         Copy-Item -Path $DomainAdmins -Destination $ACQ -Force
@@ -232,10 +312,10 @@ switch ($input) {
         $i = 0
         foreach ($f in $files) {
             if ($folderFiles -match $f) { 
-                Write-Host "File $f was found." -foregroundcolor green
+                Write-Host "File $f*.txt was found." -foregroundcolor green
                 $i++
             } else { 
-                Write-Host "File $f was not found!" -foregroundcolor red 
+                Write-Host "File $f*.txt was not found!" -foregroundcolor red 
             }
         }
         if ($i -eq 4)

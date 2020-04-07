@@ -82,22 +82,23 @@ Write-Host ""
 Compress-Archive @compressUpdates -Force
 Rename-Item -Path "$PSScriptRoot\goUpdate.zip" -NewName "goUpdate.pdf"
 
-if ((Test-Path "$PSScriptRoot\go.pdf") -and (Test-Path "$PSScriptRoot\goUpdate.pdf")) {
+if ((Test-Path "$PSScriptRoot\go.pdf") -and (Test-Path "$PSScriptRoot\goUpdate.pdf") -and (Test-Path "$PSScriptRoot\go.ps1")) {
     Write-Host "go.pdf and goUpdate.pdf files were created successfully" -ForegroundColor Green
     Write-Host ""
     
-    Write-Host "Uploading $PSScriptRoot\go.pdf and $PSScriptRoot\goUpdates.pdf to github contigon repo" -ForegroundColor Green
-    git add go.pdf,goUpdate.pdf
+    Write-Host "Uploading $PSScriptRoot \go.pdf \goUpdates.pdf \go.ps1 to github contigon repo" -ForegroundColor Green
+    git add go.pdf,goUpdate.pdf,go.ps1
     git commit -m "Uploading pdf files"
     git push
 
     Write-Host ""
-    Write-Host "Uploading $PSScriptRoot\go.pdf and $PSScriptRoot\goUpdates.pdf  to the server at cyberaudittool.c1.biz port 221" -ForegroundColor Green
+    Write-Host "Uploading \go.pdf \goUpdates.pdf \go.ps1 to the server at cyberaudittool.c1.biz port 221" -ForegroundColor Green
     Write-Host "You will need to provide password for the specified user" -ForegroundColor Yellow
     Write-Host "Password hint: cat name + year !!!" -ForegroundColor blue
     Write-Host ""
     try {
         $SftpSess = New-SFTPSession -ComputerName cyberaudittool.c1.biz -Port 221 -Credential (Get-Credential 3347985_cyber) -Verbose
+        Set-SFTPFile -SessionId $SftpSess.SessionId -LocalFile "$PSScriptRoot\go.ps1" -RemotePath "/cyberaudittool.c1.biz/" -Overwrite
         Set-SFTPFile -SessionId $SftpSess.SessionId -LocalFile "$PSScriptRoot\go.pdf" -RemotePath "/cyberaudittool.c1.biz/" -Overwrite
         Set-SFTPFile -SessionId $SftpSess.SessionId -LocalFile "$PSScriptRoot\goUpdate.pdf" -RemotePath "/cyberaudittool.c1.biz/" -Overwrite
     }
