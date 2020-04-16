@@ -70,7 +70,7 @@ switch ($input) {
      #Analyze the NTDS and SYSTEM hive (ntdsaudit, DSInternals)
      1 {
         cls
-        $ACQ = ACQ("NTDS")
+        $ACQ = ACQA("NTDS")
         Get-ChildItem -Path $ACQ -Recurse -File | Move-Item -Destination $ACQ
         NtdsAudit $ACQ\ntds.dit -s $ACQ\SYSTEM  -p  $ACQ\pwdump.txt -u  $ACQ\user-dump.csv --debug --history-hashes
         Import-Module DSInternals
@@ -336,13 +336,22 @@ switch ($input) {
     #DSInternals
      7 {
         CLS
-        $ACQ = ACQA("GPO")
+        $ACQ = ACQA("NTDS")
         $help = @"
         
+        Performs an offline credential hygiene audit of AD database against HIBP
+
+        Downloading the Pwned Passwords list can be done from:
         https://haveibeenpwned.com/Passwords
+        https://downloads.pwnedpasswords.com/passwords/pwned-passwords-ntlm-ordered-by-hash-v5.7z
+        https://downloads.pwnedpasswords.com/passwords/pwned-passwords-ntlm-ordered-by-hash-v5.7z.torrent
 
 "@
         write-host $help -ForegroundColor Yellow
+
+        Import-Module DSInternals
+        $bk=Get-BootKey -SystemHivePath $ACQ\SYSTEM
+        Get-ADDBAccount -All -DatabasePath $ACQ\ntds.dit -BootKey $bk | Test-PasswordQuality -WeakPasswordHashesSortedFile pwned-passwords-ntlm-ordered-by-hash-v5.txt
         read-host “Press ENTER to continue”     
      }
 
