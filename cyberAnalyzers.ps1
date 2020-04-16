@@ -60,6 +60,7 @@ Write-Host "     3. Hashcat        | Password cracker based on dictionaries     
 Write-Host "     4. BloodHound     | Find attack vectors within Active Directory                   " -ForegroundColor White
 Write-Host "     5. PolicyAnalizer | Compare GPO to Microdoft Security configuration baselines     " -ForegroundColor White
 Write-Host "     6. statistics     | Cracked Enterprise & Domain Admin passwords statistics        " -ForegroundColor White
+Write-Host "     7. Dsinternals    | Password cracking using haveibeenpawned NTLM v5 file          " -ForegroundColor White
 Write-Host ""
 Write-Host "    99. Quit                                                                            " -ForegroundColor White
 Write-Host ""
@@ -331,6 +332,21 @@ switch ($input) {
         }
         read-host “Press ENTER to continue”
      }
+
+    #DSInternals
+     7 {
+        CLS
+        $ACQ = ACQA("GPO")
+        $help = @"
+        
+        https://haveibeenpwned.com/Passwords
+
+"@
+        write-host $help -ForegroundColor Yellow
+        read-host “Press ENTER to continue”     
+     }
+
+#End Menu
     }
  cls
  }
