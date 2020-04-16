@@ -27,10 +27,11 @@ $DownloadsDir = New-Item -Path $Tools -Name "\Downloads" -ItemType "directory" -
 
 #Powershell Modules, Utilities and Applications that needs to be installed
 $PSGModules = @("Testimo","VMware.PowerCLI","ImportExcel","Posh-SSH")
-$utilities = @("Net_Framework_Installed_Versions_Getter","oraclejdk","putty","winscp","nmap","rclone","everything","notepadplusplus","googlechrome","firefox","foxit-reader","irfanview","grepwin","sysinternals","nirlauncher","wireshark")
+$utilities = @("Net_Framework_Installed_Versions_Getter","oraclejdk","putty","winscp","nmap","rclone","everything","notepadplusplus","googlechrome","firefox","foxit-reader","irfanview","grepwin","sysinternals","wireshark")
 $CollectorApps = @("ntdsaudit","RemoteExecutionEnablerforPowerShell","PingCastle","goddi","SharpHound","Red-Team-Scripts","Scuba-Windows","azscan3","LGPO","grouper2","Outflank-Dumpert")
 $AnalyzerApps = @("PolicyAnalyzer","BloodHoundExampleDB","BloodHoundAD","neo4j","ophcrack","vista_proba_free")
 $GPOBaselines = @("Windows10Version1507SecurityBaseline.json","Windows10Version1511SecurityBaseline.json","Windows10Version1607andWindowsServer2016SecurityBaseline.json","Windows10Version1703SecurityBaseline.json","Windows10Version1709SecurityBaseline.json","Windows10Version1803SecurityBaseline.json","Windows10Version1809andWindowsServer2019SecurityBaseline.json","Windows10Version1903andWindowsServerVersion1903SecurityBaseline-Sept2019Update.json","Windows10Version1909andWindowsServerVersion1909SecurityBaseline.json","WindowsServer2012R2SecurityBaseline.json")
+$AttackApps = @("nirlauncher", "ruler")
 
 #Creating desktop shortcuts
 if ((Test-Path -Path "C:\Users\Public\Desktop\Build.lnk","C:\Users\Public\Desktop\Audit.lnk","C:\Users\Public\Desktop\Analyze.lnk") -match "False")
@@ -74,6 +75,7 @@ Write-Host "     8. Analyzers	| Install Analyzers and Reporting tools           
 Write-Host "     9. Update   	| Update scoop applications and powershell modules            " -ForegroundColor $menuColor[9]
 Write-Host "    10. Licenses   	| Install or Create licenses to/from license files            " -ForegroundColor $menuColor[10]
 Write-Host "    11. Uninstall  	| Uninstall scoop applications and powershell modules         " -ForegroundColor White
+Write-Host "    12. Attack!  	| Install attacking and Exploiting Scripts and tools          " -ForegroundColor White
 Write-Host ""
 Write-Host "    99. Quit                                                                      " -ForegroundColor White
 Write-Host ""
@@ -81,6 +83,7 @@ $input=Read-Host "Select Script Number"
 
 switch ($input) 
 { 
+    
      #Check Windows OS and build versions and if needed it can help upgrade an update latest build
      1{
         $menuColor[1] = "Yellow"
@@ -117,6 +120,7 @@ switch ($input)
         }
       read-host “Press ENTER to continue”
       }
+    
      #Check Powershell and .Net versions and install if needed
      2{
         $menuColor[2] = "Yellow"
@@ -124,6 +128,7 @@ switch ($input)
         CheckDotNet
       read-host “Press ENTER to continue”
       }
+    
      #Install RSAT
      3 {
         $menuColor[3] = "Yellow"
@@ -139,6 +144,7 @@ switch ($input)
         }
      read-host “Press ENTER to continue”
      }
+    
      #Install PowerShell Modules from PSGallery Online
      4 {
         $menuColor[4] = "Yellow"
@@ -167,6 +173,7 @@ switch ($input)
         }
      read-host “Press ENTER to continue”
      }
+    
      #Install scoop
      5 {
         $menuColor[5] = "Yellow"
@@ -195,6 +202,7 @@ switch ($input)
         scoop update        
         read-host “Press ENTER to continue”  
      }
+    
     #add buckets and isntall global utilities
     6 {
         $menuColor[6] = "Yellow"
@@ -208,6 +216,7 @@ switch ($input)
         }
      read-host “Press ENTER to continue” 
      }
+    
     #install audit applications from cyberauditbucket
     7 {
         $menuColor[7] = "Yellow"
@@ -239,6 +248,7 @@ switch ($input)
         }
      read-host “Press ENTER to continue” 
      }
+     
       #install Analyzers and Reporting applications from cyberauditbucket
     8 {
         $menuColor[8] = "Yellow"
@@ -303,6 +313,7 @@ switch ($input)
         }
      read-host “Press ENTER to continue” 
      }
+     
      #Update scoop, Powershell and applications
      9 {
         $menuColor[9] = "Yellow"
@@ -362,6 +373,7 @@ switch ($input)
         detect
      read-host “Press ENTER to continue” 
      }
+     
      #Licenses
     10 {
         $menuColor[10] = "Yellow"
@@ -369,6 +381,7 @@ switch ($input)
         &$ScriptToRun
      read-host “Press ENTER to continue” 
      }
+     
      #Uninstal scoop utilities, applications and scoop itself
     11 {
         (Get-ChildItem $bucketsDir\CyberAuditBucket -Filter *.json).BaseName|ForEach-Object {scoop uninstall $_ -g}
@@ -391,6 +404,40 @@ switch ($input)
         Get-ComputerRestorePoint -LastStatus
      read-host “Press ENTER to continue”       
      }
+
+    #install Attacking scripts and tools
+    12 {
+        $menuColor[7] = "Yellow"
+        #(Get-ChildItem $scoopDir\buckets\CyberAuditBucket -Filter *.json).BaseName|ForEach-Object {scoop install $_ -g}
+        foreach ($AttackApp in $AttackApps)
+            {
+                scoop install $AttackApp -g
+            }
+        $c = scoop list 6>&1
+        $i=0
+        foreach ($f in $c)
+        {
+            $i++
+            if ($($foreach.current) -match 'failed')
+            {
+               if ($c[$i-2].ToString() -match "global")
+               {
+                    Write-Host $c[$i-4].ToString() "--> global app installation failed, we will try to uninstall and reinstall"
+                    scoop uninstall $c[$i-4].ToString() -g
+                    scoop install $c[$i-4].ToString() -g
+                }
+                else
+                {
+                    Write-Host $c[$i-3].ToString() "--> app installation failed, we will try to uninstall and reinstall"
+                    scoop uninstall $c[$i-3].ToString()
+                    scoop install $c[$i-3].ToString()
+                }
+            }
+        }
+     read-host “Press ENTER to continue” 
+     }
+
+
    }
   CLS
  }

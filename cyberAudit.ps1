@@ -106,19 +106,21 @@ switch ($input)
         if($winVer.contains("2003") -or $winVer.contains("2008")) 
         {
             Write-Host "The domain server is " $winVer -ForegroundColor Red
-$block = @"
-Below window 2012 we cant backup the files remotely, 
-you will need to do it locally on the Domain Controller
-run these steps from elevated CMD:
---------------------------
-1. ntdsutil
-2. activate instance ntds
-3. ifm
-4. create full C:\ntdsdump
-5. quit
-6. quit
---------------------------
-when finished please copy the c:\ntdsdump directory to the Aquisition folder (NTDS)
+            $block = @"
+
+        Below window 2012 we cant backup the files remotely, 
+        you will need to do it locally on the Domain Controller
+        run these steps from elevated CMD:
+        --------------------------
+        1. ntdsutil
+        2. activate instance ntds
+        3. ifm
+        4. create full C:\ntdsdump
+        5. quit
+        6. quit
+        --------------------------
+        when finished please copy the c:\ntdsdump directory to the Aquisition folder (NTDS)
+
 "@
 Write-Host $block -ForegroundColor Red
         }

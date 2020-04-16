@@ -53,6 +53,27 @@ $DownloadsDir = "$Tools\Downloads"
 $bucketsDir = "$scoopDir\buckets"
 $appsDir = "$scoopGlobalDir\apps"
 
+#locate a scoop application directory
+function appDir ($appName){
+    $c = scoop prefix $appName
+    Write-Host "[Success] Setting directory to $c" -ForegroundColor Green
+    Return $c
+}
+
+
+function YesNo ($FirstName, $LastName) {
+    $d = [Windows.Forms.MessageBox]::show($FirstName,$LastName,[Windows.Forms.MessageBoxButtons]::YesNo, [Windows.Forms.MessageBoxIcon]::Question)
+    If ($d -eq [Windows.Forms.DialogResult]::Yes)
+    {
+        return $true
+    }
+    else
+    {
+        return $false
+    }
+}
+
+
 #Set Acquisition folders
 $AcqBaseFolder = New-Item -Path $PSScriptRoot -Name $env:computername -ItemType "directory" -Force
 Function ACQ{
