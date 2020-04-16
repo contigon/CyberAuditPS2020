@@ -38,7 +38,7 @@ $compress = @{
           "$PSScriptRoot\CyberCreateRunecastRole.ps1",
           "$PSScriptRoot\CyberFunctions.ps1",
           "$PSScriptRoot\CyberLicenses.ps1",
-          "$PSScriptRoot\CyberMenu.ps1",
+          "$PSScriptRoot\cyberAttack.ps1",
           "$PSScriptRoot\CyberPasswordStatistics.ps1",
           "$PSScriptRoot\CyberPingCastle.ps1",
           "$PSScriptRoot\go.ps1",
@@ -47,7 +47,8 @@ $compress = @{
           "$PSScriptRoot\Bginfo64.exe",
           "$PSScriptRoot\CyberRedIcon.ico",
           "$PSScriptRoot\CyberBlackIcon.ico",
-          "$PSScriptRoot\CyberGreenIcon.ico"
+          "$PSScriptRoot\CyberGreenIcon.ico",
+          "$PSScriptRoot\CyberYellowIcon.ico"
   CompressionLevel = "Fastest"
   DestinationPath = "$PSScriptRoot\go.zip"
 }
@@ -61,7 +62,7 @@ $compressUpdates = @{
           "$PSScriptRoot\CyberCreateRunecastRole.ps1",
           "$PSScriptRoot\CyberFunctions.ps1",
           "$PSScriptRoot\CyberLicenses.ps1",
-          "$PSScriptRoot\CyberMenu.ps1",
+          "$PSScriptRoot\cyberAttack.ps1",
           "$PSScriptRoot\CyberPasswordStatistics.ps1",
           "$PSScriptRoot\CyberPingCastle.ps1",
           "$PSScriptRoot\CyberAuditDevelopersHelp.txt",
@@ -69,6 +70,13 @@ $compressUpdates = @{
   CompressionLevel = "Fastest"
   DestinationPath = "$PSScriptRoot\goUpdate.zip"
 }
+
+<#
+$a = ($compress['path'] -join ",").Replace("$PSScriptRoot\","")
+git add $a
+git commit -m "auto commit from omer"
+git push
+#>
 
 $c = $compress['path']
 Write-Host "Files ($c) will be compressed now" -ForegroundColor Green
