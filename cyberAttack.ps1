@@ -41,7 +41,7 @@ $input=Read-Host "Select Script Number"
 switch ($input) 
      { 
      
-     #Ruler
+     #InfectionMonkey
      1 {
         Cls
         $ACQ = ACQ("InfectionMonkey")
@@ -86,7 +86,10 @@ switch ($input)
         $isInstalled = Get-WmiObject -Class Win32_Product | Where-Object {$_.Name -like '*monkey*'}
         if ($isInstalled)
         {
-             "C:\Program Files\Guardicore\Monkey Island\monkey_island" && MonkeyIsland.exe
+            $a = "C:\Program Files\Guardicore\Monkey Island\monkey_island"
+            Push-Location $a
+            Start-Process -FilePath ".\MonkeyIsland.exe"
+            Pop-Location
         }
         else
         {
@@ -95,11 +98,10 @@ switch ($input)
             Start-Process -FilePath ".\MonkeyIslandSetup.exe"
             Pop-Location
         }
-            $a = "C:\Program Files\Guardicore\Monkey Island\monkey_island"
-            Push-Location $a
-            Start-Process -FilePath ".\MonkeyIsland.exe"
-            Pop-Location
-        }
+        
+        Write-Host "Web interface: https://localhost:5000/" -ForegroundColor Yellow
+        read-host “Press ENTER to continue”
+      }
 
     #Menu End
     }
