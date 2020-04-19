@@ -339,19 +339,26 @@ switch ($input) {
         $ACQ = ACQA("NTDS")
         $help = @"
         
-        Performs an offline credential hygiene audit of AD database against HIBP
+        Performs an offline credential hygiene audit of AD database against HIBP (Have I Been Pawned file)
 
-        Downloading the Pwned Passwords list can be done from:
+        This script uses the ntds.dit and SYSTEM hive to export the hashes from AD database,
+        and then tries finding the password of already pawned hashes.
+
+        Downloading the Pwned Passwords list file can be done from:
         https://haveibeenpwned.com/Passwords
         https://downloads.pwnedpasswords.com/passwords/pwned-passwords-ntlm-ordered-by-hash-v5.7z
         https://downloads.pwnedpasswords.com/passwords/pwned-passwords-ntlm-ordered-by-hash-v5.7z.torrent
 
 "@
         write-host $help -ForegroundColor Yellow
-
-        Import-Module DSInternals
-        $bk=Get-BootKey -SystemHivePath $ACQ\SYSTEM
-        Get-ADDBAccount -All -DatabasePath $ACQ\ntds.dit -BootKey $bk | Test-PasswordQuality -WeakPasswordHashesSortedFile pwned-passwords-ntlm-ordered-by-hash-v5.txt
+        $input = Read-Host "Press [B] to browse for the location of pwned-passwords-ntlm-ordered-by-hash-v5.txt file"
+        if ($input -eq "B") 
+        {
+            Import-Module DSInternals
+            $bk=Get-BootKey -SystemHivePath $ACQ\SYSTEM
+            $pwndfile = Get-FileName
+            Get-ADDBAccount -All -DatabasePath $ACQ\ntds.dit -BootKey $bk | Test-PasswordQuality -WeakPasswordHashesSortedFile $pwndfile
+         }
         read-host “Press ENTER to continue”     
      }
 
