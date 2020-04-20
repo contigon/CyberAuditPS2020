@@ -27,9 +27,9 @@ $DownloadsDir = New-Item -Path $Tools -Name "\Downloads" -ItemType "directory" -
 
 #Powershell Modules, Utilities and Applications that needs to be installed
 $PSGModules = @("Testimo","VMware.PowerCLI","ImportExcel","Posh-SSH")
-$utilities = @("Net_Framework_Installed_Versions_Getter","oraclejdk","putty","winscp","nmap","rclone","everything","notepadplusplus","googlechrome","firefox","foxit-reader","irfanview","grepwin","sysinternals","wireshark")
+$utilities = @("dotnet-sdk","Net_Framework_Installed_Versions_Getter","oraclejdk","putty","winscp","nmap","rclone","everything","notepadplusplus","googlechrome","firefox","foxit-reader","irfanview","grepwin","sysinternals","wireshark")
 $CollectorApps = @("ntdsaudit","RemoteExecutionEnablerforPowerShell","PingCastle","goddi","SharpHound","Red-Team-Scripts","Scuba-Windows","azscan3","LGPO","grouper2","Outflank-Dumpert")
-$AnalyzerApps = @("PolicyAnalyzer","BloodHoundExampleDB","BloodHoundAD","neo4j","ophcrack","vista_proba_free")
+$AnalyzerApps = @("PolicyAnalyzer","BloodHoundExampleDB","BloodHoundAD","neo4j","ophcrack","vista_proba_free","AppInspector")
 $GPOBaselines = @("Windows10Version1507SecurityBaseline.json","Windows10Version1511SecurityBaseline.json","Windows10Version1607andWindowsServer2016SecurityBaseline.json","Windows10Version1703SecurityBaseline.json","Windows10Version1709SecurityBaseline.json","Windows10Version1803SecurityBaseline.json","Windows10Version1809andWindowsServer2019SecurityBaseline.json","Windows10Version1903andWindowsServerVersion1903SecurityBaseline-Sept2019Update.json","Windows10Version1909andWindowsServerVersion1909SecurityBaseline.json","WindowsServer2012R2SecurityBaseline.json")
 $AttackApps = @("nirlauncher", "ruler")
 
@@ -126,6 +126,10 @@ switch ($input)
         $menuColor[2] = "Yellow"
         CheckPowershell
         CheckDotNet
+        Write-Host "Downloading and installing .NET Core 3.1 SDK (v3.1.201) Windows x64"
+        Invoke-WebRequest -Uri "https://download.visualstudio.microsoft.com/download/pr/56131147-65ea-47d6-a945-b0296c86e510/44b43b7cb27d55081e650b9a4188a419/dotnet-sdk-3.1.201-win-x64.exe" -OutFile "$PSScriptRoot\Downloads\dotnet-sdk-3.1.201-win-x64.exe"
+
+
       read-host “Press ENTER to continue”
       }
     
@@ -311,6 +315,20 @@ switch ($input)
 
             }
         }
+
+        Write-Host "Installing Microtosft AppInspector tool"
+        if ((dotnet --version) -ge "3.1.200")
+        {
+            $a = appdir("appinspector")
+            Set-Location $a
+            $cmd = "dotnet.exe tool install --global Microsoft.CST.ApplicationInspector.CLI"
+            Invoke-Expression $cmd
+            Pop-Location            
+        }
+        else
+        {
+            Write-Host "[Failed] You dont have .Net core SDK installed, Please install and try again" -ForegroundColor Red
+        }
      read-host “Press ENTER to continue” 
      }
      
@@ -384,6 +402,12 @@ switch ($input)
      
      #Uninstal scoop utilities, applications and scoop itself
     11 {
+        $a = appdir("appinspector")
+        Set-Location $a
+        $cmd = "dotnet.exe tool uninstall --global Microsoft.CST.ApplicationInspector.CLI"
+        Invoke-Expression $cmd
+        Pop-Location           
+
         (Get-ChildItem $bucketsDir\CyberAuditBucket -Filter *.json).BaseName|ForEach-Object {scoop uninstall $_ -g}
         foreach ($utility in $utilities)
         {

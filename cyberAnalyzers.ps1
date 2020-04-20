@@ -61,6 +61,7 @@ Write-Host "     4. BloodHound     | Find attack vectors within Active Directory
 Write-Host "     5. PolicyAnalizer | Compare GPO to Microdoft Security configuration baselines     " -ForegroundColor White
 Write-Host "     6. statistics     | Cracked Enterprise & Domain Admin passwords statistics        " -ForegroundColor White
 Write-Host "     7. Dsinternals    | Password cracking using haveibeenpawned NTLM v5 file          " -ForegroundColor White
+Write-Host "     8. AppInspector   | Software source code analysis to identify good or bad patterns" -ForegroundColor White
 Write-Host ""
 Write-Host "    99. Quit                                                                            " -ForegroundColor White
 Write-Host ""
@@ -359,6 +360,38 @@ switch ($input) {
             $pwndfile = Get-FileName
             Get-ADDBAccount -All -DatabasePath $ACQ\ntds.dit -BootKey $bk | Test-PasswordQuality -WeakPasswordHashesSortedFile $pwndfile
          }
+        read-host “Press ENTER to continue”     
+     }
+     #appInspector
+     8 {
+        CLS
+        $ACQ = ACQ("AppInspect")
+        $help = @"
+        
+        Application Inspector's primary objective is to identify source code features in a systematic and scalable way 
+        not found elsewhere in typical static analyzers. This enables developer and security professionals to validate 
+        purported component objectives.
+
+        Application Inspector will scan projects with supported languages including projects with mixed languages 
+        i.e. those that contain multiple languages in the same directory or sub-directories for well-known identifying features.
+
+        more information:
+        https://github.com/Microsoft/ApplicationInspector/wiki
+
+        Steps:
+        ------
+        1. Compress the content of the source code
+        2. Browse and select the source code compressed file
+        3. The analyzing process will start automatically
+
+"@
+        write-host $help -ForegroundColor Yellow
+        $sourceCode = Get-FileName
+        $a = appdir("appinspector")
+        push-Location $a
+        $cmd = "appinspector analyze -s $a"
+        Invoke-Expression $cmd
+        Pop-Location        
         read-host “Press ENTER to continue”     
      }
 
