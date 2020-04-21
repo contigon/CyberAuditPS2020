@@ -40,6 +40,7 @@ if ((Test-Path -Path "C:\Users\Public\Desktop\Build.lnk","C:\Users\Public\Deskto
     $null = CreateShortcut -name "Build" -Target "$env:windir\System32\WindowsPowerShell\v1.0\powershell.exe" -Arguments "-ExecutionPolicy Unrestricted -File $PSScriptroot\cyberBuild.ps1" -OutputDirectory "C:\Users\Public\Desktop" -IconLocation "$PSScriptroot\CyberBlackIcon.ico" -Description "CyberAuditTool Powershell Edition" -Elevated True
     $null = CreateShortcut -name "Audit" -Target "$env:windir\System32\WindowsPowerShell\v1.0\powershell.exe" -Arguments "-ExecutionPolicy Unrestricted -File $PSScriptroot\CyberAudit.ps1" -OutputDirectory "C:\Users\Public\Desktop" -IconLocation "$PSScriptroot\CyberRedIcon.ico" -Description "CyberAuditTool Powershell Edition" -Elevated True
     $null = CreateShortcut -name "Analyze" -Target "$env:windir\System32\WindowsPowerShell\v1.0\powershell.exe" -Arguments "-ExecutionPolicy Unrestricted -File $PSScriptroot\cyberAnalyzers.ps1" -OutputDirectory "C:\Users\Public\Desktop" -IconLocation "$PSScriptroot\CyberGreenIcon.ico" -Description "CyberAuditTool Powershell Edition" -Elevated True
+    $null = CreateShortcut -name "Attack" -Target "$env:windir\System32\WindowsPowerShell\v1.0\powershell.exe" -Arguments "-ExecutionPolicy Unrestricted -File $PSScriptroot\cyberAttack.ps1" -OutputDirectory "C:\Users\Public\Desktop" -IconLocation "$PSScriptroot\CyberYellowIcon.ico" -Description "CyberAuditTool Powershell Edition" -Elevated True
 }
 
 read-host “Press ENTER to continue (or Ctrl+C to quit)”
@@ -62,7 +63,9 @@ Write-Host "********************************************************************
 Write-Host "*** Cyber Audit Tool (Powershell Edition) - ISRAEL CYBER DIRECTORATE ***          " -ForegroundColor White
 Write-Host "************************************************************************          " -ForegroundColor White
 Write-Host ""
-Write-Host "     Build The Application:                                                       " -ForegroundColor White
+Write-Host "     install OS minimal requirements and Applications:                            " -ForegroundColor White
+Write-Host ""
+Write-Host "     Baseline folder is $PSScriptroot                                             " -ForegroundColor yellow
 Write-Host ""
 Write-Host "     1. OS		| Check Windows version and upgrade it to latest build and update " -ForegroundColor $menuColor[1]
 Write-Host "     2. PS and .Net	| Check and Update Powershell and .Net framework versions     " -ForegroundColor $menuColor[2]

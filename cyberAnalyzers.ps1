@@ -52,7 +52,7 @@ Write-Host "********************************************************************
 Write-Host ""
 Write-Host "     Audit Data Analysis:                                                               " -ForegroundColor White
 Write-Host "" 
-Write-Host "     Root aquisition folder is $AcqABaseFolder (Press [0] To change path)               " -ForegroundColor yellow
+Write-Host "     Data folder is $AcqABaseFolder                                                     " -ForegroundColor yellow
 Write-Host ""
 Write-Host "     1. Pwdump         | Process NTDS/SYSTEM files and export pwdump/ophcrack files    " -ForegroundColor White
 Write-Host "     2. Ophcrack       | Password cracker based on rainbow tables                      " -ForegroundColor White
@@ -382,16 +382,18 @@ switch ($input) {
         ------
         1. Compress the content of the source code
         2. Browse and select the source code compressed file
-        3. The analyzing process will start automatically
+        3. The analyze process will start automatically
+        4. Review the report that will be shown in your browser
 
 "@
         write-host $help -ForegroundColor Yellow
-        $sourceCode = Get-FileName
+        $fileName = Get-FileName
         $a = appdir("appinspector")
         push-Location $a
-        $cmd = "appinspector analyze -s $a"
+        $cmd = "appinspector analyze -s $fileName"
         Invoke-Expression $cmd
-        Pop-Location        
+        Start-Process iexplore $ACQ
+        Pop-Location    
         read-host “Press ENTER to continue”     
      }
 
