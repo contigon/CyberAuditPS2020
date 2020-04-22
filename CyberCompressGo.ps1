@@ -24,10 +24,11 @@ $Host.UI.RawUI.WindowTitle = "Cyber Audit Tool 2020 - compress Go"
 
 Import-Module Posh-SSH
 
-Remove-Item "$PSScriptRoot\go.zip" -ErrorAction SilentlyContinue
-Remove-Item "$PSScriptRoot\go.pdf" -ErrorAction SilentlyContinue
-Remove-Item "$PSScriptRoot\goUpdate.zip" -ErrorAction SilentlyContinue
-Remove-Item "$PSScriptRoot\goUpdate.pdf" -ErrorAction SilentlyContinue
+Copy-Item -Path "$PSScriptRoot\go.ps1" -Destination "$PSScriptRoot\Downloads\go.ps1" -Force
+Remove-Item "$PSScriptRoot\Downloads\go.zip" -ErrorAction SilentlyContinue
+Remove-Item "$PSScriptRoot\Downloads\go.pdf" -ErrorAction SilentlyContinue
+Remove-Item "$PSScriptRoot\Downloads\goUpdate.zip" -ErrorAction SilentlyContinue
+Remove-Item "$PSScriptRoot\Downloads\goUpdate.pdf" -ErrorAction SilentlyContinue
 
 $compress = @{
   Path = "$PSScriptRoot\cyberAnalyzers.ps1",
@@ -50,7 +51,7 @@ $compress = @{
           "$PSScriptRoot\CyberGreenIcon.ico",
           "$PSScriptRoot\CyberYellowIcon.ico"
   CompressionLevel = "Fastest"
-  DestinationPath = "$PSScriptRoot\go.zip"
+  DestinationPath = "$PSScriptRoot\Downloads\go.zip"
 }
 
 $compressUpdates = @{
@@ -68,9 +69,10 @@ $compressUpdates = @{
           "$PSScriptRoot\CyberAuditDevelopersHelp.txt",
           "$PSScriptRoot\CyberBginfo.bgi"
   CompressionLevel = "Fastest"
-  DestinationPath = "$PSScriptRoot\goUpdate.zip"
+  DestinationPath = "$PSScriptRoot\Downloads\goUpdate.zip"
 }
 
+git pull
 foreach ($f in $compressUpdates.Path){git add $f}
 git commit -m "commited by $env:USERNAME from $env:COMPUTERNAME"
 git push
@@ -79,31 +81,31 @@ $c = $compress['path']
 Write-Host "Files ($c) will be compressed now" -ForegroundColor Green
 Write-Host ""
 Compress-Archive @compress -Force
-Rename-Item -Path "$PSScriptRoot\go.zip" -NewName "go.pdf"
+Rename-Item -Path "$PSScriptRoot\Downloads\go.zip" -NewName "go.pdf"
 
 $d = $compressUpdates['path']
 Write-Host "Files ($d) will be compressed now" -ForegroundColor Green
 Write-Host ""
 Compress-Archive @compressUpdates -Force
-Rename-Item -Path "$PSScriptRoot\goUpdate.zip" -NewName "goUpdate.pdf"
+Rename-Item -Path "$PSScriptRoot\Downloads\goUpdate.zip" -NewName "goUpdate.pdf"
 
-if ((Test-Path "$PSScriptRoot\go.pdf") -and (Test-Path "$PSScriptRoot\goUpdate.pdf") -and (Test-Path "$PSScriptRoot\go.ps1")) {
+if ((Test-Path "$PSScriptRoot\Downloads\go.pdf") -and (Test-Path "$PSScriptRoot\Downloads\goUpdate.pdf") -and (Test-Path "$PSScriptRoot\Downloads\go.ps1")) {
     Write-Host "go.pdf and goUpdate.pdf files were created successfully" -ForegroundColor Green
     Write-Host ""
     
-    #Write-Host "Uploading $PSScriptRoot \go.pdf \goUpdates.pdf \go.ps1 to github contigon repo" -ForegroundColor Green
-    #git remote add go.pdf,goUpdate.pdf,go.ps1 Downloads https://github.com/contigon/Downloads
+    #Write-Host "Uploading $PSScriptRoot<go.pdf\goUpdates.pdf\go.ps1> to github contigon repo" -ForegroundColor Green
+    #git remote add go.pdf Downloads https://github.com/contigon/Downloads
     #git commit -m "Uploading pdf files"
     #git push Downloads master
 
     Write-Host ""
-    Write-Host "Uploading \go.pdf \goUpdates.pdf \go.ps1 to the server at cyberaudittool.c1.biz port 221" -ForegroundColor Green
+    Write-Host "Uploading <go.pdf,goUpdates.pdf,go.ps1> to the server at cyberaudittool.c1.biz port 221" -ForegroundColor Green
     Write-Host "You will need to provide password for the specified user" -ForegroundColor Yellow
     Write-Host "Password hint: cat name + year !!!" -ForegroundColor blue
     Write-Host ""
     try {
         $SftpSess = New-SFTPSession -ComputerName cyberaudittool.c1.biz -Port 221 -Credential (Get-Credential 3347985_cyber) -Verbose
-        Set-SFTPFile -SessionId $SftpSess.SessionId -LocalFile "$PSScriptRoot\go.ps1" -RemotePath "/cyberaudittool.c1.biz/" -Overwrite
+        Set-SFTPFile -SessionId $SftpSess.SessionId -LocalFile "$PSScriptRoot\Downloads\go.ps1" -RemotePath "/cyberaudittool.c1.biz/" -Overwrite
         Set-SFTPFile -SessionId $SftpSess.SessionId -LocalFile "$PSScriptRoot\go.pdf" -RemotePath "/cyberaudittool.c1.biz/" -Overwrite
         Set-SFTPFile -SessionId $SftpSess.SessionId -LocalFile "$PSScriptRoot\goUpdate.pdf" -RemotePath "/cyberaudittool.c1.biz/" -Overwrite
     }
