@@ -101,11 +101,11 @@ if ((Test-Path "$PSScriptRoot\Downloads\go.pdf") -and (Test-Path "$PSScriptRoot\
     Write-Host ""
     Write-Host "Uploading <go.pdf,goUpdates.pdf,go.ps1> to the server at cyberaudittool.c1.biz port 221" -ForegroundColor Green
     Write-Host "You will need to provide password for the specified user" -ForegroundColor Yellow
-    Write-Host "Password hint: cat name + year !!!" -ForegroundColor blue
+    Write-Host "Password hint: simba..." -ForegroundColor blue
     Write-Host ""
     try {
         $SftpSess = New-SFTPSession -ComputerName cyberaudittool.c1.biz -Port 221 -Credential (Get-Credential 3347985_cyber) -Verbose
-        Set-SFTPFile -SessionId $SftpSess.SessionId -LocalFile "$PSScriptRoot\Downloads\go.ps1" -RemotePath "/cyberaudittool.c1.biz/" -Overwrite
+        #Set-SFTPFile -SessionId $SftpSess.SessionId -LocalFile "$PSScriptRoot\Downloads\go.ps1" -RemotePath "/cyberaudittool.c1.biz/" -Overwrite
         Set-SFTPFile -SessionId $SftpSess.SessionId -LocalFile "$PSScriptRoot\go.pdf" -RemotePath "/cyberaudittool.c1.biz/" -Overwrite
         Set-SFTPFile -SessionId $SftpSess.SessionId -LocalFile "$PSScriptRoot\goUpdate.pdf" -RemotePath "/cyberaudittool.c1.biz/" -Overwrite
     }
