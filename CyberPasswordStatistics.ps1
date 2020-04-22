@@ -13,25 +13,8 @@
 $Host.UI.RawUI.WindowTitle = "Cyber Audit Tool 2020 - Password Statistics"
 
 #Get-Process EXCEL | kill
-
 #kills any excel process with a file name "cyber" if running
-try {Import-Module ImportExcel.psd1} catch {throw ; return}
-
-try{
-    $c= Get-Process -Name EXCEL -ErrorAction SilentlyContinue | Select-Object -Property id,MainWindowTitle
-    foreach($a in $c) {
-        if($a.MainWindowTitle.Contains("Cyber")) 
-        {
-        kill $a.Id
-        }
-     }
- }
- catch
-     {
-        throw
-        return
-     } 
-
+KillApp("EXCEL","Cyber")
 
 $filesPath = $ACQ
 

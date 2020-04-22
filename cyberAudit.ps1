@@ -92,6 +92,7 @@ switch ($input)
             }
         read-host “Press ENTER to continue”
         }
+
      #Test Domain Connections and Configurations for audit
      2 {
         Cls
@@ -133,6 +134,7 @@ switch ($input)
         }
         read-host “Press ENTER to continue”
      }
+
      #NTDS and SYSTEM hive remote aquisition
      3 {
         cls
@@ -184,6 +186,7 @@ Write-Host $block -ForegroundColor Red
      read-host “Press ENTER to continue”
      $null = start-Process -PassThru explorer $ACQ
      }
+
      #Network
      4 {
         Cls
@@ -207,6 +210,7 @@ Write-Host $block -ForegroundColor Red
         read-host “Press ENTER to continue”
         $null = start-Process -PassThru explorer $ACQ
         }
+
      #PingCastle
      5 {
         Cls
@@ -216,6 +220,7 @@ Write-Host $block -ForegroundColor Red
         read-host “Press ENTER to continue”
         $null = start-Process -PassThru explorer $ACQ
         }
+
     #Testimo
     6 {
         Cls
@@ -225,6 +230,7 @@ Write-Host $block -ForegroundColor Red
         read-host “Press ENTER to continue”
         $null = start-Process -PassThru explorer $ACQ
      }
+
     #goddi
     7 {
         Cls
@@ -237,6 +243,7 @@ Write-Host $block -ForegroundColor Red
         read-host “Press ENTER to continue”
         $null = start-Process -PassThru explorer $ACQ
      }
+
      #GPO
      8 {
         cls
@@ -245,6 +252,7 @@ Write-Host $block -ForegroundColor Red
         read-host “Press ENTER to continue”
         $null = start-Process -PassThru explorer $ACQ
      }
+
      #Sharphound
      9 {
         cls
@@ -257,6 +265,7 @@ Write-Host $block -ForegroundColor Red
         read-host “Press ENTER to continue”
         $null = start-Process -PassThru explorer $ACQ
      }
+
      #HostEnum
      10 {
         cls
@@ -267,33 +276,48 @@ Write-Host $block -ForegroundColor Red
         read-host “Press ENTER to continue”
         $null = start-Process -PassThru explorer $ACQ
      }
+
      #Scuba
      11 {
         cls
         $ACQ = ACQ("Scuba")
         $help = @"
 
+        Scuba Database Vulnerability Scanner
+        ------------------------------------
+        - Scan enterprise databases for vulnerabilities and misconfigurations
+        - Know the risks to your databases
+        - Get recommendations on how to mitigate identified issues
   
-        Time zone issues when auditing mysql server, run this from DOS terminal on the server:
-        set @@global.time_zone=+00:00
-        set @@session.time_zone='+00:00
+        Note: Fix timezone issues when auditing mysql server,
+              run these 2 commands from DOS terminal on the DB server:
+              set @@global.time_zone=+00:00
+              set @@session.time_zone='+00:00
 
 "@
         write-host $help 
         $cmd = "Scuba"
         Invoke-Expression $cmd
-        $input = read-host “Wait untill auditing finished and Press [S] to Saver results (or Enter to continue without saving)”
-        if ($input -eq "S"){
-            $ScubaDir = scoop prefix scuba-windows
-            $DBServer = Select-String -Path "$ScubaDir\Scuba App\production\AssessmentResults.js"  -pattern "serverAddress"
-            $a = $dbserver -split ":"
-            $b = $a[4] -split "'"
-            write-host ($b[1]) -ForegroundColor Yellow
-            Compress-Archive -Path $appsDir\scuba-windows\current\Scuba App\* -DestinationPath $ACQ\$b[1].zip
-            #Move-Item -Path $appsDir\scuba-windows\current\Scuba App -Destination $ACQ -ErrorAction SilentlyContinue
-            $null = start-Process -PassThru explorer $ACQ
-        }
+        $input = read-host “Wait untill auditing finished and Press [Enter] to save report”
+        $ScubaDir = scoop prefix scuba-windows
+        if (Get-Item -Path "$ScubaDir\Scuba App\production\AssessmentResults.js" -ErrorAction SilentlyContinue)
+            {
+                $serverAddress = Select-String -Path "$ScubaDir\Scuba App\production\AssessmentResults.js"  -pattern "serverAddress"
+                $database = Select-String -Path "$ScubaDir\Scuba App\production\AssessmentResults.js"  -pattern "database"
+                $a = $serverAddress -split "'"
+                $b = $database -split "'"
+                $fname = ($a[3] -split ":")[0] + "(" +  $b[3] + ")"
+                Compress-Archive -Path "$appsDir\scuba-windows\current\Scuba App\" -DestinationPath "$ACQ\$fname.zip" -Force
+                $null = start-Process -PassThru explorer $ACQ
+            }
+            else
+            {
+                Write-Host "Could not find any Report, please check why and try again"
+            }            
+            read-host “Press ENTER to continue”
+            KillApp("javaw","Scuba")
      }
+
         #azscan
      12 {
         $ACQ = ACQ("azscan")
@@ -303,7 +327,6 @@ Write-Host $block -ForegroundColor Red
         The steps includes running the [AZOracle.sql] script on the Oracle DB which outputs
         a result file [OScan.fil] which needs to be imported back to the azscan tool which 
         will run the tests and prepare a report with the results of the audit
-
         
 "@
         Write-Host $help
@@ -325,6 +348,7 @@ Write-Host $block -ForegroundColor Red
         $cmd = "azscan3"
         Invoke-Expression $cmd
      }
+
     #Grouper2
      13 {
         cls

@@ -12,6 +12,25 @@
 
 Set-ExecutionPolicy -ExecutionPolicy Unrestricted
 
+#kill applications that runs under another process like excell document, java applications and more
+function killApp($ProcessName,$WindowTitle){
+    try{
+        $c = Get-Process -Name $ProcessName -ErrorAction SilentlyContinue | Select-Object -Property id,MainWindowTitle
+        foreach($a in $c) {
+            if($a.MainWindowTitle.Contains($WindowTitle)) 
+            {
+            kill $a.Id
+            }
+         }
+     }
+     catch
+         {
+            throw
+            return
+         }
+}
+
+
 function UniversalTimeStamp
 {
  return ((get-date).ToUniversalTime()).ToString("yyyyMMddThhmmssZ")
@@ -82,7 +101,7 @@ Function ACQ{
     Return $ACQdir.FullName
 }
 
-#Set GUI 
+#Set GUI
 $Host.UI.RawUI.BackgroundColor = ($bckgrnd = "Black")
 $Host.UI.RawUI.ForegroundColor = "White"
 $Host.UI.RawUI.WindowTitle = "Cyber Audit Tool 2020 - functions"
