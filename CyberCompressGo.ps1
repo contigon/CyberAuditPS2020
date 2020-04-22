@@ -91,12 +91,13 @@ Rename-Item -Path "$PSScriptRoot\Downloads\goUpdate.zip" -NewName "goUpdate.pdf"
 
 if ((Test-Path "$PSScriptRoot\Downloads\go.pdf") -and (Test-Path "$PSScriptRoot\Downloads\goUpdate.pdf") -and (Test-Path "$PSScriptRoot\Downloads\go.ps1")) {
     Write-Host "go.pdf and goUpdate.pdf files were created successfully" -ForegroundColor Green
-    Write-Host ""
-    
-    #Write-Host "Uploading $PSScriptRoot<go.pdf\goUpdates.pdf\go.ps1> to github contigon repo" -ForegroundColor Green
-    #git remote add go.pdf Downloads https://github.com/contigon/Downloads
-    #git commit -m "Uploading pdf files"
-    #git push Downloads master
+    Push-Location "$PSScriptRoot\Downloads"
+    git pull
+    Write-Host "Uploading <go.pdf\goUpdates.pdf\go.ps1> to github contigon\Downloads repo" -ForegroundColor Green
+    git add .
+    git commit -m "commiting from $env:USERNAME from $env:COMPUTERNAME"
+    git push
+    Pop-Location
 
     Write-Host ""
     Write-Host "Uploading <go.pdf,goUpdates.pdf,go.ps1> to the server at cyberaudittool.c1.biz port 221" -ForegroundColor Green
@@ -104,6 +105,7 @@ if ((Test-Path "$PSScriptRoot\Downloads\go.pdf") -and (Test-Path "$PSScriptRoot\
     Write-Host "Password hint: simba..." -ForegroundColor blue
     Write-Host ""
     try {
+        Get-SFTPSession | ForEach {Remove-SFTPSession $_.SessionId}
         $SftpSess = New-SFTPSession -ComputerName cyberaudittool.c1.biz -Port 221 -Credential (Get-Credential 3347985_cyber) -Verbose
         Set-SFTPFile -SessionId $SftpSess.SessionId -LocalFile "$PSScriptRoot\Downloads\go.ps1" -RemotePath "/cyberaudittool.c1.biz/" -Overwrite
         Set-SFTPFile -SessionId $SftpSess.SessionId -LocalFile "$PSScriptRoot\go.pdf" -RemotePath "/cyberaudittool.c1.biz/" -Overwrite
