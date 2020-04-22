@@ -71,12 +71,9 @@ $compressUpdates = @{
   DestinationPath = "$PSScriptRoot\goUpdate.zip"
 }
 
-
-$a = ($compressUpdates['path'] -join ",").Replace("$PSScriptRoot\","")
-git add $a
-git commit -m "auto commit from powershell script"
+foreach ($f in $compressUpdates.Path){git add $f}
+git commit -m "commited by $env:USERNAME from $env:COMPUTERNAME"
 git push
-
 
 $c = $compress['path']
 Write-Host "Files ($c) will be compressed now" -ForegroundColor Green
@@ -94,10 +91,10 @@ if ((Test-Path "$PSScriptRoot\go.pdf") -and (Test-Path "$PSScriptRoot\goUpdate.p
     Write-Host "go.pdf and goUpdate.pdf files were created successfully" -ForegroundColor Green
     Write-Host ""
     
-    #Write-Host "Uploading $PSScriptRoot \go.pdf \goUpdates.pdf \go.ps1 to github contigon repo" -ForegroundColor Green
-    #git add go.pdf,goUpdate.pdf,go.ps1
-    #git commit -m "Uploading pdf files"
-    #git push
+    Write-Host "Uploading $PSScriptRoot \go.pdf \goUpdates.pdf \go.ps1 to github contigon repo" -ForegroundColor Green
+    git remote add go.pdf,goUpdate.pdf,go.ps1 Downloads https://github.com/contigon/Downloads
+    git commit -m "Uploading pdf files"
+    git push Downloads master
 
     Write-Host ""
     Write-Host "Uploading \go.pdf \goUpdates.pdf \go.ps1 to the server at cyberaudittool.c1.biz port 221" -ForegroundColor Green
