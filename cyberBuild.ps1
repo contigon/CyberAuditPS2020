@@ -338,15 +338,15 @@ switch ($input)
      #Update scoop, Powershell and applications
      9 {
         $menuColor[9] = "Yellow"
-        
         Write-Host "Updating the core CyberAuditTool scripts"
-        $zipURLB = "http://cyberaudittool.c1.biz/$FileNamef"
-        $zipURLA = "https://raw.githubusercontent.com/contigon/Downloads/master/$FileName"
         $FileName = "goUpdate.pdf"
+        $zipURLB = "http://cyberaudittool.c1.biz/$FileName"
+        $zipURLA = "https://raw.githubusercontent.com/contigon/Downloads/master/$FileName"
         $FilesToUpdate = (
           "cyberAnalysers.ps1",
           "cyberAudit.ps1",
           "cyberBuild.ps1",
+          "cyberAttack.ps1",
           "CyberCollectNetworkConfig.ps1",
           "CyberCompressGo.ps1",
           "CyberCompressGoUpdate.ps1",
