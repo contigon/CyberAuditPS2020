@@ -60,7 +60,6 @@ function appDir ($appName){
     Return $c
 }
 
-
 function YesNo ($FirstName, $LastName) {
     $d = [Windows.Forms.MessageBox]::show($FirstName,$LastName,[Windows.Forms.MessageBoxButtons]::YesNo, [Windows.Forms.MessageBoxIcon]::Question)
     If ($d -eq [Windows.Forms.DialogResult]::Yes)
@@ -72,7 +71,6 @@ function YesNo ($FirstName, $LastName) {
         return $false
     }
 }
-
 
 #Set Acquisition folders
 $AcqBaseFolder = New-Item -Path $PSScriptRoot -Name $env:computername -ItemType "directory" -Force
