@@ -353,7 +353,6 @@ switch ($input)
           "CyberCreateRunecastRole.ps1",
           "CyberFunctions.ps1",
           "CyberLicenses.ps1",
-          "CyberMenu.ps1",
           "CyberPasswordStatistics.ps1",
           "CyberPingCastle.ps1",
           "CyberAuditDevelopersHelp.txt",
