@@ -76,9 +76,11 @@ function YesNo ($FirstName, $LastName) {
 
 #Set Acquisition folders
 $AcqBaseFolder = New-Item -Path $PSScriptRoot -Name $env:computername -ItemType "directory" -Force
+
 Function ACQ{
     Param ($dir)
-    $ACQdir = New-Item -Path $AcqBaseFolder.Name -Name $dir -ItemType "directory" -Force
+    $ACQdir = New-Item -Path $AcqBaseFolder -Name $dir -ItemType "directory" -Force
+    Write-Host "$dir Aquisition folder is: $ACQdir" -ForegroundColor Yellow
     Return $ACQdir.FullName
 }
 

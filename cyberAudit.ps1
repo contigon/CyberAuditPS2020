@@ -32,6 +32,8 @@ Write-Host "********************************************************************
 Write-Host ""
 Write-Host "     Audit Data Collection:                                                        " -ForegroundColor White
 Write-Host ""
+Write-Host "     Data collecting folder is: $AcqBaseFolder                                     " -ForegroundColor yellow
+Write-Host ""
 Write-Host "     1. Domain		| Join/Disconnect machine to/from a Domain                     " -ForegroundColor White
 Write-Host "     2. Test		| Test Domain Connections and Configurations for audit         " -ForegroundColor White
 Write-Host "     3. NTDS		| Remote aquire ntds/SYSTEM                                    " -ForegroundColor White
@@ -56,6 +58,21 @@ switch ($input)
      { 
      1 {
         Cls
+        $help = @"
+
+        Join/Disconnect machine to/from a Domain
+        ----------------------------------------
+        
+        In order for the audit tools to collect all information required,
+        you need that the machine to the Domain of your network.
+         
+        This script will help you Join/Disconnect the machine to/from a Domain.
+
+        In order for this script to success you need to have domain administrative permissions.
+                
+"@
+        Write-Host $help
+        Write-Host "Checking if there are any network connections open, and deleting them"
         net use * /delete
         $choose = Read-Host "Press J to join or D to disconnect (Enter to continue)"
         if ($choose -eq "J"){
@@ -78,6 +95,24 @@ switch ($input)
      #Test Domain Connections and Configurations for audit
      2 {
         Cls
+        $help = @"
+
+        Test Domain Connections and Configuration
+        -----------------------------------------
+
+        In order for the audit tools to collect all information required,
+        you need to be able to connect to the domain controllers and be able
+        to execute remote commands on remote computers.
+         
+        This script will help you test connections and enable powershell remoting.
+
+        In order for this script to success you need to have domain administrative permissions.
+
+        If the script failes conncting to remote machines you will be able to enable remote 
+        connections using a special tool called SolarWinds Remote Execution Enabler.
+                
+"@
+        Write-Host $help
         write-host local Computer Name:  $env:COMPUTERNAME
         Write-Host User domain is: $env:USERDOMAIN
         Write-Host Dns domain is: $env:USERDNSDOMAIN
@@ -101,6 +136,21 @@ switch ($input)
      #NTDS and SYSTEM hive remote aquisition
      3 {
         cls
+        $help = @"
+
+        NTDS and SYSTEM hive remote aquisition
+        --------------------------------------
+        
+        This script will try to connect to $DC Domain controller and create a remote backup of the
+        ntds.dit database and SYSTEM hive, and then copies the files to the aquisition folder.
+
+        In order for this script to success you need to have domain administrative permissions.
+
+        Note: This script supports AD running on Windows Servers 2012 and up,
+              on windows 2003/2008 we will show manual instructions. 
+                
+"@
+        Write-Host $help
         $ACQ = ACQ("NTDS")
         $winVer = Invoke-Command -ComputerName $DC -ScriptBlock {(Get-WmiObject -class Win32_OperatingSystem).Caption} -credential $cred
         if($winVer.contains("2003") -or $winVer.contains("2008")) 
@@ -137,6 +187,20 @@ Write-Host $block -ForegroundColor Red
      #Network
      4 {
         Cls
+        $help = @"
+
+        Join/Disconnect machine to/from a Domain
+        ----------------------------------------
+        
+        In order for the audit tools to collect all information required,
+        you need that the machine to the Domain of your network.
+         
+        This script will help you Join/Disconnect the machine to/from a Domain.
+
+        In order for this script to success you need to have a user with root SSH permissions.
+                
+"@
+        Write-Host $help
         $ACQ = ACQ("Network")
         $ScriptToRun = $PSScriptRoot+"\CyberCollectNetworkConfig.ps1"
         &$ScriptToRun
@@ -164,11 +228,12 @@ Write-Host $block -ForegroundColor Red
     #goddi
     7 {
         Cls
-        $ACQ = ACQ("goddi")
+        $ACQ = ACQ("goddi")        
+        Write-Host "You are running as user: $env:USERDNSDOMAIN\$env:USERNAME"
         $securePwd = Read-Host "Input a Domain Admin password" -AsSecureString
         $Pwd =[Runtime.InteropServices.Marshal]::PtrToStringAuto([Runtime.InteropServices.Marshal]::SecureStringToBSTR($securePwd))
         goddi-windows-amd64.exe -username $env:USERNAME -password $Pwd -domain $env:USERDNSDOMAIN -dc $DC -unsafe
-        Move-Item -Path $appsDir\goddi\current\csv\* -Destination $ACQ
+        Move-Item -Path $appsDir\goddi\current\csv\* -Destination $ACQ -Force
         read-host “Press ENTER to continue”
         $null = start-Process -PassThru explorer $ACQ
      }

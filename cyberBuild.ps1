@@ -27,10 +27,15 @@ $DownloadsDir = New-Item -Path $Tools -Name "\Downloads" -ItemType "directory" -
 
 #Powershell Modules, Utilities and Applications that needs to be installed
 $PSGModules = @("Testimo","VMware.PowerCLI","ImportExcel","Posh-SSH")
-$utilities = @("Net_Framework_Installed_Versions_Getter","oraclejdk","putty","winscp","nmap","rclone","everything","notepadplusplus","googlechrome","firefox","foxit-reader","irfanview","grepwin","sysinternals","wireshark")
+$utilities = @("dotnet-sdk","Net_Framework_Installed_Versions_Getter","oraclejdk","putty","winscp","nmap","rclone","everything","notepadplusplus","googlechrome","firefox","foxit-reader","irfanview","grepwin","sysinternals","wireshark")
 $CollectorApps = @("ntdsaudit","RemoteExecutionEnablerforPowerShell","PingCastle","goddi","SharpHound","Red-Team-Scripts","Scuba-Windows","azscan3","LGPO","grouper2","Outflank-Dumpert")
+<<<<<<< HEAD
 $AnalyzerApps = @("PolicyAnalyzer","BloodHoundExampleDB","BloodHoundAD","neo4j","ophcrack","vista_proba_free")
 $GPOBaselines = @("Windows10Version1507SecurityBaseline","Windows10Version1511SecurityBaseline","Windows10Version1607andWindowsServer2016SecurityBaseline","Windows10Version1703SecurityBaseline","Windows10Version1709SecurityBaseline","Windows10Version1803SecurityBaseline","Windows10Version1809andWindowsServer2019SecurityBaseline","W10V1903WinSerV1903SecBase","W10V1909WinSerV1909SecBaseline","WindowsServer2012R2SecurityBaseline")
+=======
+$AnalyzerApps = @("PolicyAnalyzer","BloodHoundExampleDB","BloodHoundAD","neo4j","ophcrack","vista_proba_free","AppInspector")
+$GPOBaselines = @("Windows10Version1507SecurityBaseline.json","Windows10Version1511SecurityBaseline.json","Windows10Version1607andWindowsServer2016SecurityBaseline.json","Windows10Version1703SecurityBaseline.json","Windows10Version1709SecurityBaseline.json","Windows10Version1803SecurityBaseline.json","Windows10Version1809andWindowsServer2019SecurityBaseline.json","Windows10Version1903andWindowsServerVersion1903SecurityBaseline-Sept2019Update.json","Windows10Version1909andWindowsServerVersion1909SecurityBaseline.json","WindowsServer2012R2SecurityBaseline.json")
+>>>>>>> c75a026ba0010f8953d922c7b416375591cc8ffe
 $AttackApps = @("nirlauncher", "ruler")
 
 #Creating desktop shortcuts
@@ -40,6 +45,7 @@ if ((Test-Path -Path "C:\Users\Public\Desktop\Build.lnk","C:\Users\Public\Deskto
     $null = CreateShortcut -name "Build" -Target "$env:windir\System32\WindowsPowerShell\v1.0\powershell.exe" -Arguments "-ExecutionPolicy Unrestricted -File $PSScriptroot\cyberBuild.ps1" -OutputDirectory "C:\Users\Public\Desktop" -IconLocation "$PSScriptroot\CyberBlackIcon.ico" -Description "CyberAuditTool Powershell Edition" -Elevated True
     $null = CreateShortcut -name "Audit" -Target "$env:windir\System32\WindowsPowerShell\v1.0\powershell.exe" -Arguments "-ExecutionPolicy Unrestricted -File $PSScriptroot\CyberAudit.ps1" -OutputDirectory "C:\Users\Public\Desktop" -IconLocation "$PSScriptroot\CyberRedIcon.ico" -Description "CyberAuditTool Powershell Edition" -Elevated True
     $null = CreateShortcut -name "Analyze" -Target "$env:windir\System32\WindowsPowerShell\v1.0\powershell.exe" -Arguments "-ExecutionPolicy Unrestricted -File $PSScriptroot\cyberAnalyzers.ps1" -OutputDirectory "C:\Users\Public\Desktop" -IconLocation "$PSScriptroot\CyberGreenIcon.ico" -Description "CyberAuditTool Powershell Edition" -Elevated True
+    $null = CreateShortcut -name "Attack" -Target "$env:windir\System32\WindowsPowerShell\v1.0\powershell.exe" -Arguments "-ExecutionPolicy Unrestricted -File $PSScriptroot\cyberAttack.ps1" -OutputDirectory "C:\Users\Public\Desktop" -IconLocation "$PSScriptroot\CyberYellowIcon.ico" -Description "CyberAuditTool Powershell Edition" -Elevated True
 }
 
 read-host “Press ENTER to continue (or Ctrl+C to quit)”
@@ -62,7 +68,9 @@ Write-Host "********************************************************************
 Write-Host "*** Cyber Audit Tool (Powershell Edition) - ISRAEL CYBER DIRECTORATE ***          " -ForegroundColor White
 Write-Host "************************************************************************          " -ForegroundColor White
 Write-Host ""
-Write-Host "     Build The Application:                                                       " -ForegroundColor White
+Write-Host "     install OS minimal requirements and Applications:                            " -ForegroundColor White
+Write-Host ""
+Write-Host "     Baseline folder is $PSScriptroot                                             " -ForegroundColor yellow
 Write-Host ""
 Write-Host "     1. OS		| Check Windows version and upgrade it to latest build and update " -ForegroundColor $menuColor[1]
 Write-Host "     2. PS and .Net	| Check and Update Powershell and .Net framework versions     " -ForegroundColor $menuColor[2]
@@ -126,6 +134,10 @@ switch ($input)
         $menuColor[2] = "Yellow"
         CheckPowershell
         CheckDotNet
+        Write-Host "Downloading and installing .NET Core 3.1 SDK (v3.1.201) Windows x64"
+        Invoke-WebRequest -Uri "https://download.visualstudio.microsoft.com/download/pr/56131147-65ea-47d6-a945-b0296c86e510/44b43b7cb27d55081e650b9a4188a419/dotnet-sdk-3.1.201-win-x64.exe" -OutFile "$PSScriptRoot\Downloads\dotnet-sdk-3.1.201-win-x64.exe"
+
+
       read-host “Press ENTER to continue”
       }
     
@@ -311,6 +323,20 @@ switch ($input)
 
             }
         }
+
+        Write-Host "Installing Microtosft AppInspector tool"
+        if ((dotnet --version) -ge "3.1.200")
+        {
+            $a = appdir("appinspector")
+            Set-Location $a
+            $cmd = "dotnet.exe tool install --global Microsoft.CST.ApplicationInspector.CLI"
+            Invoke-Expression $cmd
+            Pop-Location            
+        }
+        else
+        {
+            Write-Host "[Failed] You dont have .Net core SDK installed, Please install and try again" -ForegroundColor Red
+        }
      read-host “Press ENTER to continue” 
      }
      
@@ -385,6 +411,12 @@ switch ($input)
      
      #Uninstal scoop utilities, applications and scoop itself
     11 {
+        $a = appdir("appinspector")
+        Set-Location $a
+        $cmd = "dotnet.exe tool uninstall --global Microsoft.CST.ApplicationInspector.CLI"
+        Invoke-Expression $cmd
+        Pop-Location           
+
         (Get-ChildItem $bucketsDir\CyberAuditBucket -Filter *.json).BaseName|ForEach-Object {scoop uninstall $_ -g}
         foreach ($utility in $utilities)
         {
