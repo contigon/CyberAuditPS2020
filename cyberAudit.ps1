@@ -283,7 +283,7 @@ Write-Host $block -ForegroundColor Red
         $cmd = "Scuba"
         Invoke-Expression $cmd
         $input = read-host “Wait untill auditing finished and Press [S] to Saver results (or Enter to continue without saving)”
-        if (
+        if ($input -eq "S"){
             $ScubaDir = scoop prefix scuba-windows
             $DBServer = Select-String -Path "$ScubaDir\Scuba App\production\AssessmentResults.js"  -pattern "serverAddress"
             $a = $dbserver -split ":"
@@ -292,6 +292,7 @@ Write-Host $block -ForegroundColor Red
             Compress-Archive -Path $appsDir\scuba-windows\current\Scuba App\* -DestinationPath $ACQ\$b[1].zip
             #Move-Item -Path $appsDir\scuba-windows\current\Scuba App -Destination $ACQ -ErrorAction SilentlyContinue
             $null = start-Process -PassThru explorer $ACQ
+        }
      }
         #azscan
      12 {
