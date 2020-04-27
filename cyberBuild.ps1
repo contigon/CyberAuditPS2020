@@ -58,7 +58,6 @@ cls
 $menuColor  = New-Object System.Collections.ArrayList
 for ($i = 1; $i -lt 12;$i++) {
         $null = $menuColor.Add("White")
-
     }
 
 
@@ -146,8 +145,6 @@ switch ($input)
         CheckDotNet
         Write-Host "Downloading and installing .NET Core 3.1 SDK (v3.1.201) Windows x64"
         Invoke-WebRequest -Uri "https://download.visualstudio.microsoft.com/download/pr/56131147-65ea-47d6-a945-b0296c86e510/44b43b7cb27d55081e650b9a4188a419/dotnet-sdk-3.1.201-win-x64.exe" -OutFile "$PSScriptRoot\Downloads\dotnet-sdk-3.1.201-win-x64.exe"
-
-
       read-host “Press ENTER to continue”
       }
     

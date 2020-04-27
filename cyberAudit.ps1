@@ -21,6 +21,27 @@ $Host.UI.RawUI.WindowTitle = "Cyber Audit Tool 2020 - Audit"
 
 start-Transcript -path $AcqBaseFolder\CyberAuditPhase.Log -Force -append
 
+#SET Domain controller name
+$i=0
+$DC = ($env:LOGONSERVER).TrimStart("\\")
+$DClist = Get-ADDomainController -filter * | select hostname, operatingsystem
+foreach ($dcontroller in $DClist) {$i++;$a = $dcontroller.hostname;$os = $dcontroller.operatingsystem ;if (($OS -match "2003") -or $OS -match "2008") {Write-Host "Domain Controller $i => $a ($OS)" -ForegroundColor red} else {Write-Host "Domain Controller $i => $a ($OS)" -ForegroundColor green}}
+if ($i -gt 1) 
+{
+    Write-Host "You are currently logged on to domain controller $DC"
+    Write-Host "Some scripts will not operate automatically on Windows 2003/2008 Doman Controllers"
+    $dcName = Read-Host "Input a different Domain Controller name to connect to (or Enter to continue using $DC)"
+    if ($dcName -ne "") 
+    {
+        $c = nltest /Server:$env:COMPUTERNAME /SC_RESET:$env:USERDNSDOMAIN\$dcName
+        if ($c.Contains("The command completed successfully"))
+        {
+            $DC = $dcName
+            success "Domain controller was changed to $DC"
+         }
+    }
+}
+
 cls
 
 do {
@@ -32,7 +53,8 @@ Write-Host "********************************************************************
 Write-Host ""
 Write-Host "     Audit Data Collection:                                                        " -ForegroundColor White
 Write-Host ""
-Write-Host "     Data collecting folder is: $AcqBaseFolder                                     " -ForegroundColor yellow
+Write-Host "     Domain Controller: $DC                                                        " -ForegroundColor yellow
+Write-Host "     Aquisition folder: $AcqBaseFolder                                             " -ForegroundColor yellow
 Write-Host ""
 Write-Host "     1. Domain		| Join/Disconnect machine to/from a Domain                     " -ForegroundColor White
 Write-Host "     2. Test		| Test Domain Connections and Configurations for audit         " -ForegroundColor White
@@ -78,7 +100,7 @@ switch ($input)
         if (CheckMachineRole)
         {
              Write-Host "Your machine is part of $env:USERDNSDOMAIN"
-             if (Test-ComputerSecureChannel)
+             if (Test-ComputerSecureChannel -Server $DC)
              {
                 Write-Host "[Success] Connected to domain server $DC using secure channel" -ForegroundColor Green
              }

@@ -108,9 +108,6 @@ function dl($url,$to) {
     $wc.downloadFile($url,$to)
 }
 
-#SET Domain controller name
-$DC = ($env:LOGONSERVER).TrimStart("\\")
-
 #Set Script directory tree variables
 $Tools = "$PSScriptRoot\Tools"
 $scoopDir = "$Tools\Scoop"
