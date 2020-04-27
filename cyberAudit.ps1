@@ -49,6 +49,7 @@ Write-Host "    12. azscan		| Oracle,Unix-Linux,iSeries,AS400-OS400,HP-Alpha,Vax
 Write-Host "    13. Grouper2 	| Find ActiveDirectory GPO security-related misconfigurations  " -ForegroundColor White
 Write-Host "    14. Dumpert	 	| LSASS memory dumper for offline extraction of credentials    " -ForegroundColor White
 Write-Host "    15. Runecast	| Security Hardening checks of VMWARE vSphere/NSX/cloud        " -ForegroundColor White
+Write-Host "    16. Misc    	| collection of scripts that checks miscofigurations or vulns" -ForegroundColor White
 Write-Host ""
 Write-Host "    99. Quit                                                                       " -ForegroundColor White
 Write-Host ""
@@ -68,30 +69,45 @@ switch ($input)
          
         This script will help you Join/Disconnect the machine to/from a Domain.
 
-        In order for this script to success you need to have domain administrative permissions.
+        In order for this script to succeed you need to have domain administrative permissions.
                 
 "@
         Write-Host $help
         Write-Host "Checking if there are any network connections open, and deleting them"
         net use * /delete
-        $choose = Read-Host "Press J to join or D to disconnect (Enter to continue)"
-        if ($choose -eq "J"){
-        $domain = Read-Host -Prompt "Enter Domain name to join the machine to"
-        $username = read-host -Prompt "Enter an admin user name which have enough permissions"
-        $password = Read-Host -Prompt "Enter password for $user" -AsSecureString
-        $username = $domain+"\"+$username
-        $credential = New-Object System.Management.Automation.PSCredential($username,$password)
-        Add-Computer -DomainName $domain -Credential $credential
-            }
-        if ($choose -eq "D"){
-        Remove-Computer -PassThru -Verbose
-            }
-        $restart = read-host "Press R to restart the computer in order for the settings to take effect (Enter to continue without restarting)"
-        if ($restart -eq "R"){
-            shutdown /r /f /c "Rebooting computer afer Domain joining or unjoining"
-            }
-        read-host “Press ENTER to continue”
+        if (CheckMachineRole)
+        {
+             Write-Host "Your machine is part of $env:USERDNSDOMAIN"
+             if (Test-ComputerSecureChannel)
+             {
+                Write-Host "[Success] Connected to domain server $DC using secure channel" -ForegroundColor Green
+             }
+             else
+             {
+                Write-Host "[Failure] Domain could not be contacted" -ForegroundColor Red
+               $choose = Write-Host "Press [D] to disconnect from $env:USERDNSDOMAIN domain"
+               if ($choose -eq "D")
+               {
+                Remove-Computer -PassThru -Verbose
+                }
+             }
         }
+        else
+        {
+            $domain = Read-Host -Prompt "Enter Domain name to join the machine to"
+            $username = read-host -Prompt "Enter an admin user name which have enough permissions"
+            $password = Read-Host -Prompt "Enter password for $user" -AsSecureString
+            $username = $domain+"\"+$username
+            $credential = New-Object System.Management.Automation.PSCredential($username,$password)
+            Add-Computer -DomainName $domain -Credential $credential
+        }
+
+        $restart = read-host "Press [R] to restart machine in order for settings to take effect (Enter to continue)"
+        if ($restart -eq "R")
+        {
+            shutdown /r /f /c "Rebooting computer afer Domain joining or disconnecting"
+        }
+    }
 
      #Test Domain Connections and Configurations for audit
      2 {
@@ -107,7 +123,7 @@ switch ($input)
          
         This script will help you test connections and enable powershell remoting.
 
-        In order for this script to success you need to have domain administrative permissions.
+        In order for this script to succeed you need to have domain administrative permissions.
 
         If the script failes conncting to remote machines you will be able to enable remote 
         connections using a special tool called SolarWinds Remote Execution Enabler.
@@ -146,7 +162,7 @@ switch ($input)
         This script will try to connect to $DC Domain controller and create a remote backup of the
         ntds.dit database and SYSTEM hive, and then copies the files to the aquisition folder.
 
-        In order for this script to success you need to have domain administrative permissions.
+        In order for this script to succeed you need to have domain administrative permissions.
 
         Note: This script supports AD running on Windows Servers 2012 and up,
               on windows 2003/2008 we will show manual instructions. 
@@ -195,12 +211,25 @@ Write-Host $block -ForegroundColor Red
         Join/Disconnect machine to/from a Domain
         ----------------------------------------
         
-        In order for the audit tools to collect all information required,
-        you need that the machine to the Domain of your network.
-         
-        This script will help you Join/Disconnect the machine to/from a Domain.
+        This script collects configuration and routing tables from network devices.
 
-        In order for this script to success you need to have a user with root SSH permissions.
+        Devices supported: 
+        - CISCO (IOS/ASA)
+        - HP
+        - H3C
+        - Juniper
+        - Enterasys
+        - Fortigate
+
+        You will need to fill an excell file with all the required details:
+        - IP Address
+		- SSH Port
+        - User Name
+        - Password
+        - Vendor
+     
+        In order for this script to succeed you need to have a user with root SSH permissions
+        on the network devices.
                 
 "@
         Write-Host $help
@@ -214,6 +243,20 @@ Write-Host $block -ForegroundColor Red
      #PingCastle
      5 {
         Cls
+        $help = @"
+
+        PIngCastle
+        ----------
+        
+        Active Directory Security Maturity Self-Assessment, based on CMMI 
+        (Carnegie Mellon university 5 maturity steps) where each step has 
+        been adapted to the specificity of Active Directory. 
+
+        In order for this script to succeed you need to have a user with 
+        Domain Admin permissions.
+                
+"@
+        Write-Host $help
         $ACQ = ACQ("PingCastle")
         $ScriptToRun = $PSScriptRoot+"\CyberPingCastle.ps1"
         &$ScriptToRun
@@ -224,16 +267,69 @@ Write-Host $block -ForegroundColor Red
     #Testimo
     6 {
         Cls
+        $help = @"
+
+        Testimo
+        -------
+        
+        PowerShell module for running health checks for Active Directory 
+        (and later on any other server type) against a bunch of different tests.
+
+        Tests are based on:
+        - Active Directory CheckList
+        - AD Health & Checkup
+        - Best Practices
+
+        In order for this script to succeed you need to have a user with 
+        Domain Admin permissions.
+                
+"@
+        Write-Host $help
         $ACQ = ACQ("Testimo")
-        import-module activedirectory ; Get-ADDomainController -Filter * | Select Name, ipv4Address, OperatingSystem, site | Sort-Object -Property Name
-        Invoke-Testimo  -ExcludeSources DCDiagnostics -ReportPath $ACQ\Testimo.html
+        if (checkRsat) 
+        {
+            import-module activedirectory ; Get-ADDomainController -Filter * | Select Name, ipv4Address, OperatingSystem, site | Sort-Object -Property Name
+            Invoke-Testimo  -ExcludeSources DCDiagnostics -ReportPath $ACQ\Testimo.html
+            $null = start-Process -PassThru explorer $ACQ
+        }
         read-host “Press ENTER to continue”
-        $null = start-Process -PassThru explorer $ACQ
      }
 
     #goddi
     7 {
         Cls
+        $help = @"
+
+        goddi
+        -----
+        
+        goddi (go dump domain info) dumps Active Directory domain information.
+
+        Functionality:
+        - Extract Domain users
+        - Users in priveleged user groups (DA, EA, FA)
+        - Users with passwords not set to expire
+        - User accounts that have been locked or disabled
+        - Machine accounts with passwords older than 45 days
+        - Domain Computers
+        - Domain Controllers
+        - Sites and Subnets
+        - SPNs and includes csv flag if domain admin
+        - Trusted domain relationships
+        - Domain Groups
+        - Domain OUs
+        - Domain Account Policy
+        - Domain deligation users
+        - Domain GPOs
+        - Domain FSMO roles
+        - LAPS passwords
+        - GPP passwords. On Windows
+
+        In order for this script to succeed you need to have a user with 
+        Domain Admin permissions.
+                
+"@
+        Write-Host $help
         $ACQ = ACQ("goddi")        
         Write-Host "You are running as user: $env:USERDNSDOMAIN\$env:USERNAME"
         $securePwd = Read-Host "Input a Domain Admin password" -AsSecureString
@@ -247,6 +343,18 @@ Write-Host $block -ForegroundColor Red
      #GPO
      8 {
         cls
+        $help = @"
+
+        GPO
+        ---
+        
+        Backs up all the GPOs in a domain.
+
+        In order for this script to succeed you need to have a user with 
+        Domain Admin permissions.
+                
+"@
+        Write-Host $help
         $ACQ = ACQ("GPO")
         Backup-GPO -All -Path $ACQ
         read-host “Press ENTER to continue”
@@ -256,6 +364,36 @@ Write-Host $block -ForegroundColor Red
      #Sharphound
      9 {
         cls
+        $help = @"
+
+        Sharphound
+        ----------
+        
+        Data Collector for the BloodHound Project
+
+        Sharphound must be run from the context of a domain user, either directly 
+        through a logon or through another method such as RUNAS.
+
+        CollectionMethod :
+        - Default - group membership, domain trust, local group, session, ACL, object property and SPN target collection
+        - Group - group membership collection
+        - LocalAdmin - local admin collection
+        - RDP - Remote Desktop Users collection
+        - DCOM - Distributed COM Users collection
+        - PSRemote - Remote Management Users collection
+        - GPOLocalGroup - local admin collection using Group Policy Objects
+        - Session - session collection
+        - ComputerOnly - local admin, RDP, DCOM and session collection
+        - LoggedOn - privileged session collection (requires admin rights on target systems)
+        - Trusts - domain trust enumeration
+        - ACL - collection of ACLs
+        - Container - collection of Containers
+
+        In order for this script to succeed you need to have a user with 
+        Domain Admin permissions.
+                
+"@
+        Write-Host $help
         $ACQ = ACQ("Sharphound")
         Import-Module $appsDir\sharphound\current\SharpHound.ps1
         Invoke-BloodHound -CollectionMethod All,GPOLocalGroup,LoggedOn -OutputDirectory $ACQ
@@ -269,6 +407,31 @@ Write-Host $block -ForegroundColor Red
      #HostEnum
      10 {
         cls
+        $help = @"
+
+        HostEnum
+        -------
+        
+        A collection of Red Team focused powershell script to collect data during assesment.
+
+        Enumerated Information:
+
+        - OS Details, Hostname, Uptime, Installdate
+        - Installed Applications and Patches
+        - Network Adapter Configuration, Network Shares, Connections, Routing Table, DNS Cache
+        - Running Processes and Installed Services
+        - Interesting Registry Entries
+        - Local Users, Groups, Administrators
+        - Personal Security Product Status
+        - Interesting file locations and keyword searches via file indexing
+        - Interesting Windows Logs (User logins)
+        - Basic Domain enumeration (users, groups, trusts, domain controllers, account policy, SPNs)
+
+        In order for this script to succeed you need to have a user with 
+        Domain Admin permissions.
+                
+"@
+        Write-Host $help
         $ACQ = ACQ("HostEnum")
         Import-Module $appsDir\red-team-scripts\current\HostEnum.ps1
         Invoke-HostEnum -ALL -HTMLReport -Verbose
@@ -352,6 +515,18 @@ Write-Host $block -ForegroundColor Red
     #Grouper2
      13 {
         cls
+        $help = @"
+
+        Grouper2
+        -------
+        
+        Help find security-related misconfigurations in Active Directory Group Policy.
+
+        In order for this script to succeed you need to have a user with 
+        Domain Admin permissions.
+                
+"@
+        Write-Host $help
         $ACQ = ACQ("grouper2")
         $cmd = "grouper2.exe -g"
         Invoke-Expression $cmd
@@ -363,9 +538,22 @@ Write-Host $block -ForegroundColor Red
         #Dumpert
      14 {
         cls
+        $help = @"
+
+        Dumpert
+        -------
+        
+        Outflank Dumpert is an LSASS memory dumper using direct system calls and API unhooking.
+
+        offline Decrypt the users NTLM hashes from Memdump using mimikatz.
+
+        https://outflank.nl/blog/2019/06/19/red-team-tactics-combining-direct-system-calls-and-srdi-to-bypass-av-edr/
+
+        Please use with care and do not execute on critical servers or Virtual machines !!!
+                
+"@
+        Write-Host $help
         $ACQ = ACQ("Dumpert")
-        Write-Host "This will help dumping memory and later this can be used to decrypt tha users NTLM hashes offline"
-        Write-Host "Please use with care and do not execute on critical servers or Virtual machines !!!" -ForegroundColor Red
         $target = Read-Host "Input the Name or IP address of the windows machine you want to run this tool"
         $cmd = "Outflank-Dumpert.exe"
         Copy-Item -Path $appsDir\Outflank-Dumpert\current\Outflank-Dumpert.exe -Destination \\$target\c$\Windows\temp -Recurse -Force
@@ -380,28 +568,37 @@ Write-Host $block -ForegroundColor Red
         $ACQ = ACQ("Runecast")
         $help = @"
 
-linux: rcadmin/admin
+        runecast Analyzer 
+        -----------------
 
-web:   rcuser/Runecast!
+        Automates checks of infrastructure against Knowledge Base articles, Best Practices, HCL, and security standards.
+        
+        Supported platforms:
+        - VMware vSphere/vSAN/NSX/Horizon
+        - Amazon Web Services IAM/EC2/VPC/S3
 
-licence: You need to assign the runecast 14 days licence after connecting to the vsphere servers
+        linux login: rcadmin/admin
 
-Creating User in the vCenter and assigning the [Runecast] role:
----------------------------------------------------------------
-1 - Automatically or Manually run the powershell script (https://github.com/Runecast/public/blob/master/PowerCLI/createRunecastRole.ps1)
-2 - Log to the vCenter web interface (with user such as administrator@$env:USERDNSDOMAIN)"
-3 - Single Sign On --> Users and Groups --> Add User --> (Create New user for Runecast Analyzer)
-4 - Access Control --> Global Permissions --> Add Permission
-5 - search for the user created in step 2 and assign the [Runecast] role 
+        web login:   rcuser/Runecast!
 
-[Optional] Syslog analysis !!! Be carefull as this can affect the server performance !!!
--------------------------------------------------------------------------------------
-1 - ESXi Log Forwarding by clicking the help ring icon located to the right-hand side of the Host syslog settings section
-in the Log Analysis tab, expand the section and click to download the PowerCLI script and Execute the script using PowerCLI
-2 - VM Log Forwarding to Syslog Click the help ring icon located on the right side-hand of the
-VM log settings section of the Log Analysis tab, expand the Scripted section and download 
-the PowerCLI script and Execute the script using PowerCLI
-3 - Perform either a vMotion or Power Cycle for each VM
+        licence: You need to assign the runecast licence after connecting to the vsphere servers
+
+        Creating User in the vCenter and assigning the [Runecast] role:
+        ---------------------------------------------------------------
+        1 - Automatically or Manually run the powershell script (https://github.com/Runecast/public/blob/master/PowerCLI/createRunecastRole.ps1)
+        2 - Log to the vCenter web interface (with user such as administrator@$env:USERDNSDOMAIN)"
+        3 - Single Sign On --> Users and Groups --> Add User --> (Create New user for Runecast Analyzer)
+        4 - Access Control --> Global Permissions --> Add Permission
+        5 - search for the user created in step 2 and assign the [Runecast] role 
+
+        [Optional] Syslog analysis !!! Be carefull as this can affect the server performance !!!
+        -------------------------------------------------------------------------------------
+        1 - ESXi Log Forwarding by clicking the help ring icon located to the right-hand side of the Host syslog settings section
+        in the Log Analysis tab, expand the section and click to download the PowerCLI script and Execute the script using PowerCLI
+        2 - VM Log Forwarding to Syslog Click the help ring icon located on the right side-hand of the
+        VM log settings section of the Log Analysis tab, expand the Scripted section and download 
+        the PowerCLI script and Execute the script using PowerCLI
+        3 - Perform either a vMotion or Power Cycle for each VM
         
 "@
         Write-Host $help
@@ -413,8 +610,32 @@ the PowerCLI script and Execute the script using PowerCLI
         read-host “Press ENTER to continue”
         $null = start-Process -PassThru explorer $ACQ
      }
+    
+         #Misc
+     16 {
+        Cls
+        $help = @"
+
+        Misc
+        ----
+        
+        Script that checks all sorts of misconfigurations and vulnerabilities.
+
+        Checks:
+
+        -
+                
+"@
+        Write-Host $help
+        $ACQ = ACQ("Misc")
+        $ScriptToRun = $PSScriptRoot+"\CyberMisc.ps1"
+        &$ScriptToRun
+        read-host “Press ENTER to continue”
+        $null = start-Process -PassThru explorer $ACQ
+        }
+    
     #Menu End
-    }
+    } 
  cls
  }
 while ($input -ne '99')

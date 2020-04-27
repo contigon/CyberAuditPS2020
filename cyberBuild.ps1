@@ -12,9 +12,15 @@
 
 . $PSScriptRoot\CyberFunctions.ps1
 #ShowIncd
+if (![Environment]::Is64BitProcess)
+{
+    failed "OS architecture must be 64 bit, exiting ..."
+    exit
+}
 CyberBginfo
 DisableFirewall
 DisableAntimalware
+proxydetect
 $Host.UI.RawUI.WindowTitle = "Cyber Audit Tool 2020 - build"
 
 #Checkpoint-Computer -Description 'before installing CyberAuditTool'
@@ -75,10 +81,10 @@ Write-Host "     5. Scoop		| Install Scoop framework                            
 Write-Host "     6. Utilities	| Install Buckets and utilities Applications                  " -ForegroundColor $menuColor[6]
 Write-Host "     7. Collectors	| Install Collector Applications                              " -ForegroundColor $menuColor[7]
 Write-Host "     8. Analyzers	| Install Analyzers and Reporting tools                       " -ForegroundColor $menuColor[8]
-Write-Host "     9. Update   	| Update scoop applications and powershell modules            " -ForegroundColor $menuColor[9]
-Write-Host "    10. Licenses   	| Install or Create licenses to/from license files            " -ForegroundColor $menuColor[10]
-Write-Host "    11. Uninstall  	| Uninstall scoop applications and powershell modules         " -ForegroundColor White
-Write-Host "    12. Attack!  	| Install attacking and Exploiting Scripts and tools          " -ForegroundColor White
+Write-Host "     9. Attack!  	| Install attacking and Exploiting Scripts and tools          " -ForegroundColor $menuColor[9]
+Write-Host "    10. Update   	| Update scoop applications and powershell modules            " -ForegroundColor $menuColor[10]
+Write-Host "    11. Licenses   	| Install or Create licenses to/from license files            " -ForegroundColor $menuColor[11]
+Write-Host "    12. Uninstall  	| Uninstall scoop applications and powershell modules         " -ForegroundColor $menuColor[12]
 Write-Host ""
 Write-Host "    99. Quit                                                                      " -ForegroundColor White
 Write-Host ""
@@ -89,6 +95,15 @@ switch ($input)
     
      #Check Windows OS and build versions and if needed it can help upgrade an update latest build
      1{
+        $help = @"
+
+        OS
+        --
+
+        Checks Windows version and upgrade it to latest build and update.
+                
+"@
+        Write-Host $help
         $menuColor[1] = "Yellow"
         if (!(test-connection 8.8.8.8 -Count 1 -Quiet)) 
             {
@@ -138,6 +153,23 @@ switch ($input)
     
      #Install RSAT
      3 {
+        $help = @"
+
+        RSAT
+        ----
+        
+        Remote Server Administration Tools for Windows 10 includes Server Manager, 
+        Microsoft Management Console (MMC) snap-ins, consoles, Windows PowerShell cmdlets and providers,
+        and command-line tools for managing roles and features that run on Windows Server.
+
+        Starting with Windows 10 October 2018 Update, add RSAT tools right from Windows 10.
+        Just go to "Manage optional features" in Settings and click "Add a feature" to see the list of available RSAT tools.
+
+        The downloadable packages above can still be used to install RSAT on Windows 10 versions prior to the October 2018 Update.
+        https://www.microsoft.com/en-us/download/details.aspx?id=45520
+                
+"@
+        Write-Host $help
         $menuColor[3] = "Yellow"
         $RSATinstalled = Get-WindowsCapability -online | ? Name -like Rsat* | ? state -eq installed
         if ($RSATinstalled.Count -lt 21)
@@ -154,6 +186,21 @@ switch ($input)
     
      #Install PowerShell Modules from PSGallery Online
      4 {
+        $help = @"
+
+        PSGallery
+        ---------
+        
+        Install PowerShell Modules from Powershell gallery.
+
+        Modules Installed:
+             
+"@
+        Write-Host $help
+        foreach ($psm in $PSGModules)
+        {
+            write-host "- $psm"
+        }
         $menuColor[4] = "Yellow"
         Set-PSRepository -Name 'PSGallery' -InstallationPolicy Trusted
         Install-PackageProvider Nuget -Force
@@ -183,6 +230,25 @@ switch ($input)
     
      #Install scoop
      5 {
+        $help = @"
+
+        Scoop
+        ---------
+        
+        installs programs from the command line with a minimal amount of friction.
+        
+        Tries to eliminate things like:
+        - Permission popup windows
+        - GUI wizard-style installers
+        - Path pollution from installing lots of programs
+        - Unexpected side-effects from installing and uninstalling programs
+        - The need to find and install dependencies
+        - The need to perform extra setup steps to get a working program
+
+        Minimal requirement is PowerShell 5 (or later, include PowerShell Core) and .NET Framework 4.5 (or later).
+             
+"@
+        Write-Host $help
         $menuColor[5] = "Yellow"
         Write-Host "Backing up Environment Variables before installing scoop"
         regedit /e $PSScriptRoot\HKEY_CURRENT_USER.reg "HKEY_CURRENT_USER\Environment"
@@ -212,6 +278,25 @@ switch ($input)
     
     #add buckets and isntall global utilities
     6 {
+       $help = @"
+
+        Scoop buckets and Utilities
+        ---------------------------
+        
+        In Scoop, buckets are collections of applications.
+        a bucket is a Git repository containing JSON app manifests 
+        which describe how to install an applications.
+        
+        In order to support the functionality of the Cyber Audit tool,
+        we will install some utilities.
+
+        Utilities installed:     
+"@
+        Write-Host $help
+        foreach ($utility in $utilities)
+        {
+            write-host "- $utility"
+        }
         $menuColor[6] = "Yellow"
         scoop bucket add extras
         scoop bucket add java
@@ -226,6 +311,23 @@ switch ($input)
     
     #install audit applications from cyberauditbucket
     7 {
+       $help = @"
+
+        Applications
+        ------------
+        
+        The next phase will install the audit applications.
+
+        Audit applications will collect the data which will be offline analyzed
+        in the Analyzers phase in order to create the audit report.
+
+        Applications installed:     
+"@
+        Write-Host $help
+        foreach ($CollectorApp in $CollectorApps)
+        {
+            write-host "- $CollectorApp"
+        }
         $menuColor[7] = "Yellow"
         #(Get-ChildItem $scoopDir\buckets\CyberAuditBucket -Filter *.json).BaseName|ForEach-Object {scoop install $_ -g}
         foreach ($CollectorApp in $CollectorApps)
@@ -258,6 +360,23 @@ switch ($input)
      
       #install Analyzers and Reporting applications from cyberauditbucket
     8 {
+        $help = @"
+
+        Analyzers
+        ---------
+        
+        The next phase will install the Analyzers applications.
+
+        Analyzer applications will be used to process the data collected during
+        the audit phase.
+
+        Applications installed:     
+"@
+        Write-Host $help
+        foreach ($AnalyzerApp in $AnalyzerApps)
+        {
+            write-host "- $AnalyzerApp"
+        }
         $menuColor[8] = "Yellow"
         #(Get-ChildItem $scoopDir\buckets\CyberAuditBucket -Filter *.json).BaseName|ForEach-Object {scoop install $_ -g}
         foreach ($AnalyzerApp in $AnalyzerApps)
@@ -335,9 +454,53 @@ switch ($input)
      read-host “Press ENTER to continue” 
      }
      
-     #Update scoop, Powershell and applications
-     9 {
+     #install Attacking scripts and tools
+    9 {
         $menuColor[9] = "Yellow"
+        #(Get-ChildItem $scoopDir\buckets\CyberAuditBucket -Filter *.json).BaseName|ForEach-Object {scoop install $_ -g}
+        foreach ($AttackApp in $AttackApps)
+            {
+                scoop install $AttackApp -g
+            }
+        $c = scoop list 6>&1
+        $i=0
+        foreach ($f in $c)
+        {
+            $i++
+            if ($($foreach.current) -match 'failed')
+            {
+               if ($c[$i-2].ToString() -match "global")
+               {
+                    Write-Host $c[$i-4].ToString() "--> global app installation failed, we will try to uninstall and reinstall"
+                    scoop uninstall $c[$i-4].ToString() -g
+                    scoop install $c[$i-4].ToString() -g
+                }
+                else
+                {
+                    Write-Host $c[$i-3].ToString() "--> app installation failed, we will try to uninstall and reinstall"
+                    scoop uninstall $c[$i-3].ToString()
+                    scoop install $c[$i-3].ToString()
+                }
+            }
+        }
+     read-host “Press ENTER to continue” 
+     }
+
+     #Update scoop, Powershell and applications
+     10 {
+        $help = @"
+
+        Update
+        ------
+        
+        - Update core audit scripts
+        - Update scoop and buckets
+        - Update Powershell modules
+        - Check if there is a newer powershell version
+
+"@
+        Write-Host $help
+        $menuColor[10] = "Yellow"
         Write-Host "Updating the core CyberAuditTool scripts"
         $FileName = "goUpdate.pdf"
         $zipURLB = "http://cyberaudittool.c1.biz/$FileName"
@@ -396,20 +559,57 @@ switch ($input)
      }
      
      #Licenses
-    10 {
-        $menuColor[10] = "Yellow"
+    11 {
+       $help = @"
+
+        Licenses
+        --------
+        
+        Install licenses for applications.
+
+        Licenses will be stored in base64 encoding inside the script
+        and will be generated as a license file which will be copied
+        to the correct application path.
+
+        New licenses can be added using by editing the $PSScriptRoot\CyberLicenses.ps1 file.
+
+"@
+        Write-Host $help
+        $menuColor[11] = "Yellow"
         $ScriptToRun = $PSScriptRoot+"\CyberLicenses.ps1"
         &$ScriptToRun
      read-host “Press ENTER to continue” 
      }
      
      #Uninstal scoop utilities, applications and scoop itself
-    11 {
+    12 {
+       $help = @"
+
+        Uninstal
+        --------
+    
+        This script will uninstall:
+        - Scoop utilities
+        - Audit, Analyzer and Attack applications
+        - Scoop itself
+        - Powershell Modules
+
+        You will also be able to use restore point to remove all installations
+        and changes to the operating system and registry keys.
+
+"@
+        Write-Host $help
+        $menuColor[12] = "Yellow"
         $a = appdir("appinspector")
         Set-Location $a
         $cmd = "dotnet.exe tool uninstall --global Microsoft.CST.ApplicationInspector.CLI"
         Invoke-Expression $cmd
         Pop-Location           
+
+        $TestimoModules = @('Testimo', 'PSWinDocumentation.AD','PSWinDocumentation.DNS','ADEssentials', 'PSSharedGoods','PSWriteColor', 'Connectimo', 'DSInternals','Emailimo','PSWriteHTML' )
+        foreach ($Module in $TestimoModules) {
+            Uninstall-Module $Module -Force -AllVersions
+        }
 
         (Get-ChildItem $bucketsDir\CyberAuditBucket -Filter *.json).BaseName|ForEach-Object {scoop uninstall $_ -g}
         foreach ($utility in $utilities)
@@ -431,40 +631,7 @@ switch ($input)
         Get-ComputerRestorePoint -LastStatus
      read-host “Press ENTER to continue”       
      }
-
-    #install Attacking scripts and tools
-    12 {
-        $menuColor[7] = "Yellow"
-        #(Get-ChildItem $scoopDir\buckets\CyberAuditBucket -Filter *.json).BaseName|ForEach-Object {scoop install $_ -g}
-        foreach ($AttackApp in $AttackApps)
-            {
-                scoop install $AttackApp -g
-            }
-        $c = scoop list 6>&1
-        $i=0
-        foreach ($f in $c)
-        {
-            $i++
-            if ($($foreach.current) -match 'failed')
-            {
-               if ($c[$i-2].ToString() -match "global")
-               {
-                    Write-Host $c[$i-4].ToString() "--> global app installation failed, we will try to uninstall and reinstall"
-                    scoop uninstall $c[$i-4].ToString() -g
-                    scoop install $c[$i-4].ToString() -g
-                }
-                else
-                {
-                    Write-Host $c[$i-3].ToString() "--> app installation failed, we will try to uninstall and reinstall"
-                    scoop uninstall $c[$i-3].ToString()
-                    scoop install $c[$i-3].ToString()
-                }
-            }
-        }
-     read-host “Press ENTER to continue” 
-     }
-
-
+    
    }
   CLS
  }

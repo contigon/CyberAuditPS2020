@@ -54,14 +54,14 @@ Write-Host "     Audit Data Analysis:                                           
 Write-Host "" 
 Write-Host "     Data folder is $AcqABaseFolder                                                     " -ForegroundColor yellow
 Write-Host ""
-Write-Host "     1. Pwdump         | Process NTDS/SYSTEM files and export pwdump/ophcrack files    " -ForegroundColor White
-Write-Host "     2. Ophcrack       | Password cracker based on rainbow tables                      " -ForegroundColor White
-Write-Host "     3. Hashcat        | Password cracker based on dictionaries                        " -ForegroundColor White
-Write-Host "     4. BloodHound     | Find attack vectors within Active Directory                   " -ForegroundColor White
-Write-Host "     5. PolicyAnalizer | Compare GPO to Microdoft Security configuration baselines     " -ForegroundColor White
-Write-Host "     6. statistics     | Cracked Enterprise & Domain Admin passwords statistics        " -ForegroundColor White
-Write-Host "     7. Dsinternals    | Password cracking using haveibeenpawned NTLM v5 file          " -ForegroundColor White
-Write-Host "     8. AppInspector   | Software source code analysis to identify good or bad patterns" -ForegroundColor White
+Write-Host "     1. hash dumping   | Process NTDS/SYSTEM files and export the password hashes       " -ForegroundColor White
+Write-Host "     2. Ophcrack       | Password cracker based on rainbow tables                       " -ForegroundColor White
+Write-Host "     3. Hashcat        | Password cracker based on dictionaries                         " -ForegroundColor White
+Write-Host "     4. BloodHound     | Find attack vectors within Active Directory                    " -ForegroundColor White
+Write-Host "     5. PolicyAnalizer | Compare GPO to Microdoft Security configuration baselines      " -ForegroundColor White
+Write-Host "     6. statistics     | Cracked Enterprise & Domain Admin passwords statistics         " -ForegroundColor White
+Write-Host "     7. Dsinternals    | Password cracking using haveibeenpawned NTLM v5 file           " -ForegroundColor White
+Write-Host "     8. AppInspector   | Software source code analysis to identify good or bad patterns " -ForegroundColor White
 Write-Host ""
 Write-Host "    99. Quit                                                                            " -ForegroundColor White
 Write-Host ""
@@ -71,6 +71,26 @@ switch ($input) {
      #Analyze the NTDS and SYSTEM hive (ntdsaudit, DSInternals)
      1 {
         cls
+        $help = @"
+        
+        hash dumping
+        ------------
+
+        Process NTDS/SYSTEM files and export pwdump/ophcrack files using NtdsAudit and
+        DSINternals tools.
+
+        NtdsAudit is an application to assist in auditing Active Directory databases,        
+        and provides some useful statistics relating to accounts and passwords.
+
+        DSinternals is a Directory Services Internals PowerShell Module and Framework.
+        we will use the Get-ADDBAccount function retrieve accounts from an Active Directory database file
+        and dump the users password hashes to Ophcrack, HashcatNT, HashcatLM, JohnNT and JohnLM formats.
+
+        Both tools requires the ntds.dit Active Directory database, and optionally the 
+        SYSTEM registry hive if dumping password hashes
+
+"@
+        write-host $help
         $ACQ = ACQA("NTDS")
         Get-ChildItem -Path $ACQ -Recurse -File | Move-Item -Destination $ACQ
         NtdsAudit $ACQ\ntds.dit -s $ACQ\SYSTEM  -p  $ACQ\pwdump.txt -u  $ACQ\user-dump.csv --debug --history-hashes
@@ -85,19 +105,33 @@ switch ($input) {
         read-host “Press ENTER to continue”
         $null = start-Process -PassThru explorer $ACQ
      }
+
      #Ophcrack
      2 {
         CLS
         $ACQ = ACQA("NTDS")
         $help = @"
         
+        Ophcrack
+        --------
+
+        Ophcrack is a free Windows password cracker based on rainbow tables.
+        It is a very efficient implementation of rainbow tables done by the inventors of the method
+
+        - Cracks LM and NTLM hashes
+        - Free tables available
+        - Brute-force module for simple passwords
+        - Audit mode and CSV export
+        - Real-time graphs to analyze the passwords
+        - Dumps and loads hashes from encrypted SAM recovered from a Windows partition
+
         In order to run the hashed passwords cracking process, we will upload the
         $ACQ\hashes-Ophcrack.txt into ophcrack.
        
         Next step you will need to Press the [Crack] button to start the process.
 
 "@
-        write-host $help -ForegroundColor Yellow
+        write-host $help
         if (Test-Path -Path $ACQ\hashes-Ophcrack.txt)
         {
             Write-Host "[Success] The file $ACQ\hashes-Ophcrack.txt was found" -ForegroundColor Green
@@ -113,6 +147,28 @@ switch ($input) {
        #hashcat
      3 {
         CLS
+        $help = @"
+        
+        hashcat
+        --------
+
+        advanced password recovery using GPU and CPU.
+
+        Attack types:
+        - Brute-force
+        - Combinator
+        - Dictionary
+        - Fingerprint
+        - Hybrid
+        - Mask
+        - Permutation attack
+        - Rule-based
+        - Table-Lookup attack
+        - Toggle-Case attack
+        - PRINCE attack
+
+"@
+        write-host $help
         $ACQ = ACQ("NTDS")
         #check if not Virtual Machine
         $ComputerSystemInfo = Get-WmiObject -Class Win32_ComputerSystem
@@ -177,7 +233,7 @@ switch ($input) {
         https://github.com/nccgroup/hashcrack
 
 "@
-            write-host $help -ForegroundColor Yellow
+            write-host $help
             if (Test-Path -Path $ACQ\$dumpFile)
             {
                     Write-Host "[Success] The file $ACQ\$dumpFile was found" -ForegroundColor Green
@@ -209,6 +265,21 @@ switch ($input) {
         $ACQ = ACQA("Sharphound")
         $help = @"
         
+        BloodHound
+        ----------
+
+        visualising attack paths using graph theory to reveal the hidden and often unintended relationships
+        within an Active Directory environment and dentify highly complex attack paths.
+
+        Data Includes:
+        - Users         – The users on the network extracted from active directory
+        - Computers     – The different endpoints on the network, servers, workstations and other devices
+        - Groups        – The different AD groups extracted from AD
+        - Sessions      – The amount of user sessions on computers on the network that the ingestor has extracted
+        - ACLs          – Access control lists, the different permissions and access that users and groups have against each other
+        - Relationships – The different relations that all of the other aspects have to each other such as 
+                          group memberships, users, user sessions and other related information
+
         Please wait untill the neo4j database is running, this can take some time,
         when logged in to the bloodhound application you will need to upload the
         sharphound collected .json files in $ACQ
@@ -257,15 +328,15 @@ switch ($input) {
         4. Save this GPO (you will 1st need to give a name for this GPO)
 
 "@
-        write-host $help -ForegroundColor Yellow
+        write-host $help
         $cmd = "policyanalyzer"
         Invoke-Expression $cmd
         read-host “Press ENTER to continue”     
      }
      #Statistics
      6 {     
+        CLS
         $ACQ = ACQA("Statistics")
-
         Write-Host "Searching for installed Microsoft Excel..."
         $excelVer = Get-WmiObject win32_product | where{$_.Name -match "Excel"} | select Name,Version
         if ($excelVer) 
@@ -340,6 +411,9 @@ switch ($input) {
         $ACQ = ACQA("NTDS")
         $help = @"
         
+        DSInternals
+        -----------
+
         Performs an offline credential hygiene audit of AD database against HIBP (Have I Been Pawned file)
 
         This script uses the ntds.dit and SYSTEM hive to export the hashes from AD database,
@@ -368,6 +442,9 @@ switch ($input) {
         $ACQ = ACQ("AppInspect")
         $help = @"
         
+        appInspector
+        ------------
+
         Application Inspector's primary objective is to identify source code features in a systematic and scalable way 
         not found elsewhere in typical static analyzers. This enables developer and security professionals to validate 
         purported component objectives.

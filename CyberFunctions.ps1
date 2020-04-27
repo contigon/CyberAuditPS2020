@@ -12,7 +12,19 @@
 
 Set-ExecutionPolicy -ExecutionPolicy Unrestricted
 
+function success ($msg)
+{
+    $null = Write-Host "[Success] $msg" -ForegroundColor Green
+}
+
+function failed ($msg)
+{
+    $null = Write-Host "[Failed] $msg" -ForegroundColor Red
+}
+
+
 #kill applications that runs under another process like excell document, java applications and more
+#example: KillApp("Javaw","Scuba")
 function killApp($ProcessName,$WindowTitle){
     try{
         $c = Get-Process -Name $ProcessName -ErrorAction SilentlyContinue | Select-Object -Property id,MainWindowTitle
@@ -30,6 +42,19 @@ function killApp($ProcessName,$WindowTitle){
          }
 }
 
+#check if RSAT is installed
+function checkRsat {
+    If ((Get-Module -Name ActiveDirectory -ListAvailable) -ne $null) 
+    {
+        Write-Host "[Success] Rsat in installed" -ForegroundColor Green
+        Return $true
+    } 
+    else 
+    {
+        Write-Host "[Failures] Rsat in  not installed" -ForegroundColor red
+        return $false
+    }
+}
 
 function UniversalTimeStamp
 {
@@ -43,6 +68,30 @@ function CurrentDate{
 function Get-UserAgent() {
     return "CyberAuditTool/1.0 (+http://cyberaudittool.c1.biz/) PowerShell/$($PSVersionTable.PSVersion.Major).$($PSVersionTable.PSVersion.Minor) (Windows NT $([System.Environment]::OSVersion.Version.Major).$([System.Environment]::OSVersion.Version.Minor); $(if($env:PROCESSOR_ARCHITECTURE -eq 'AMD64'){'Win64; x64; '})$(if($env:PROCESSOR_ARCHITEW6432 -eq 'AMD64'){'WOW64; '})$PSEdition)"
 }
+
+#check if machine is part of domain
+function CheckMachineRole
+     {
+        [int]$systemRoleID = $(get-wmiObject -Class Win32_ComputerSystem).DomainRole
+         $systemRoles = @{
+                              0         =    "Standalone Workstation    " ;
+                              1         =    "Member Workstation        " ;
+                              2         =    "Standalone Server         " ;
+                              3         =    "Member Server             " ;
+                              4         =    "Backup  Domain Controller " ;
+                              5         =    "Primary Domain Controller "       
+         }
+
+        if($systemRoleID -eq 0){   
+                write-host "[Failure] some features need access to a domain, connect this machine to the organization domain" -ForegroundColor Red
+                return $false
+        }
+        else
+        {
+            write-host "[Success] This machine role is: " $systemRoles[[int]$systemRoleID] -ForegroundColor Green
+            return $true
+        }
+    }
 
 function fname($path) { split-path $path -leaf }
 function strip_ext($fname) { $fname -replace '\.[^\.]*$', '' }
@@ -480,4 +529,67 @@ Function CreateShortcut
 	    return $null
     }
     return $LinkFile
+}
+
+function proxydetect
+{
+    <#
+        .DESCRIPTION
+        Checks, if a proxy is active. Uses current users credentials for Proxy Access / other user input is possible as well.
+        Author: @S3cur3Th1sSh1t
+        License: BSD 3-Clause
+    #>    
+    #Proxy Detect #1
+
+    Write-Host -ForegroundColor Yellow 'Searching for network proxy...'
+
+    $reg2 = [Microsoft.Win32.RegistryKey]::OpenRemoteBaseKey('CurrentUser', $env:COMPUTERNAME)
+    $regkey2 = $reg2.OpenSubkey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Internet Settings")
+
+    if ($regkey2.GetValue('ProxyServer') -and $regkey2.GetValue('ProxyEnable'))
+    {
+        $proxy = Read-Host -Prompt 'Proxy detected! Proxy is: '$regkey2.GetValue('ProxyServer')'! Does the Powershell-User have proxy rights? (yes/no)'
+        if ($proxy -eq "yes" -or $proxy -eq "y" -or $proxy -eq "Yes" -or $proxy -eq "Y")
+        {
+             #Proxy
+            Write-Host -ForegroundColor Yellow 'Setting up Powershell-Session Proxy Credentials...'
+            $Wcl = new-object System.Net.WebClient
+            $Wcl.Proxy.Credentials = [System.Net.CredentialCache]::DefaultNetworkCredentials
+        }
+        else
+        {
+            Write-Host -ForegroundColor Yellow 'Please enter valid credentials, or the script will fail!'
+            #Proxy Integration manual user
+            $webclient=New-Object System.Net.WebClient
+            $creds=Get-Credential
+            $webclient.Proxy.Credentials=$creds
+        }
+   }
+    else {Write-Host -ForegroundColor Yellow 'No proxy detected, continuing... '}
+}
+
+function TempDir
+{
+ if(!(Test-Path -Path C:\temp\))
+ {
+    mkdir C:\temp
+ }
+}
+
+function DomainComputersToFile 
+{
+    $i = 0
+    Remove-Item -Path $AcqBaseFolder\DomainComputers.txt -ErrorAction SilentlyContinue
+    $ADcomputers = Get-ADComputer -Filter * | Select-Object name
+    foreach ($comp in $ADcomputers)
+    {
+        if (Test-Connection -ComputerName $comp.name -Count 1 -TimeToLive 20 -ErrorAction Continue)
+        {
+            $compname = $comp.name
+            success "$compname is alive"
+            Add-Content -Path $AcqBaseFolder\DomainComputers.txt -Value $compname -Force
+            $i++
+        }
+    }
+    success "$AcqBaseFolder\DomainComputers.txt includes $i machines"
 }

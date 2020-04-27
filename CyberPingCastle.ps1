@@ -10,9 +10,7 @@
 		Cyber Audit Tool - PingCastle
 #>
 
-$Host.UI.RawUI.WindowTitle = "Cyber Audit Tool 2020 - PingCastle"
-
-Set-Location $ACQ
+push-Location $ACQ
 Copy-Item $appsDir\PingCastle\current\*.* $ACQ -Recurse -Force
 $key = Read-Host "Press A for Automatically or I for Interactively running PingCastle"
 switch ($key) 
@@ -29,4 +27,4 @@ switch ($key)
         }
     }
 }
-Set-Location $PSScriptRoot
+Pop-Location
