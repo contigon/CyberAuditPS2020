@@ -356,7 +356,7 @@ Write-Host $block -ForegroundColor Red
         Write-Host "You are running as user: $env:USERDNSDOMAIN\$env:USERNAME"
         $securePwd = Read-Host "Input a Domain Admin password" -AsSecureString
         $Pwd =[Runtime.InteropServices.Marshal]::PtrToStringAuto([Runtime.InteropServices.Marshal]::SecureStringToBSTR($securePwd))
-        goddi-windows-amd64.exe -username $env:USERNAME -password $Pwd -domain $env:USERDNSDOMAIN -dc $DC -unsafe
+        goddi-windows-amd64.exe -username="$env:USERNAME" -password="$Pwd" -domain="$env:USERDNSDOMAIN" -dc="$DC" -unsafe
         Move-Item -Path $appsDir\goddi\current\csv\* -Destination $ACQ -Force
         read-host “Press ENTER to continue”
         $null = start-Process -PassThru explorer $ACQ

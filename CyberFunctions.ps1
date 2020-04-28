@@ -348,11 +348,9 @@ function CheckDotNet()
 {
         try
         {
+            $ScoopInstalled = $null
             $ScoopInstalled = scoop
-            if ($ScoopInstalled -ne $null)
-            {
-              $dotNet = detect.ps1
-            }
+            $dotNet = detect.ps1
         }
         catch 
         {
@@ -589,4 +587,11 @@ function DomainComputersToFile
         }
     }
     success "$AcqBaseFolder\DomainComputers.txt includes $i machines"
+}
+
+#Gets the current active IP-Address configuration
+function Get-currentIP
+{
+    $IPaddress = Get-NetIPConfiguration | Where-Object {$_.IPv4DefaultGateway -ne $null -and $_.NetAdapter.Status -ne "Disconnected"}
+    return $IPaddress
 }
