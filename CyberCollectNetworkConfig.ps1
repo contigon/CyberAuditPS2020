@@ -20,70 +20,16 @@ $vendors = @("CISCO","HP","H3C","Juniper","Enterasys","Fortigate", "Asa")
 
 $TimeStamp = UniversalTimeStamp
 
-function Check-Table ($totalRows) {
-    $counter = 0
-    for ($col = 1; $col -le 5;$col++)
-    {     
-        for ($row = 2; $row -le $totalRows;$row++)
-        {
-            $cell = $worksheet.Cells.Item($row, $col).Text
-            if ([string]::IsNullOrEmpty($cell)){
-                    $worksheet.Cells.Item($row, $col).Interior.ColorIndex = 3
-                    $counter++
-                    $worksheet.Cells.Item(2,8) = "Checking excel table..."
-                    $worksheet.Cells.Item(2,8).font.bold = $true
-                    $worksheet.Cells.Item(2,8).font.size = 12
-                    $worksheet.Cells.Item(2,8).font.colorindex = 45
-                }
-        }
-    }
-    if ($counter -ne 0) 
-    {
-        Write-Host "Please fill the missing data in the excel table" -ForegroundColor Red
-        $worksheet.Cells.Item(2,8) = "Please fill the missing data in the excel table"
-        $worksheet.Cells.Item(2,8).font.bold = $true
-        $worksheet.Cells.Item(2,8).font.size = 12
-        $worksheet.Cells.Item(2,8).font.colorindex = 3
-        Read-Host "When finished, Press [Enter] to continue"
-    }
-    else
-    {
-        Write-Host "Data in table is filled ok" -ForegroundColor Green
-        $worksheet.Cells.Item(2,8) = "Data in table is filled ok"
-        $worksheet.Cells.Item(2,8).font.bold = $true
-        $worksheet.Cells.Item(2,8).font.size = 12
-        $worksheet.Cells.Item(2,8).font.colorindex = 4
-        Read-Host "If all OK, Press [Enter] to continue"
-    }
-}
+#Global Variables
+$global:length = $null;
+$global:startRow = $null;
+$global:worksheet = $null;
+$global:devices = $null;
+$global:excel = $null;
+$global:usedexcel = $null;
+$global:FilePath = $null;
+$global:workbook = $null;
 
-function Rename-Dir 
-{
-    param
-    (
-		[String]$Num,
-        [String]$Dir,
-        [String]$IP,
-        [String]$Vendor,
-        [String]$File
-    )
-    $FileContent = Get-Content $File | Out-String
-    if ($Vendor -eq $vendors[0] -or $Vendor -eq $vendors[6] -or $Vendor -eq $vendors[1] -or $Vendor -eq $vendors[4]) {
-        $EndDelimeter = "#"
-        $StartDelimeter = "`n"
-    } elseif ($Vendor -eq $vendors[2]) {
-        $EndDelimeter = ">"
-        $StartDelimeter = "<"
-    } elseif ($Vendor -eq $vendors[3]) {
-        $EndDelimeter = ">";
-        $StartDelimeter = "`n"
-    } 
-    $LastIndex = $FileContent.LastIndexOf($EndDelimeter)
-    $Tmp = $FileContent.Substring(0, $LastIndex)
-    $FirstIndex = $Tmp.LastIndexOf($StartDelimeter)
-    $DeviceName = $Tmp.Substring($FirstIndex + 1) + ' ' + $IP
-    Rename-Item $Dir\$Num $Dir\$DeviceName
-}
 function Get-DeviceConfig
 {
     [OutputType([String])]
@@ -169,7 +115,190 @@ function Get-DeviceConfig
     }
 }
 
+function Rename-Dir 
+{
+    param
+    (
+		[String]$Num,
+        [String]$Dir,
+        [String]$IP,
+        [String]$Vendor,
+        [String]$File
+    )
+    $FileContent = Get-Content $File | Out-String
+    if ($Vendor -eq $vendors[0] -or $Vendor -eq $vendors[6] -or $Vendor -eq $vendors[1] -or $Vendor -eq $vendors[4]) {
+        $EndDelimeter = "#"
+        $StartDelimeter = "`n"
+    } elseif ($Vendor -eq $vendors[2]) {
+        $EndDelimeter = ">"
+        $StartDelimeter = "<"
+    } elseif ($Vendor -eq $vendors[3]) {
+        $EndDelimeter = ">";
+        $StartDelimeter = "`n"
+    } 
+    $LastIndex = $FileContent.LastIndexOf($EndDelimeter)
+    $Tmp = $FileContent.Substring(0, $LastIndex)
+    $FirstIndex = $Tmp.LastIndexOf($StartDelimeter)
+    $DeviceName = $Tmp.Substring($FirstIndex + 1) + ' ' + $IP
+    Rename-Item $Dir\$Num $Dir\$DeviceName
+}
 
+function Check-Table($totalRows) 
+{
+    $counter = 0
+    for ($col = 1; $col -le 5;$col++)
+    {     
+        for ($row = 2; $row -le $totalRows;$row++)
+        {
+            $cell = $global:worksheet.Cells.Item($row, $col).Text
+            if ([string]::IsNullOrEmpty($cell)){
+                    $global:worksheet.Cells.Item($row, $col).Interior.ColorIndex = 3
+                    $counter++
+                    $global:worksheet.Cells.Item(2,8) = "Checking excel table..."
+                    $global:worksheet.Cells.Item(2,8).font.bold = $true
+                    $global:worksheet.Cells.Item(2,8).font.size = 12
+                    $global:worksheet.Cells.Item(2,8).font.colorindex = 45
+                }
+        }
+    }
+    if ($counter -ne 0) 
+    {
+        Write-Host "Please fill the missing data in the excel table" -ForegroundColor Red
+        $global:worksheet.Cells.Item(2,8) = "Please fill the missing data in the excel table"
+        $global:worksheet.Cells.Item(2,8).font.bold = $true
+        $global:worksheet.Cells.Item(2,8).font.size = 12
+        $global:worksheet.Cells.Item(2,8).font.colorindex = 3
+        Read-Host "When finished, Press [Enter] to continue"
+    }
+    else
+    {
+        Write-Host "Data in table is filled ok" -ForegroundColor Green
+        $global:worksheet.Cells.Item(2,8) = "Data in table is filled ok"
+        $global:worksheet.Cells.Item(2,8).font.bold = $true
+        $global:worksheet.Cells.Item(2,8).font.size = 12
+        $global:worksheet.Cells.Item(2,8).font.colorindex = 4
+        Read-Host "If all OK, Press [Enter] to continue"
+    }
+}
+
+
+function create-excel
+{
+    #creating the excel file for this audit
+
+    $global:excel.Visible = $false
+    $global:workbook = $global:excel.Workbooks.Add()
+    $global:worksheet = $global:workbook.Worksheets.Item(1)
+    $global:worksheet.Name = "DeviceList"
+    $global:worksheet._DisplayRightToLeft = $false
+
+    $global:worksheet.Cells.Item(1,1) = "IP"
+    $global:worksheet.Cells.Item(1,2) = "SSH Port"
+    $global:worksheet.Cells.Item(1,3) = "User Name"
+    $global:worksheet.Cells.Item(1,4) = "Password"
+    $global:worksheet.Cells.Item(1,5) = "Vendor"
+    $global:worksheet.Cells.range("A1:E1").font.bold = $true
+    $global:worksheet.Cells.range("A1:E1").font.size = 12
+    $global:worksheet.Cells.range("A1:E1").font.colorindex = 4
+
+    $global:worksheet.Cells.Item(1,8) = "Please save [Ctrl+S] after changes !!!"
+    $global:worksheet.Cells.Item(1,8).font.bold = $true
+    $global:worksheet.Cells.Item(1,8).font.size = 12
+    $global:worksheet.Cells.Item(1,8).font.colorindex = 3
+
+    $VendorsHeader = "CISCO,HP,H3C,Juniper,Enterasys,Fortigate,ASA"
+    $Range = $global:worksheet.Range("E2:E100")
+    $Range.Validation.add(3,1,1,$VendorsHeader)
+    $Range.Validation.ShowError = $False
+
+    $global:excel.DisplayAlerts = $false
+    $global:FilePath = "$ACQ\NetworkDevices-$TimeStamp.xlsx"
+    $global:worksheet.SaveAs($FilePath)
+
+    $global:excel.Visible = $true
+
+
+}
+
+function Create-JSON
+{
+    Write-Host "Copy and paste the device object as many times as needed and fill in the values"
+    Write-Host 'Make sure to fill vendor = {"CISCO","HP","H3C","Juniper","Enterasys","Fortigate", "Asa"}'
+    Read-Host "Please save [Ctrl+S] after changes!!! [Press enter to continue]"
+    $global:FilePath = "$ACQ\NetworkDevices-$TimeStamp.txt"
+    $Content = 
+'[
+{"IP": "",
+ "SSHPort": "",
+ "Username": "",
+ "Password": "",
+ "Vendor": ""
+},
+	    
+{"IP": "",
+ "SSHPort": "",
+ "Username": "",
+ "Password": "",
+ "Vendor": ""
+}
+]'
+    Set-Content $FilePath $Content; Invoke-Item $FilePath
+}
+
+function Check-JSON($FilePath)
+{
+    $loop = $true
+    while ($loop){
+        Write-Host "Checking JSON format..."
+        try {
+            $global:devices = Get-Content $FilePath | ConvertFrom-Json
+            $loop = $false
+        } catch {
+            Write-Host "Format of file is incorrect" -ForegroundColor Red
+            $input = Read-Host "Please fix the file or press [N] to create a new JSON file (Press Enter if you fixed the file)"
+            if ($input -eq "N") {
+                create-JSON
+            }
+        }
+    }
+    Write-Host "JSON format is good" -ForegroundColor Green    
+    Write-Host "Checking file content"
+    $length = $devices.length
+    $counteri = 0
+    $counterj = 0
+    for ($row = 0; $row -lt $length;$row++)
+    {
+        $IPEntry = $devices[$row].IP
+        $PortEntry = $devices[$row].SSHPort
+        $UserEntry = $devices[$row].Username
+        $PassEntry = $devices[$row].Password
+        $VendorEntry = $devices[$row].Vendor
+        if ([string]::IsNullOrEmpty($IPEntry)){
+            $counteri++
+        }
+        if ([string]::IsNullOrEmpty($PortEntry)){
+            $counteri++
+        }
+        if ([string]::IsNullOrEmpty($UserEntry)){
+            $counteri++
+        }
+        if ([string]::IsNullOrEmpty($PassEntry)){
+            $counteri++
+        }
+        if (!($VendorEntry -in $vendors)){
+            Write-Host "Vendor in device $($row+1) must be of $vendors"
+            $counterj++
+        }
+    }
+    if ($counteri -ne 0 -or $counterj -ne 0){
+        Write-Host "Found [$counteri] empty entries and [$counterj] incompatible vendors" -ForegroundColor Red
+        Write-Host "Please fix the file"
+        Read-Host "When finished, Press [Enter] to continue"
+    } else {
+        Write-Host "Data in file is filled ok" -ForegroundColor Green
+        Read-Host "If all OK, Press [Enter] to continue"
+    }
+}
 $help = @"
 
         This tool will try to automatically collect configuration and routing tables from network devices
@@ -200,63 +329,62 @@ Write-Host $help
 
 if (!($Timeout = Read-Host "Choose Timeout (in seconds) between each run (or Enter for 5 seconds)")) { $Timeout = 5 }
 
-$IPCol = 1
-$PortCol = 2
-$UserCol = 3
-$PassCol = 4
-$VendorCol = 5
-$StartRow = 2
 
-#creating the excel file for this audit
-$excel = New-Object -ComObject Excel.Application
-$excel.Visible = $false
-$workbook = $excel.Workbooks.Add()
-$worksheet = $workbook.Worksheets.Item(1)
-$worksheet.Name = "DeviceList"
-$worksheet._DisplayRightToLeft = $false
-
-$worksheet.Cells.Item(1,1) = "IP"
-$worksheet.Cells.Item(1,2) = "SSH Port"
-$worksheet.Cells.Item(1,3) = "User Name"
-$worksheet.Cells.Item(1,4) = "Password"
-$worksheet.Cells.Item(1,5) = "Vendor"
-$worksheet.Cells.range("A1:E1").font.bold = $true
-$worksheet.Cells.range("A1:E1").font.size = 12
-$worksheet.Cells.range("A1:E1").font.colorindex = 4
-
-$worksheet.Cells.Item(1,8) = "Please save [Ctrl+S] after changes !!!"
-$worksheet.Cells.Item(1,8).font.bold = $true
-$worksheet.Cells.Item(1,8).font.size = 12
-$worksheet.Cells.Item(1,8).font.colorindex = 3
-
-$VendorsHeader = "CISCO,HP,H3C,Juniper,Enterasys,Fortigate,ASA"
-$Range = $WorkSheet.Range("E2:E100")
-$Range.Validation.add(3,1,1,$VendorsHeader)
-$Range.Validation.ShowError = $False
-
-$excel.DisplayAlerts = $false
-$FilePath = "$ACQ\NetworkDevices-$TimeStamp.xlsx"
-$worksheet.SaveAs($FilePath)
-
-$excel.Visible = $true
+try{
+    $global:excel = New-Object -ComObject Excel.Application
+    $global:usedexcel = $true
+    create-excel
+} catch {
+    Write-Host "Excel is not installed on this PC" -ForegroundColor Red
+    Write-Host "We recommend running this module using excel" -ForegroundColor Yellow
+    Read-Host "Press [Enter] to continue with the run (use .json) or [Ctrl + C] to quit"
+    $usedExcel = $false
+    create-json
+}
 
 $action = Read-Host "Press [S] to save file and start collecting config data (or Enter to quit)"
-$worksheet.SaveAs($FilePath)
+
 
 if ($action -eq "S") {
-    $length = $worksheet.UsedRange.Rows.Count
-    Check-Table ($length)
+    if ($global:usedExcel){
+        $global:worksheet.SaveAs($global:FilePath)
+        $length = $worksheet.UsedRange.Rows.Count
+        $IPCol = 1
+        $PortCol = 2
+        $UserCol = 3
+        $PassCol = 4
+        $VendorCol = 5
+        $StartRow = 2
+        Check-Table ($length)
+    } else {
+        Check-JSON($FilePath)
+        $length = $($devices.Length - 1)
+        $StartRow = 0
+    }
     Write-Host "Creating connection and retrieving configuration files,Please wait..."
     for ($i = $StartRow; $i -le $length; $i++){
-        $ip = $worksheet.Cells.Item($i, $IPCol).Text
-        $port = $null 
-        $port = $worksheet.Cells.Item($i, $PortCol).Text
-        if ([String]::IsNullOrEmpty($port)) {
-            $port = 22
+        if ($usedExcel){
+            $ip = $worksheet.Cells.Item($i, $IPCol).Text
+            $port = $null 
+            $port = $worksheet.Cells.Item($i, $PortCol).Text
+            if ([String]::IsNullOrEmpty($port)) {
+                $port = 22
+            }
+            $username = $worksheet.Cells.Item($i, $UserCol).Text
+            $password = $worksheet.Cells.Item($i, $PassCol).Text
+            $vendor = $worksheet.Cells.Item($i, $VendorCol).Text
+        } else {
+            $ip = $devices[$i].IP
+            $port = $null 
+            $port = $devices[$i].SSHPort
+            if ([String]::IsNullOrEmpty($port)) {
+                $port = 22
+            }
+            $username = $devices[$i].Username
+            $password = $devices[$i].Password
+            $vendor = $devices[$i].Vendor
         }
-        $username = $worksheet.Cells.Item($i, $UserCol).Text
-        $password = $worksheet.Cells.Item($i, $PassCol).Text
-        $vendor = $worksheet.Cells.Item($i, $VendorCol).Text
+        
         $savePath = "$ACQ\$vendor-$ip-$port\"
         Write-Host "Trying to collect data from device: $Vendor ip: $ip port: $port"
         try {
@@ -319,9 +447,11 @@ if ($action -eq "S") {
         	Write-Host "[Failure] Error connecting to device: $Vendor ip: $ip port: $port" -ForegroundColor Red
         }
     }
+    if ($UsedExcel){
+        [void]$workbook.Close($false)
+        $excel.DisplayAlerts = $true
+        [void]$excel.quit()
+        [System.Runtime.Interopservices.Marshal]::ReleaseComObject($excel) | Out-Null
+    }
 }
 
-[void]$workbook.Close($false)
-$excel.DisplayAlerts = $true
-[void]$excel.quit()
-[System.Runtime.Interopservices.Marshal]::ReleaseComObject($excel) | Out-Null
