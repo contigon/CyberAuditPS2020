@@ -230,32 +230,46 @@ Write-Host $block -ForegroundColor Red
         Cls
         $help = @"
 
-        Join/Disconnect machine to/from a Domain
-        ----------------------------------------
+        Collect configuration and routing tables from network devices
+        -------------------------------------------------------------
         
-        This script collects configuration and routing tables from network devices.
+        1. In order to map the network devices we will launch Lantopolog tool
+           which will automatically do the discovery based on SNMP protocol.
 
-        Devices supported: 
-        - CISCO (IOS/ASA)
-        - HP
-        - H3C
-        - Juniper
-        - Enterasys
-        - Fortigate
+           Specify the ranges of the IP addresses for switch discovery:
+           - 192.168.0.*   
+           - 192.168.0.100-200 
+           - 172.16.200-255.*
 
-        You will need to fill an excell file with all the required details:
-        - IP Address
-		- SSH Port
-        - User Name
-        - Password
-        - Vendor
+           In case of SNMPv3:
+           Cisco switches are not typically configured for reading of all the Bridge-MIB information on a
+           per-VLAN basis when using SNMPv3, you need to configure an SNMPv3 context as described here:
+           http://www.switchportmapper.com/support-mapping-a-cisco-switch-using-snmpv3.htm
+
+        2. Powershell script that collects configuration and routing tables from network devices.
+
+            Devices supported: 
+            - CISCO (IOS/ASA)
+            - HP
+            - H3C
+            - Juniper
+            - Enterasys
+            - Fortigate
+
+        3. You will need to fill an excell or json file with all the required details:
+            - Device IP Address
+		    - SSH Port
+            - User Name
+            - Password
+            - Vendor
      
-        In order for this script to succeed you need to have a user with root SSH permissions
-        on the network devices.
+        In order for this script to succeed you need to have a user with at SSH permissions
+        on the network devices to collect configuration and routing tables.
                 
 "@
         Write-Host $help
         $ACQ = ACQ("Network")
+        lantopolog
         $ScriptToRun = $PSScriptRoot+"\CyberCollectNetworkConfig.ps1"
         &$ScriptToRun
         read-host “Press ENTER to continue”
@@ -493,6 +507,9 @@ Write-Host $block -ForegroundColor Red
                 $b = $database -split "'"
                 $fname = ($a[3] -split ":")[0] + "(" +  $b[3] + ")"
                 Compress-Archive -Path "$appsDir\scuba-windows\current\Scuba App\" -DestinationPath "$ACQ\$fname.zip" -Force
+                success "exporting AssessmentResults.js to .csv" 
+                SetPythonVersion "2"
+                python .\Scuba2CSV.py "$ScubaDir\Scuba App\production\AssessmentResults.js"
                 $null = start-Process -PassThru explorer $ACQ
             }
             else

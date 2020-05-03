@@ -12,6 +12,7 @@
 
 Set-ExecutionPolicy -ExecutionPolicy Unrestricted
 
+#write success/failed messages in green/red
 function success ($msg)
 {
     $null = Write-Host "[Success] $msg" -ForegroundColor Green
@@ -594,4 +595,36 @@ function Get-currentIP
 {
     $IPaddress = Get-NetIPConfiguration | Where-Object {$_.IPv4DefaultGateway -ne $null -and $_.NetAdapter.Status -ne "Disconnected"}
     return $IPaddress
+}
+
+
+#sets required python version to 2.x or 3.x
+#example:  SetPythonVersion "2"
+function SetPythonVersion ($version)
+{
+    $pyVer = (python --version) -match "python 3"
+    if ($pyVer)
+    {
+        if ($version -eq "2")
+        {
+            scoop reset python27
+            success "Python version 3.x changed to 2.x"
+        }
+        else
+        {
+            success "Current python version is 3.x"
+        }
+    }
+    else
+    {
+      if ($version -eq "3")
+        {
+            scoop reset python37
+            success "Python version 2.x changed to 3.x"
+        }
+            else
+        {
+            success "Current python version is 2.x"
+        }
+    }
 }

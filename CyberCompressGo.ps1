@@ -43,6 +43,7 @@ $compress = @{
           "$PSScriptRoot\CyberPasswordStatistics.ps1",
           "$PSScriptRoot\CyberPingCastle.ps1",
           "$PSScriptRoot\go.ps1",
+          "$PSScriptRoot\Scuba2CSV.py",
           "$PSScriptRoot\CyberAuditDevelopersHelp.txt",
           "$PSScriptRoot\CyberBginfo.bgi",
           "$PSScriptRoot\Bginfo64.exe",
@@ -66,6 +67,7 @@ $compressUpdates = @{
           "$PSScriptRoot\CyberLicenses.ps1",
           "$PSScriptRoot\CyberPasswordStatistics.ps1",
           "$PSScriptRoot\CyberPingCastle.ps1",
+          "$PSScriptRoot\Scuba2CSV.py",
           "$PSScriptRoot\CyberAuditDevelopersHelp.txt",
           "$PSScriptRoot\CyberBginfo.bgi"
   CompressionLevel = "Fastest"

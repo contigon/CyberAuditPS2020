@@ -16,14 +16,14 @@ $key = Read-Host "Press A for Automatically or I for Interactively running PingC
 switch ($key) 
 {
 "I" {
-    .\PingCastle --interactive
+     cmd /c start .\PingCastle --interactive
     }
 "A" {
-    .\PingCastle --no-enum-limit --carto --healthcheck --server *
-    .\PingCastle --hc-conso
+     cmd /c start .\PingCastle --no-enum-limit --carto --healthcheck --server *
+     cmd /c start .\PingCastle --hc-conso
     $checks = @("antivirus","corruptADDatabase","laps_bitlocker","localadmin","nullsession","nullsession-trust","share","smb","spooler","startup")
     foreach($check in $checks){
-        .\PingCastle --scanner $check
+         cmd /c start .\PingCastle --scanner $check
         }
     }
 }
