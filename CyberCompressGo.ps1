@@ -112,8 +112,8 @@ if ((Test-Path "$PSScriptRoot\Downloads\go.pdf") -and (Test-Path "$PSScriptRoot\
         $credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList "3347985_cyber",$password
         $SftpSess = New-SFTPSession -ComputerName cyberaudittool.c1.biz -Port 221 -Credential $credential -Verbose
         Set-SFTPFile -SessionId $SftpSess.SessionId -LocalFile "$PSScriptRoot\Downloads\go.ps1" -RemotePath "/cyberaudittool.c1.biz/" -Overwrite
-        Set-SFTPFile -SessionId $SftpSess.SessionId -LocalFile "$PSScriptRoot\go.pdf" -RemotePath "/cyberaudittool.c1.biz/" -Overwrite
-        Set-SFTPFile -SessionId $SftpSess.SessionId -LocalFile "$PSScriptRoot\goUpdate.pdf" -RemotePath "/cyberaudittool.c1.biz/" -Overwrite
+        Set-SFTPFile -SessionId $SftpSess.SessionId -LocalFile "$PSScriptRoot\Downloads\go.pdf" -RemotePath "/cyberaudittool.c1.biz/" -Overwrite
+        Set-SFTPFile -SessionId $SftpSess.SessionId -LocalFile "$PSScriptRoot\Downloads\goUpdate.pdf" -RemotePath "/cyberaudittool.c1.biz/" -Overwrite
     }
     catch {
        Write-Host "[Failed] Problem with connection or password is not correct, please try again" -ForegroundColor Red
