@@ -108,7 +108,8 @@ if ((Test-Path "$PSScriptRoot\Downloads\go.pdf") -and (Test-Path "$PSScriptRoot\
     Write-Host ""
     try {
         Get-SFTPSession | ForEach {Remove-SFTPSession $_.SessionId}
-        $SftpSess = New-SFTPSession -ComputerName cyberaudittool.c1.biz -Port 221 -Credential (Get-Credential 3347985_cyber) -Verbose
+        $credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList "3347985_cyber","o-iyFEmj8qIN@e7E"
+        $SftpSess = New-SFTPSession -ComputerName cyberaudittool.c1.biz -Port 221 -Credential $credential -Verbose
         Set-SFTPFile -SessionId $SftpSess.SessionId -LocalFile "$PSScriptRoot\Downloads\go.ps1" -RemotePath "/cyberaudittool.c1.biz/" -Overwrite
         Set-SFTPFile -SessionId $SftpSess.SessionId -LocalFile "$PSScriptRoot\go.pdf" -RemotePath "/cyberaudittool.c1.biz/" -Overwrite
         Set-SFTPFile -SessionId $SftpSess.SessionId -LocalFile "$PSScriptRoot\goUpdate.pdf" -RemotePath "/cyberaudittool.c1.biz/" -Overwrite
