@@ -71,7 +71,8 @@ Write-Host "    12. azscan		| Oracle,Unix-Linux,iSeries,AS400-OS400,HP-Alpha,Vax
 Write-Host "    13. Grouper2 	| Find ActiveDirectory GPO security-related misconfigurations  " -ForegroundColor White
 Write-Host "    14. Dumpert	 	| LSASS memory dumper for offline extraction of credentials    " -ForegroundColor White
 Write-Host "    15. Runecast	| Security Hardening checks of VMWARE vSphere/NSX/cloud        " -ForegroundColor White
-Write-Host "    16. Misc    	| collection of scripts that checks miscofigurations or vulns" -ForegroundColor White
+Write-Host "    16. Misc    	| collection of scripts that checks miscofigurations or vulns  " -ForegroundColor White
+Write-Host "    17. Skybox    	| All windows machines interface and routing config collector  " -ForegroundColor White
 Write-Host ""
 Write-Host "    99. Quit                                                                       " -ForegroundColor White
 Write-Host ""
@@ -662,7 +663,8 @@ Write-Host $block -ForegroundColor Red
 
         Checks:
 
-        -
+        - TBD
+        - TBD
                 
 "@
         Write-Host $help
@@ -673,6 +675,52 @@ Write-Host $block -ForegroundColor Red
         $null = start-Process -PassThru explorer $ACQ
         }
     
+         #IpconfigNetstat
+     17 {
+        Cls
+        $help = @"
+
+        skybox interface and routing collector
+        --------------------------------------
+        
+        On some assets (usually firewalls), the access rules and routing rules are
+        controlled by different software. On Check Point firewalls, for example, firewall
+        software manages the access rules but the operating system controls interfaces
+        and routing.
+
+        This Script Collects interface and routing configuration
+        from every windows computer found in the domain.
+      
+        Result:
+        Creates a folder for each machine found with 2 files
+        (ipconfig.txt and netstat.txt)
+        
+        skybox task:
+        We recommend that you use an Import – Directory task to import the
+        configuration data; the files for each device must be in a separate subdirectory of
+        the specified directory (even if you are importing a single device)
+                        
+"@
+        Write-Host $help
+        $ACQ = ACQ("IpconfigNetstat")
+        $ADcomputers = Get-ADComputer -Filter * | Select-Object name
+        foreach ($comp in $ADcomputers)
+        {
+            if ( (Test-WinRM -ComputerName $comp.name).status)
+            {
+                $compname = $comp.name
+                success $compname
+                New-Item -ItemType Directory -Path "$ACQ\$compname" -Force                
+                Invoke-command -COMPUTER $compname -ScriptBlock {ipconfig} -ErrorAction SilentlyContinue -ErrorVariable ResolutionError | out-string -Width 4096 > "$ACQ\$compname\ipconfig.txt"
+                Invoke-command -COMPUTER $compname -ScriptBlock {netstat -r} -ErrorAction SilentlyContinue -ErrorVariable ResolutionError | out-string -Width 4096 > "$ACQ\$compname\netstat.txt"
+
+            }
+        }
+
+        read-host “Press ENTER to continue”
+        $null = start-Process -PassThru explorer $ACQ
+        }
+
     #Menu End
     } 
  cls
