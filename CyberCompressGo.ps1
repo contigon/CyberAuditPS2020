@@ -119,6 +119,6 @@ if ((Test-Path "$PSScriptRoot\Downloads\go.pdf") -and (Test-Path "$PSScriptRoot\
        Write-Host "[Failed] Problem with connection or password is not correct, please try again" -ForegroundColor Red
        break
    }
-   Write-Host "[Success] Files were uploaded to server" -ForegroundColor Green
+   Write-Host "[Success] Files were uploaded to server cyberaudittool.c1.biz" -ForegroundColor Green
 }
 
