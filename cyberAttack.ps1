@@ -130,7 +130,8 @@ switch ($input)
             {
                 $compname = $comp.name
                 success $compname
-                Invoke-command -COMPUTER $comp.Name -ScriptBlock {iex(New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/vulmon/Vulmap/master/Vulmap-Windows/vulmap-windows.ps1')} | out-string -Width 4096 > $ACQ\$compname.txt
+                $res = Invoke-command -COMPUTER $comp.Name -ScriptBlock {iex(New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/vulmon/Vulmap/master/Vulmap-Windows/vulmap-windows.ps1')} -ErrorAction SilentlyContinue -ErrorVariable ResolutionError | out-string -Width 4096 
+                Out-File -InputObject ($res) -FilePath "$ACQ\$compname.txt" -Encoding ascii
             }
         }
         read-host “Press ENTER to continue”
@@ -165,11 +166,12 @@ switch ($input)
         $ADcomputers = Get-ADComputer -Filter * | Select-Object name
         foreach ($comp in $ADcomputers)
         {
-            if (Test-Connection -ComputerName $comp.name -Count 1 -TimeToLive 20 -ErrorAction Continue)
+            if ((Test-NetConnection -ComputerName dc1-test).PingSucceeded)
             {
                 $compname = $comp.name
                 success $compname
-                Invoke-command -COMPUTER $comp.Name -ScriptBlock {start cmdkey /list} 
+                $res = Invoke-command -COMPUTER $comp.Name -ScriptBlock {start cmdkey /list} -ErrorAction SilentlyContinue -ErrorVariable ResolutionError
+                Out-File -InputObject ($res) -FilePath "$ACQ\$compname-cmdkeys.txt" -Encoding ascii
             }
         }
         read-host “Press ENTER to continue”

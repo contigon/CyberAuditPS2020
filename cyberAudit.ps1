@@ -711,9 +711,10 @@ Write-Host $block -ForegroundColor Red
                 $compname = $comp.name
                 success $compname
                 New-Item -ItemType Directory -Path "$ACQ\$compname" -Force                
-                Invoke-command -COMPUTER $compname -ScriptBlock {ipconfig} -ErrorAction SilentlyContinue -ErrorVariable ResolutionError | out-string -Width 4096 > "$ACQ\$compname\ipconfig.txt"
-                Invoke-command -COMPUTER $compname -ScriptBlock {netstat -r} -ErrorAction SilentlyContinue -ErrorVariable ResolutionError | out-string -Width 4096 > "$ACQ\$compname\netstat.txt"
-
+                $res = Invoke-command -COMPUTER $compname -ScriptBlock {ipconfig} -ErrorAction SilentlyContinue -ErrorVariable ResolutionError
+                Out-File -InputObject ($res) -FilePath "$ACQ\$compname\ipconfig.txt" -Encoding ascii
+                $res = Invoke-command -COMPUTER $compname -ScriptBlock {netstat -r} -ErrorAction SilentlyContinue -ErrorVariable ResolutionError
+                Out-File -InputObject ($res) -FilePath "$ACQ\$compname\netstat.txt" -Encoding ascii
             }
         }
 
