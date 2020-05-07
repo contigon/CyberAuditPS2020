@@ -317,6 +317,11 @@ $help = @"
         The tool requires as an input an excel file in this format:
         IP | SSH Port | Username | Password | Vendor
 
+        IP can be in the form of:
+        192.168.1.1
+        192.168.1.1-192.168.1.20
+        192.168.2.0/24
+
         Please follow these steps:
         1. Excel template file will be automatically created at:
            $ACQ\NetworkDevices-$TimeStamp.xlsx
