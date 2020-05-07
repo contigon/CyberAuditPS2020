@@ -20,7 +20,7 @@ def parse_file(file_content):
     remediation_pattern = "'remediation': '(.*)',"
     cveLink_pattern = "'cveLink': '(.*)',"
     details_pattern = "'details': '(.*)',"
-    data_pattern = r"'data': \[(.*?)\],"
+    data_pattern = r"'data': \[(.*)\],"
     score_pattern = "'score': '(.*)',"
     test_result = re.findall(test_pattern, file_content)
     severity_result = re.findall(severity_pattern, file_content)
