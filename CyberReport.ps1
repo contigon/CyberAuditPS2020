@@ -56,4 +56,14 @@ foreach ($dc in $dcs)
     $i++
 }
 
-
+Write-Host "----------------------------------------------------------"
+Write-Host "Default Domain Policy:" -ForegroundColor Green
+$dp = Get-ADDefaultDomainPasswordPolicy
+Write-Host "ComplexityEnabled           | " $dp.ComplexityEnabled -ForegroundColor Green
+Write-Host "LockoutDuration             | " $dp.LockoutDuration -ForegroundColor Green
+Write-Host "LockoutObservationWindow    | " $dp.LockoutObservationWindow -ForegroundColor Green
+Write-Host "MaxPasswordAge              | " $dp.MaxPasswordAge -ForegroundColor Green
+Write-Host "MinPasswordAge              | " $dp.MinPasswordAge -ForegroundColor Green
+Write-Host "MinPasswordLength           | " $dp.MinPasswordLength -ForegroundColor Green
+Write-Host "PasswordHistoryCount        | " $dp.PasswordHistoryCount -ForegroundColor Green
+Write-Host "ReversibleEncryptionEnabled | " $dp.ReversibleEncryptionEnabled -ForegroundColor Green

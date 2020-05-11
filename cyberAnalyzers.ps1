@@ -20,11 +20,20 @@ $Host.UI.RawUI.WindowTitle = "Cyber Audit Tool 2020 - Analyzers"
 Write-Host " "
 
 #Set the Audit Acquisition folders
-if ($AcqABaseFolder -eq $null) 
+do
 {
     Write-Host "Choose the root folder with the audit data you want to analyze" -ForegroundColor Yellow
     $AcqABaseFolder = Get-Folder
+    if ($AcqABaseFolder -eq "")
+    {
+        failed "No folder was choosen, Please try again"
+    }
+    else
+    {
+        success $AcqABaseFolder
+    }
 }
+while ($AcqABaseFolder -eq "") 
 
 Function ACQA{
     Param ($dir)
@@ -52,7 +61,7 @@ Write-Host "********************************************************************
 Write-Host ""
 Write-Host "     Audit Data Analysis:                                                               " -ForegroundColor White
 Write-Host "" 
-Write-Host "     Data folder is $AcqABaseFolder                                                     " -ForegroundColor yellow
+Write-Host "     Data folder is: $AcqABaseFolder                                                     " -ForegroundColor yellow
 Write-Host ""
 Write-Host "     1. hash dumping   | Process NTDS/SYSTEM files and export the password hashes       " -ForegroundColor White
 Write-Host "     2. Ophcrack       | Password cracker based on rainbow tables                       " -ForegroundColor White

@@ -32,9 +32,9 @@ $PowerShellsDir = New-Item -Path $Tools -Name "\PowerShells" -ItemType "director
 $DownloadsDir = New-Item -Path $Tools -Name "\Downloads" -ItemType "directory" -Force
 
 #Powershell Modules, Utilities and Applications that needs to be installed
-$PSGModules = @("Testimo","VMware.PowerCLI","ImportExcel","Posh-SSH")
+$PSGModules = @("Testimo","VMware.PowerCLI","ImportExcel","Posh-SSH","7Zip4PowerShell","FileSplitter")
 $utilities = @("sudo","dotnet-sdk","Net_Framework_Installed_Versions_Getter","python27","python37","oraclejdk","putty","winscp","nmap","rclone","everything","notepadplusplus","googlechrome","firefox","foxit-reader","irfanview","grepwin","sysinternals","wireshark","excelviewer")
-$CollectorApps = @("ntdsaudit","RemoteExecutionEnablerforPowerShell","PingCastle","goddi","SharpHound","Red-Team-Scripts","Scuba-Windows","azscan3","LGPO","grouper2","Outflank-Dumpert","lantopolog")
+$CollectorApps = @("ntdsaudit","RemoteExecutionEnablerforPowerShell","PingCastle","goddi","SharpHound","Red-Team-Scripts","Scuba-Windows","azscan3","LGPO","grouper2","Outflank-Dumpert","lantopolog","nessus")
 $GPOBaselines = @("Windows10Version1507SecurityBaseline","Windows10Version1511SecurityBaseline","Windows10Version1607andWindowsServer2016SecurityBaseline","Windows10Version1703SecurityBaseline","Windows10Version1709SecurityBaseline","Windows10Version1803SecurityBaseline","Windows10Version1809andWindowsServer2019SecurityBaseline","W10V1903WinSerV1903SecBase","W10V1909WinSerV1909SecBaseline","WindowsServer2012R2SecurityBaseline")
 $AnalyzerApps = @("PolicyAnalyzer","BloodHoundExampleDB","BloodHoundAD","neo4j","ophcrack","vista_proba_free","AppInspector")
 $AttackApps = @("nirlauncher", "ruler")
@@ -84,6 +84,7 @@ Write-Host "     9. Attack!  	| Install attacking and Exploiting Scripts and too
 Write-Host "    10. Update   	| Update scoop applications and powershell modules            " -ForegroundColor $menuColor[10]
 Write-Host "    11. Licenses   	| Install or Create licenses to/from license files            " -ForegroundColor $menuColor[11]
 Write-Host "    12. Uninstall  	| Uninstall scoop applications and powershell modules         " -ForegroundColor $menuColor[12]
+Write-Host "    13. Backup  	| Compress and Backup all Audit folders and Files             " -ForegroundColor $menuColor[13]
 Write-Host ""
 Write-Host "    99. Quit                                                                      " -ForegroundColor White
 Write-Host ""
@@ -383,6 +384,7 @@ switch ($input)
                     $input = Read-Host "Press [Y] to download $AnalyzerApp rainbow table for Ophcrack (or Enter to continue and download it later)"
                      if ($input -eq "Y") {
                         scoop install $AnalyzerApp -g
+                        scoop update $AnalyzerApp -g
                         }
                         else
                         {
@@ -393,6 +395,7 @@ switch ($input)
                 else 
                 {
                     scoop install $AnalyzerApp -g
+                    scoop update $AnalyzerApp -g
                 }
             }
         foreach ($GPOBaseline in $GPOBaselines)
@@ -630,6 +633,56 @@ switch ($input)
      read-host “Press ENTER to continue”       
      }
     
+    #Backup
+    13 {
+       $src = "$PSScriptRoot\$env:Computername\"
+       $dst = "$PSScriptRoot\Backup\"
+       $dt = CurrentDate
+       $file = "$env:Computername(",$dt,").7z" -join ""
+       New-Item -Path $dst -ItemType Directory -Force
+       Add-Type -AssemblyName 'System.Web'
+       $minLength = 18 ## characters
+       $maxLength = 24 ## characters
+       $length = Get-Random -Minimum $minLength -Maximum $maxLength
+       $nonAlphaChars = 5
+       $pass = [System.Web.Security.Membership]::GeneratePassword($length, $nonAlphaChars)
+       $compress = @{
+              Path = $src
+              CompressionLevel = "Fastest"
+              DestinationPath = "$dst\$file"
+        }
+
+       $help = @"
+
+        Backup
+        ------
+        
+        This script will backup all collected audit files in order
+        to analyze them later on.
+
+        Source back up folder: $src
+        Destination folder   : $dst 
+        File Name            : $file
+
+        ***********************************************
+        Zip File is password protected, the password is
+
+                -->    $pass    <--
+                                          
+        ***********************************************
+"@
+        Write-Host $help
+        $menuColor[13] = "Yellow"
+        #Compress-Archive @compress -Force
+        $verify = Compress-7Zip -Path $src -ArchiveFileName "$dst\$file" -Format SevenZip -Password $pass -EncryptFilenames
+        Write-Host "Backup file Password is: $pass" -ForegroundColor Yellow
+        Get-7ZipInformation "$dst\$file" -Password $pass
+        Write-Host $verify
+        read-host “Press ENTER to continue”
+        $null = start-Process -PassThru explorer $dst
+     }
+
+#Menu End
    }
   CLS
  }

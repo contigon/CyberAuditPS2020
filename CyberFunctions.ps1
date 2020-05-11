@@ -12,6 +12,29 @@
 
 Set-ExecutionPolicy -ExecutionPolicy Unrestricted
 
+#Split-File C:\CyberAuditPS2020\Downloads\Nessus-8.10.0-x64.msi -PartSizeBytes 25MB
+#Join-File 
+
+function screenshot ()
+{
+    $null = New-Item -Path "$AcqBaseFolder\Screenshots" -ItemType Directory -Force
+    $timestamp = UniversalTimeStamp
+    [void][reflection.assembly]::loadwithpartialname("system.windows.forms")
+    [system.windows.forms.sendkeys]::sendwait('{PRTSC}')
+    Get-Clipboard -Format Image | ForEach-Object -MemberName Save -ArgumentList "$AcqBaseFolder\Screenshots\capture-$timestamp.png"
+}
+
+#get installed application path from application name 
+#example: GetAppInstallPath(nessus")
+function GetAppInstallPath ($appName)
+{
+    Write-Host "Looking for $appName installation path, please wait..."
+    $loc = Get-WmiObject -Class Win32_Product -Filter "Name like '%$appName%'" | Select InstallLocation
+    $locloc = $loc.InstallLocation
+    success "$appName is Installed in: $locloc" 
+    return $locloc
+}
+
 #write success/failed messages in green/red
 function success ($msg)
 {

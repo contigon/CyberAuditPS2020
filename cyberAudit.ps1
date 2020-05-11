@@ -73,6 +73,7 @@ Write-Host "    14. Dumpert	 	| LSASS memory dumper for offline extraction of cr
 Write-Host "    15. Runecast	| Security Hardening checks of VMWARE vSphere/NSX/cloud        " -ForegroundColor White
 Write-Host "    16. Misc    	| collection of scripts that checks miscofigurations or vulns  " -ForegroundColor White
 Write-Host "    17. Skybox    	| All windows machines interface and routing config collector  " -ForegroundColor White
+Write-Host "    18. Nessus    	| Vulnerability misconfigurations scanning of OS,Net,Apps,DB..." -ForegroundColor White
 Write-Host ""
 Write-Host "    99. Quit                                                                       " -ForegroundColor White
 Write-Host ""
@@ -721,6 +722,87 @@ Write-Host $block -ForegroundColor Red
         read-host “Press ENTER to continue”
         $null = start-Process -PassThru explorer $ACQ
         }
+
+         #Nessus
+     18 {
+        Cls
+$help = @"
+
+        Misc
+        ----
+        
+        Nessus Professional automates point-in-time assessments 
+        to help quickly identify and fix vulnerabilities and misconfigurations
+        including:
+        - software flaws
+        - OS missing patches
+        - malware
+        - Databases
+        - Network equipement
+        - Virtualization
+        - Cloud infrastructures
+        - Web Application
+
+        If you have problems scanning with nessus please try any of these solutions:
+        - If using windows Firewall please follow these instructions
+          https://docs.tenable.com/nessus/Content/CredentialedChecksOnWindows.htm
+        - If using other Antimalware solutions such as Mcafee,TrendMicro,ESET,SYMANTEC
+          Disable host IPS/IDS all workstations/servers or any other blocking techniques
+        - A Script that sets three registry keys and restarts a service to allow nessus 
+          to scan, Open Powershell as Admin and run these commands:
+            
+          `$NPF = scoop prefix NessusPreFlight
+          cd `$NPF
+          . .\NPF.ps1
+          Invoke-NPF -remote -target "MAchine Name or IP Address"
+          when fininshed scanning run:
+          Invoke-NPF -remoteclean -target "MAchine Name or IP address"
+          
+         In order to backup/restore udits,
+         please run these commands from elevated powershell:
+
+         net stop "Tenable Nessus"
+         copy C:\ProgramData\Tenable\Nessus\nessus\backups\global-<yyyy-mm-dd>.db
+         replace with 
+         C:\ProgramData\Tenable\Nessus\nessus\global.db 
+
+         More tips:
+         https://astrix.co.uk/news/2019/11/26/nessus-professional-tips-and-tricks
+
+"@
+        Write-Host $help
+        $ACQ = ACQ("Nessus")
+        $nessusPath = GetAppInstallPath("nessus")
+        Push-Location $nessusPath
+        <# $reg = Read-Host "Press [S] to register online or [O] for offline challenge (or Enter to continue)"
+        if ($reg -eq "S") 
+        {
+            Start-Process .\nessuscli -ArgumentList "fetch --register XXXX-XXXX-XXXX-XXXX" -wait -NoNewWindow -PassThru
+        }
+        elseif ($reg -eq "O")
+        {
+            Start-Process .\nessuscli -ArgumentList "fetch --challenge" -wait -NoNewWindow -PassThru
+        }
+        #>
+        Write-Host "Nessus users:"
+        $null = Start-Process .\nessuscli -ArgumentList "lsuser" -wait -NoNewWindow -PassThru
+        Pop-Location
+        Write-Host "Starting Internet Explorer in background..."
+        $ie = New-Object -com InternetExplorer.Application
+        $ie.visible=$true
+        $uri = 'https://localhost:8834'
+        $ie.navigate("$uri")
+        while($ie.ReadyState -ne 4) {start-sleep -m 100}
+        if ($ie.document.url -Match "invalidcert")
+                {
+                Write-Host "Trying to Bypass SSL Certificate error page..."
+                $sslbypass=$ie.Document.getElementsByTagName("a") | where-object {$_.id -eq "overridelink"}
+                $sslbypass.click()
+                }
+        read-host “Press ENTER to continue”
+
+        }
+
 
     #Menu End
     } 

@@ -88,7 +88,7 @@ function Get-DeviceConfig
         Start-Sleep -s $Timeout;
         while ($SessionStream.DataAvailable){
             Start-Sleep -s 1;
-        $SessionResponse = $SessionStream.Read() | Out-String;
+        $SessionResponse += $SessionStream.Read() | Out-String;
         }
         Write-Host $SessionResponse
         if ($Output){
