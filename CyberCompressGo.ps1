@@ -98,6 +98,7 @@ Rename-Item -Path "$PSScriptRoot\Downloads\goUpdate.zip" -NewName "goUpdate.pdf"
 if ((Test-Path "$PSScriptRoot\Downloads\go.pdf") -and (Test-Path "$PSScriptRoot\Downloads\goUpdate.pdf") -and (Test-Path "$PSScriptRoot\Downloads\go.ps1")) {
     Write-Host "go.pdf and goUpdate.pdf files were created successfully" -ForegroundColor Green
     Push-Location "$PSScriptRoot\Downloads"
+    Get-ChildItem -Filter "nessus*.msi" | foreach {Remove-Item -Path $_}
     git pull
     Write-Host "Uploading <go.pdf\goUpdates.pdf\go.ps1> to github contigon\Downloads repo" -ForegroundColor Green
     git add .
