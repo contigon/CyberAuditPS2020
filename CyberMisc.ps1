@@ -7,7 +7,7 @@
 	 Filename:     	CyberMisc
 	===========================================================================
 	.DESCRIPTION
-		Cyber Audit Tool - Misc
+		Cyber Audit Tool - Misc scripts
 #>
 
 . $PSScriptRoot\CyberFunctions.ps1
