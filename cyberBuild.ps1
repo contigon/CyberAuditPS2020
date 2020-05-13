@@ -594,6 +594,7 @@ switch ($input)
         - Audit, Analyzer and Attack applications
         - Scoop itself
         - Powershell Modules
+        - neo4j service
 
         You will also be able to use restore point to remove all installations
         and changes to the operating system and registry keys.
@@ -601,6 +602,8 @@ switch ($input)
 "@
         Write-Host $help
         $menuColor[12] = "Yellow"
+        $cmd = "neo4j uninstall-service"
+        Invoke-Expression $cmd
         $a = appdir("appinspector")
         Set-Location $a
         $cmd = "dotnet.exe tool uninstall --global Microsoft.CST.ApplicationInspector.CLI"

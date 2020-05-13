@@ -290,34 +290,60 @@ switch ($input) {
                           group memberships, users, user sessions and other related information
 
         Please wait untill the neo4j database is running, this can take some time,
-        when logged in to the bloodhound application you will need to upload the
-        sharphound collected .json files in $ACQ
+        on 1st run you need to change the default login password in the neo4j web interface:
+        User:     neo4j
+        password: neo4j (change this to BloodHound)
+
+        Bloodhound application login will be:
+        User:    neo4j
+        Password BloodHound
+
+        After logging in to the bloodhound application you will need to upload the
+        sharphound collected .json or .zip files in $ACQ
 
 "@
         write-host $help -ForegroundColor Yellow
 	    if (Get-Service -Name "neo4j" -ErrorAction SilentlyContinue) 
             {
-	            $cmd = "net start 'neo4j'"
-                Invoke-Expression $cmd
-                write-host "User Name: neo4j" -ForegroundColor Yello
-                write-host "Password: BloodHound" -ForegroundColor Yello
-                invoke-expression "BloodHound"
+	            $stat = invoke-expression "neo4j status"
+                if ($stat -ne "Neo4j is running")
+                {
+                    $j = Start-Job -ScriptBlock {Start-service "neo4j" -Verbose}
+                    $j | Wait-Job
+                    write-host "User:     neo4j" -ForegroundColor Yello
+                    write-host "Password: BloodHound" -ForegroundColor Yello
+                    invoke-expression "BloodHound"
+                }
+                else
+                {
+                    failed "neo4j is not running, so Bloodhound can run without it"
+                }
         }
         else {
                 $cmd = "neo4j install-service"
                 Invoke-Expression $cmd
-                Copy-Item $appsDir\BloodHoundExampleDB\current\BloodHoundExampleDB.graphdb $appsDir\neo4j\current\data\databases\BloodHoundExampleDB.graphdb -Recurse -Force      
+                Copy-Item "$appsDir\BloodHoundExampleDB\current\BloodHoundExampleDB.db\" "$appsDir\neo4j\current\data\databases\BloodHoundExampleDB.db" -Recurse -Force      
                 (Get-Content -Path  $appsDir\neo4j\current\conf\neo4j.conf -Raw) -replace "#dbms.active_database=graph.db","dbms.active_database=BloodHoundExampleDB.graphdb" | set-content -Path $appsDir\neo4j\current\conf\neo4j.conf
                 (Get-Content -Path  $appsDir\neo4j\current\conf\neo4j.conf -Raw) -replace "#dbms.allow_upgrade=true","dbms.allow_upgrade=true" | set-content -Path $appsDir\neo4j\current\conf\neo4j.conf
-	            $cmd = "net start 'neo4j'"
-                Invoke-Expression $cmd
+                $j = Start-Job -ScriptBlock {Start-service "neo4j" -Verbose}
+                $j | Wait-Job
 	            write-host "If you have problem with service starting, please start it manually from services.msc"
+                Write-Host "and if problem is not resolved run from elevated console:"
+                Write-Host "neo4j uninstall-service"
 	            write-host "Verify neo4j is running(web console should show up in your browser"
-	            start explorer http://localhost:7474/
-	            write-host "User Name: neo4j" -ForegroundColor Green
-	            write-host "Password: neo4j" -ForegroundColor Green
-	            write-host "Please change initial password to: BloodHound" -ForegroundColor Red
-                write-host "User Name: neo4j" -ForegroundColor Yello
+                Write-Host "Starting Internet Explorer in background..."
+                $ie = New-Object -com InternetExplorer.Application
+                $ie.visible=$true
+                $uri = 'http://localhost:7474/'
+                $ie.navigate("$uri")
+                while($ie.ReadyState -ne 4) {start-sleep -m 10}
+                #start explorer http://localhost:7474/
+	            write-host "User:     neo4j" 
+	            write-host "Password: neo4j"
+	            write-host "Please change default password to: BloodHound" -ForegroundColor Red
+                read-host  “After password is changed, Press ENTER to continue”
+                write-host "Login to the BloodHound application using:"
+                write-host "User:     neo4j" -ForegroundColor Yello
                 write-host "Password: BloodHound" -ForegroundColor Yello
                 invoke-expression "BloodHound"
         }
@@ -488,5 +514,6 @@ switch ($input) {
  cls
  }
 while ($input -ne '99')
-$cmd = "net stop 'neo4j'"
-Invoke-Expression $cmd
+
+#on exit stop neo4j service
+Stop-Service "neo4j" -Verbose
