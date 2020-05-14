@@ -45,6 +45,7 @@ $compress = @{
           "$PSScriptRoot\go.ps1",
           "$PSScriptRoot\CyberMisc.ps1",
           "$PSScriptRoot\CyberReport.ps1",
+          "$PSScriptRoot\CyberOfflineNTDS.ps1",
           "$PSScriptRoot\Scuba2CSV.py",
           "$PSScriptRoot\CyberAuditDevelopersHelp.txt",
           "$PSScriptRoot\CyberBginfo.bgi",
@@ -71,6 +72,7 @@ $compressUpdates = @{
           "$PSScriptRoot\CyberPingCastle.ps1",
           "$PSScriptRoot\CyberMisc.ps1",
           "$PSScriptRoot\CyberReport.ps1",
+          "$PSScriptRoot\CyberOfflineNTDS.ps1",
           "$PSScriptRoot\Scuba2CSV.py",
           "$PSScriptRoot\CyberAuditDevelopersHelp.txt",
           "$PSScriptRoot\CyberBginfo.bgi"
