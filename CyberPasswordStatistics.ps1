@@ -21,7 +21,8 @@ $filesPath = $ACQ
 $xlfile = "$filesPath\CyberStatistics.xlsx"
 Remove-Item $xlfile -ErrorAction Ignore
 
-((Get-Content -Path "$filesPath\found_*.txt") -replace ":",",") | Set-Content -Path "$filesPath\foundPasswords.csv"
+$DomainString = ((Get-Content -Path "$filesPath\found_*.txt" -Tail 1).Split("\")[0])
+(((Get-Content -Path "$filesPath\found_*.txt") -replace ":",",") -replace $DomainString,"").TrimStart("\") | Set-Content -Path "$filesPath\foundPasswords.csv"
 $domAdmins = Import-Csv -path "$filesPath\Domain_Users_Domain Admins.csv"
 $entAdmins = Import-Csv -path "$filesPath\Domain_Users_Enterprise Admins.csv"
 $FoundPasswords = Import-Csv -path "$filesPath\foundPasswords.csv" -Header "user","hash","password"

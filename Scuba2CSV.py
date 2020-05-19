@@ -61,5 +61,5 @@ if __name__ == "__main__":
     if num_args != 2:
         print("Usage: Scuba2CSV.py <pathToAssessmentResult.js>")
         exit(1)
-    file = open(sys.argv[1], "r", encoding="ISO-8859-1")
+    file = open(sys.argv[1], "r")
     parse_file(file.read())

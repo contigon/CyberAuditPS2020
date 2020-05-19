@@ -71,6 +71,7 @@ Write-Host "     5. PolicyAnalizer | Compare GPO to Microdoft Security configura
 Write-Host "     6. statistics     | Cracked Enterprise & Domain Admin passwords statistics         " -ForegroundColor White
 Write-Host "     7. Dsinternals    | Password cracking using haveibeenpawned NTLM v5 file           " -ForegroundColor White
 Write-Host "     8. AppInspector   | Software source code analysis to identify good or bad patterns " -ForegroundColor White
+Write-Host "     9. RiskChart      | Generate an excelRisk Pie Chart                                " -ForegroundColor White
 Write-Host ""
 Write-Host "    99. Quit                                                                            " -ForegroundColor White
 Write-Host ""
@@ -308,7 +309,9 @@ switch ($input) {
 	            $stat = invoke-expression "neo4j status"
                 if ($stat -ne "Neo4j is running")
                 {
-                    $j = Start-Job -ScriptBlock {Start-service "neo4j" -Verbose}
+                    #$j = Start-Job -ScriptBlock {Start-service "neo4j" -Verbose}
+                    Write-Host "Starting neo4j service"
+                    $j = Start-Job -ScriptBlock {neo4j start}
                     $j | Wait-Job
                     write-host "User:     neo4j" -ForegroundColor Yello
                     write-host "Password: BloodHound" -ForegroundColor Yello
@@ -316,7 +319,10 @@ switch ($input) {
                 }
                 else
                 {
-                    failed "neo4j is not running, so Bloodhound can run without it"
+                    Success "neo4j is running, we can launce Bloodhound"
+                    write-host "User:     neo4j" -ForegroundColor Yello
+                    write-host "Password: BloodHound" -ForegroundColor Yello
+                    invoke-expression "BloodHound"
                 }
         }
         else {
@@ -506,6 +512,29 @@ switch ($input) {
         Invoke-Expression $cmd
         Start-Process iexplore $ACQ
         Pop-Location    
+        read-host “Press ENTER to continue”     
+     }
+     #RiskChart
+     8 {
+        CLS
+        $ACQ = ACQA("RiskChart")
+        $help = @"
+        
+        RiskChart
+        ---------
+
+        Generat a risk Pie Chart based on scoring of the risk found during audit.
+
+"@
+        write-host $help -ForegroundColor Yellow
+        $input = Read-Host "Press [B] to browse for the location of pwned-passwords-ntlm-ordered-by-hash-v5.txt file"
+        if ($input -eq "B") 
+        {
+            Import-Module DSInternals
+            $bk=Get-BootKey -SystemHivePath $ACQ\SYSTEM
+            $pwndfile = Get-FileName
+            Get-ADDBAccount -All -DatabasePath $ACQ\ntds.dit -BootKey $bk | Test-PasswordQuality -WeakPasswordHashesSortedFile $pwndfile
+         }
         read-host “Press ENTER to continue”     
      }
 

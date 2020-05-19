@@ -47,6 +47,7 @@ $compress = @{
           "$PSScriptRoot\CyberReport.ps1",
           "$PSScriptRoot\CyberOfflineNTDS.ps1",
           "$PSScriptRoot\Scuba2CSV.py",
+          "$PSScriptRoot\RiskChart.xlsx",
           "$PSScriptRoot\CyberAuditDevelopersHelp.txt",
           "$PSScriptRoot\CyberBginfo.bgi",
           "$PSScriptRoot\Bginfo64.exe",
@@ -74,6 +75,7 @@ $compressUpdates = @{
           "$PSScriptRoot\CyberReport.ps1",
           "$PSScriptRoot\CyberOfflineNTDS.ps1",
           "$PSScriptRoot\Scuba2CSV.py",
+          "$PSScriptRoot\RiskChart.xlsx",
           "$PSScriptRoot\CyberAuditDevelopersHelp.txt",
           "$PSScriptRoot\CyberBginfo.bgi"
   CompressionLevel = "Fastest"
