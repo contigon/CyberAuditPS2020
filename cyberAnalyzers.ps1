@@ -71,7 +71,7 @@ Write-Host "     5. PolicyAnalizer | Compare GPO to Microdoft Security configura
 Write-Host "     6. statistics     | Cracked Enterprise & Domain Admin passwords statistics         " -ForegroundColor White
 Write-Host "     7. Dsinternals    | Password cracking using haveibeenpawned NTLM v5 file           " -ForegroundColor White
 Write-Host "     8. AppInspector   | Software source code analysis to identify good or bad patterns " -ForegroundColor White
-Write-Host "     9. RiskChart      | Generate an excelRisk Pie Chart                                " -ForegroundColor White
+Write-Host "     9. Charts         | Generate an excel Risk and remediation efforts charts          " -ForegroundColor White
 Write-Host ""
 Write-Host "    99. Quit                                                                            " -ForegroundColor White
 Write-Host ""
@@ -514,27 +514,36 @@ switch ($input) {
         Pop-Location    
         read-host “Press ENTER to continue”     
      }
-     #RiskChart
-     8 {
+     #Remediation Efforts and Risk Charts
+     9 {
         CLS
-        $ACQ = ACQA("RiskChart")
+        $ACQ = ACQA("EffortsChart")
         $help = @"
         
-        RiskChart
-        ---------
+        Remediation Efforts and Risk Charts
+        -----------------------------------
 
-        Generat a risk Pie Chart based on scoring of the risk found during audit.
+        Generate Remediation Efforts and Risk Charts based on scoring of 
+        audited categories and the risks found in each category.
 
+        The effort scorings  is based on:
+        1 = Low
+        2 = Medium
+        3 = High
+        
+        The Risk scoring is based on:
+        80-125 = Critical
+        45-79  = High
+        25-44  = Medium
+        1-24   = Low
+
+        Requirements: 
+        You need to have Microsoft Excel installed
 "@
         write-host $help -ForegroundColor Yellow
-        $input = Read-Host "Press [B] to browse for the location of pwned-passwords-ntlm-ordered-by-hash-v5.txt file"
-        if ($input -eq "B") 
-        {
-            Import-Module DSInternals
-            $bk=Get-BootKey -SystemHivePath $ACQ\SYSTEM
-            $pwndfile = Get-FileName
-            Get-ADDBAccount -All -DatabasePath $ACQ\ntds.dit -BootKey $bk | Test-PasswordQuality -WeakPasswordHashesSortedFile $pwndfile
-         }
+        Copy-Item -Path $PSScriptRoot\CyberRiskCompute.xlsx -Destination $ACQ
+        Start-Process "$ACQ\CyberRiskCompute.xlsx"
+        Start-Process iexplore $ACQ
         read-host “Press ENTER to continue”     
      }
 

@@ -21,6 +21,15 @@ CyberBginfo
 DisableFirewall
 DisableAntimalware
 proxydetect
+
+Write-Host "Adding GodMode shortcut to desktop"
+$godmodeSplat = @{
+Path = "$env:USERPROFILE\Desktop"
+Name = "GodMode.{ED7BA470-8E54-465E-825C-99712043E01C}"
+ItemType = "Directory"
+}
+New-Item @godmodeSplat
+
 $Host.UI.RawUI.WindowTitle = "Cyber Audit Tool 2020 - build"
 
 #Checkpoint-Computer -Description 'before installing CyberAuditTool'
@@ -36,7 +45,7 @@ $PSGModules = @("Testimo","VMware.PowerCLI","ImportExcel","Posh-SSH","7Zip4Power
 $utilities = @("sudo","dotnet-sdk","Net_Framework_Installed_Versions_Getter","python27","python37","oraclejdk","putty","winscp","nmap","rclone","everything","notepadplusplus","googlechrome","firefox","foxit-reader","irfanview","grepwin","sysinternals","wireshark","excelviewer")
 $CollectorApps = @("ntdsaudit","RemoteExecutionEnablerforPowerShell","PingCastle","goddi","SharpHound","Red-Team-Scripts","Scuba-Windows","azscan3","LGPO","grouper2","Outflank-Dumpert","lantopolog","nessus")
 $GPOBaselines = @("Windows10Version1507SecurityBaseline","Windows10Version1511SecurityBaseline","Windows10Version1607andWindowsServer2016SecurityBaseline","Windows10Version1703SecurityBaseline","Windows10Version1709SecurityBaseline","Windows10Version1803SecurityBaseline","Windows10Version1809andWindowsServer2019SecurityBaseline","W10V1903WinSerV1903SecBase","W10V1909WinSerV1909SecBaseline","WindowsServer2012R2SecurityBaseline")
-$AnalyzerApps = @("PolicyAnalyzer","BloodHoundExampleDB","BloodHoundAD","neo4j","ophcrack","vista_proba_free","AppInspector")
+$AnalyzerApps = @("PolicyAnalyzer","BloodHoundExampleDB","BloodHoundAD","neo4j","ophcrack","hashcat","rockyou","vista_proba_free","AppInspector")
 $AttackApps = @("nirlauncher", "ruler")
 
 #Creating desktop shortcuts
