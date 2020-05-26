@@ -50,6 +50,9 @@ Function ACQA{
     Return $ACQdir
 }
 
+$ACQLog = ACQA("")
+start-Transcript -path $ACQLog\CyberAnalyzersPhase.Log -Force -append
+
 cls
 
 do {
@@ -103,15 +106,23 @@ switch ($input) {
         write-host $help
         $ACQ = ACQA("NTDS")
         Get-ChildItem -Path $ACQ -Recurse -File | Move-Item -Destination $ACQ
-        NtdsAudit $ACQ\ntds.dit -s $ACQ\SYSTEM  -p  $ACQ\pwdump.txt -u  $ACQ\user-dump.csv --debug --history-hashes
+        #NtdsAudit $ACQ\ntds.dit -s $ACQ\SYSTEM  -p  $ACQ\pwdump-with-hitory.txt -u  $ACQ\user-dump.csv --debug --history-hashes
+        NtdsAudit $ACQ\ntds.dit -s $ACQ\SYSTEM  -p  $ACQ\pwdump.txt -u  $ACQ\user-dump.csv --debug
         Import-Module DSInternals
         $bk=Get-BootKey -SystemHivePath $ACQ\SYSTEM
-        $fileFormat = @("Ophcrack","HashcatNT","HashcatLM","JohnNT","JohnLM")
+        #$fileFormat = @("Ophcrack","HashcatNT","HashcatLM","JohnNT","JohnLM")
+        $fileFormat = @("Ophcrack")
         foreach ($f in $fileFormat) 
         {
             Write-Host "[Success] Exporting hashes to $f format" -ForegroundColor Green
             Get-ADDBAccount -All -DBPath $ACQ\ntds.dit -BootKey $bk|Format-Custom -View $f|Out-File $ACQ\hashes-$f.txt -Encoding ASCII
         }
+        
+        Success "Creating the DomainStatistics.txt report from CyberAnalyzersPhase.Log"
+        Select-String "Account stats for:" $ACQLog\CyberAnalyzersPhase.Log -Context 0,20 | % { 
+            $_.context.PreContext + $_.line + $_.Context.PostContext
+            } | Out-File $ACQ\DomainStatistics.txt
+
         read-host “Press ENTER to continue”
         $null = start-Process -PassThru explorer $ACQ
      }
@@ -378,19 +389,6 @@ switch ($input) {
      6 {     
         CLS
         $ACQ = ACQA("Statistics")
-        Write-Host "Searching for installed Microsoft Excel..."
-        $excelVer = Get-WmiObject win32_product | where{$_.Name -match "Excel"} | select Name,Version
-        if ($excelVer) 
-        {
-            Write-Host "[Success]" $excelVer[0].name "is already installed" -ForegroundColor Green
-        }
-
-        else
-        {
-             Write-Host "[Failure] Please install Microsoft Excel before continuing running this analysis" -ForegroundColor Red
-             read-host “Press [Enter] if you installed Excel (or Ctrl + c to quit)”
-        }
-
         $help = @"
         
         In order to create the password statistics excel we need 4 files
@@ -407,41 +405,51 @@ switch ($input) {
 
 "@
 
-        $files = @("found_","left_","Domain_Users_Domain Admins.csv","Domain_Users_Enterprise Admins.csv")
-        $hashcat = ACQA("NTDS")
-        $found = $hashcat + "\" + $files[0].ToString()
-        Copy-Item -Path $found*.txt -Destination $ACQ -Force
-        $left = $hashcat + "\" + $files[1].ToString()
-        Copy-Item -Path $left*.txt -Destination $ACQ -Force
-
-        $goddi = ACQA("goddi")
-        $DomainAdmins = $goddi + "\" + $files[2].ToString()
-        Copy-Item -Path $DomainAdmins -Destination $ACQ -Force
-        $EntAdmins = $goddi + "\" + $files[3].ToString()
-        Copy-Item -Path $EntAdmins -Destination $ACQ -Force
-        Write-Host $help -ForegroundColor Yellow
-        Start-Process iexplore $ACQ
-        $input  = Read-Host "Press [Enter] if you all files are located in $ACQ (or Ctrl + C to quit)"
-        $folderFiles = Get-ChildItem -Path $ACQ -Recurse -File -Name
-        $i = 0
-        foreach ($f in $files) {
-            if ($folderFiles -match $f) { 
-                Write-Host "File $f*.txt was found." -foregroundcolor green
-                $i++
-            } else { 
-                Write-Host "File $f*.txt was not found!" -foregroundcolor red 
+        Write-Host "Searching for installed Microsoft Excel"
+        $excelVer = Get-WmiObject win32_product | where{$_.Name -match "Excel"} | select Name,Version
+        if ($excelVer) 
+        {
+            success $excelVer[0].name "is already installed"
+            $files = @("found_","left_","Domain_Users_Domain Admins.csv","Domain_Users_Enterprise Admins.csv")
+            $hashcat = ACQA("NTDS")
+            $found = $hashcat + "\" + $files[0].ToString()
+            Copy-Item -Path $found*.txt -Destination $ACQ -Force
+            $left = $hashcat + "\" + $files[1].ToString()
+            Copy-Item -Path $left*.txt -Destination $ACQ -Force
+            $goddi = ACQA("goddi")
+            $DomainAdmins = $goddi + "\" + $files[2].ToString()
+            Copy-Item -Path $DomainAdmins -Destination $ACQ -Force
+            $EntAdmins = $goddi + "\" + $files[3].ToString()
+            Copy-Item -Path $EntAdmins -Destination $ACQ -Force
+            Write-Host $help -ForegroundColor Yellow
+            Start-Process iexplore $ACQ
+            $input  = Read-Host "Press [Enter] if all files are located in $ACQ (or Ctrl + C to quit)"
+            $folderFiles = Get-ChildItem -Path $ACQ -Recurse -File -Name
+            $i = 0
+            foreach ($f in $files) {
+                if ($folderFiles -match $f) { 
+                    success "File $f*.txt was found"
+                    $i++
+                } else { 
+                    failed "File $f*.txt was not found"
+                }
+            }
+            if ($i -eq 4)
+            {
+                Success "Generating the statistics excel file"
+                $ScriptToRun = $PSScriptRoot+"\CyberPasswordStatistics.ps1"
+                &$ScriptToRun
+            }
+            else 
+            {
+                Failed "Check that all files are copied to the $ACQ folder and try again"
+                Start-Process iexplore $ACQ
             }
         }
-        if ($i -eq 4)
+        else
         {
-            Write-Host "[Success] Creating the statistics excel file..."
-            $ScriptToRun = $PSScriptRoot+"\CyberPasswordStatistics.ps1"
-            &$ScriptToRun
-        }
-        else 
-        {
-            Write-Host "[Failed] Check that all files are copied to the $ACQ folder and try again" -ForegroundColor Red
-            Start-Process iexplore $ACQ
+             Write-Host "[Failure] Please install Microsoft Excel before continuing running this analysis" -ForegroundColor Red
+             read-host “Press [Enter] if you installed Excel (or Ctrl + c to quit)”
         }
         read-host “Press ENTER to continue”
      }
@@ -541,10 +549,21 @@ switch ($input) {
         You need to have Microsoft Excel installed
 "@
         write-host $help -ForegroundColor Yellow
-        Copy-Item -Path $PSScriptRoot\CyberRiskCompute.xlsx -Destination $ACQ
-        Start-Process "$ACQ\CyberRiskCompute.xlsx"
-        Start-Process iexplore $ACQ
-        read-host “Press ENTER to continue”     
+        Write-Host "Searching for installed Microsoft Excel"
+        $excelVer = Get-WmiObject win32_product | where{$_.Name -match "Excel"} | select Name,Version
+        if ($excelVer) 
+        {
+            success $excelVer[0].name" is already installed"
+            Copy-Item -Path $PSScriptRoot\CyberRiskCompute.xlsx -Destination $ACQ
+            Start-Process "$ACQ\CyberRiskCompute.xlsx"
+            Start-Process iexplore $ACQ
+        }
+
+        else
+        {
+             failed " Please install Microsoft Excel before running this analysis"
+        }
+        read-host “Press ENTER to continue”
      }
 
 #End Menu
@@ -553,5 +572,6 @@ switch ($input) {
  }
 while ($input -ne '99')
 
+Stop-Transcript | out-null
 #on exit stop neo4j service
 Stop-Service "neo4j" -Verbose

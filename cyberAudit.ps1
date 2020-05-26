@@ -512,6 +512,7 @@ Write-Host $block -ForegroundColor Red
                 success "exporting AssessmentResults.js to .csv" 
                 SetPythonVersion "2"
                 python .\Scuba2CSV.py "$ScubaDir\Scuba App\production\AssessmentResults.js"
+                Rename-Item -Path "$ACQ\ScubaCSV.csv" -NewName "$ACQ\ScubaCSV-$fname.csv"
                 $null = start-Process -PassThru explorer $ACQ
             }
             else
