@@ -106,11 +106,11 @@ switch ($input) {
         write-host $help
         $ACQ = ACQA("NTDS")
         Get-ChildItem -Path $ACQ -Recurse -File | Move-Item -Destination $ACQ
-        #NtdsAudit $ACQ\ntds.dit -s $ACQ\SYSTEM  -p  $ACQ\pwdump-with-hitory.txt -u  $ACQ\user-dump.csv --debug --history-hashes
+        #NtdsAudit $ACQ\ntds.dit -s $ACQ\SYSTEM  -p  $ACQ\pwdump-with-history.txt -u  $ACQ\user-dump.csv --debug --history-hashes
         NtdsAudit $ACQ\ntds.dit -s $ACQ\SYSTEM  -p  $ACQ\pwdump.txt -u  $ACQ\user-dump.csv --debug
         Import-Module DSInternals
         $bk=Get-BootKey -SystemHivePath $ACQ\SYSTEM
-        #$fileFormat = @("Ophcrack","HashcatNT","HashcatLM","JohnNT","JohnLM")
+        $fileFormat = @("Ophcrack","HashcatNT","HashcatLM","JohnNT","JohnLM")
         $fileFormat = @("Ophcrack")
         foreach ($f in $fileFormat) 
         {
@@ -122,6 +122,30 @@ switch ($input) {
         Select-String "Account stats for:" $ACQLog\CyberAnalyzersPhase.Log -Context 0,20 | % { 
             $_.context.PreContext + $_.line + $_.Context.PostContext
             } | Out-File $ACQ\DomainStatistics.txt
+
+
+        Write-Host "Searching for installed Microsoft Excel"
+        $excelVer = Get-WmiObject win32_product | where{$_.Name -match "Excel"} | select Name,Version
+        if ($excelVer) 
+        {
+            success $excelVer[0].name "is already installed"
+            if (Test-Path -Path "$ACQ\user-dump.csv")
+            {
+                Success "Generating the statistics excel file"
+                $ScriptToRun = $PSScriptRoot+"\CyberUserDumpStatistics.ps1"
+                &$ScriptToRun
+            }
+            else 
+            {
+                Failed "Check that user-dump.csv is located in the $ACQ folder and try again"
+                Start-Process iexplore $ACQ
+            }
+        }
+        else
+        {
+             Write-Host "[Failure] Please install Microsoft Excel before continuing running this analysis" -ForegroundColor Red
+             read-host “Press [Enter] if you installed Excel (or Ctrl + c to quit)”
+        }
 
         read-host “Press ENTER to continue”
         $null = start-Process -PassThru explorer $ACQ
@@ -558,7 +582,6 @@ switch ($input) {
             Start-Process "$ACQ\CyberRiskCompute.xlsx"
             Start-Process iexplore $ACQ
         }
-
         else
         {
              failed " Please install Microsoft Excel before running this analysis"
