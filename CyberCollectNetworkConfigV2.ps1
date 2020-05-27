@@ -54,8 +54,6 @@ function Get-DeviceConfig
         [Parameter(mandatory=$false)]
         [Switch]$Append,
         [Parameter(mandatory=$false)]
-        [Int]$Timeout,
-        [Parameter(mandatory=$false)]
         [String]$NipperDir
     )
     $SecPass = ConvertTo-SecureString $Password -AsPlainText -Force
@@ -65,9 +63,8 @@ function Get-DeviceConfig
     if ($SSHSession.Connected)
     {
         $SessionStream = New-SSHShellStream -SessionId $SSHSession.SessionId
-        
-        
         if ($Vendor -eq $vendors[0]){
+            #Cisco
             $intro = ""
             while(($line=$SessionStream.Read()) -ne "" -or $intro -eq ""){$intro += $line}
             $SessionStream.WriteLine("enable")
@@ -82,33 +79,75 @@ function Get-DeviceConfig
             $finishLine = $SessionStream.Read();
             $SessionStream.WriteLine("terminal length 0")
         } elseif ($Vendor -eq $vendors[2]){
+            #H3C
+            $intro = ""
+            while(($line=$SessionStream.Read()) -ne "" -or $intro -eq ""){$intro += $line}
+            while (($line = $SessionStream.ReadLine(5)) -eq ""){}
+            $SessionStream.WriteLine("")
+            while($SessionStream.ReadLine(5) -eq $null){}
+            while($SessionStream.ReadLine(5) -eq ""){}
+            $finishLine = $SessionStream.Read();
             $SessionStream.WriteLine("screen-length disable")
             $SessionStream.WriteLine("disable paging")
         } elseif ($Vendor -eq $vendors[1]){
+            #HP
+            $intro = ""
+            while(($line=$SessionStream.Read()) -ne "" -or $intro -eq ""){$intro += $line}
+            while (($line = $SessionStream.ReadLine(5)) -eq ""){}
+            $SessionStream.WriteLine("")
+            while($SessionStream.ReadLine(5) -eq $null){}
+            while($SessionStream.ReadLine(5) -eq ""){}
+            $finishLine = $SessionStream.Read();
             $SessionStream.WriteLine("no page")
             $SessionStream.WriteLine("enable")
         } elseif ($Vendor -eq $vendors[3]){
+            #Juniper
             while($SessionStream.ReadLine(5) -notlike "*master*"){}
             $SessionStream.WriteLine("")
             $finishLine = $SessionStream.ReadLine()
             $SessionStream.WriteLine("set cli screen-width 1000")
         } elseif ($Vendor -eq $vendors[4]){
+            #Enterasys
+            $intro = ""
+            while(($line=$SessionStream.Read()) -ne "" -or $intro -eq ""){$intro += $line}
+            while (($line = $SessionStream.ReadLine(5)) -eq ""){}
+            $SessionStream.WriteLine("")
+            while($SessionStream.ReadLine(5) -eq $null){}
+            while($SessionStream.ReadLine(5) -eq ""){}
+            $finishLine = $SessionStream.Read();
             $SessionStream.WriteLine("terminal more disable")
         } elseif ($Vendor -eq $vendors[5]) {
+            #Fortigate
+            $intro = ""
+            while(($line=$SessionStream.Read()) -ne "" -or $intro -eq ""){$intro += $line}
+            while (($line = $SessionStream.ReadLine(5)) -eq ""){}
+            $SessionStream.WriteLine("")
+            while($SessionStream.ReadLine(5) -eq $null){}
+            while($SessionStream.ReadLine(5) -eq ""){}
+            $finishLine = $SessionStream.Read();
             $SessionStream.WriteLine("config system console")
             $SessionStream.WriteLine("set output standard")
         } elseif ($Vendor -eq $vendors[6]) {
+            #Asa
+            $intro = ""
+            while(($line=$SessionStream.Read()) -ne "" -or $intro -eq ""){$intro += $line}
+            while (($line = $SessionStream.ReadLine(5)) -eq ""){}
+            $SessionStream.WriteLine("")
+            while($SessionStream.ReadLine(5) -eq $null){}
+            while($SessionStream.ReadLine(5) -eq ""){}
+            $finishLine = $SessionStream.Read();
             $SessionStream.WriteLine("enable")
             $SessionStream.WriteLine("terminal pager 0")
             $SessionStream.WriteLine("no pager")
         }
         $SessionStream.WriteLine($command)
         $SessionStream.WriteLine("");
-        #$SessionStream.Flush()
         $i = 0;
         while (($line = $SessionStream.ReadLine(5)) -notlike $finishLine){
+            if($line -ne $null){
             Write-Host $line
             $SessionResponse += $line | Out-String;
+            }
             Write-Progress -Activity "Running $command on $ip" -PercentComplete $i -CurrentOperation InnerLoop
             $i = ($i + 1) % 100
         }
@@ -138,34 +177,6 @@ function Get-DeviceConfig
             Write-Error "Could not remove SSH Session $($SSHSession.SessionId):$($SSHSession.Host)."
         }
     }
-}
-
-function Rename-Dir 
-{
-    param
-    (
-		[String]$Num,
-        [String]$Dir,
-        [String]$IP,
-        [String]$Vendor,
-        [String]$File
-    )
-    $FileContent = Get-Content $File | Out-String
-    if ($Vendor -eq $vendors[0] -or $Vendor -eq $vendors[6] -or $Vendor -eq $vendors[1] -or $Vendor -eq $vendors[4]) {
-        $EndDelimeter = "#"
-        $StartDelimeter = "`n"
-    } elseif ($Vendor -eq $vendors[2]) {
-        $EndDelimeter = ">"
-        $StartDelimeter = "<"
-    } elseif ($Vendor -eq $vendors[3]) {
-        $EndDelimeter = ">";
-        $StartDelimeter = "`n"
-    } 
-    $LastIndex = $FileContent.LastIndexOf($EndDelimeter)
-    $Tmp = $FileContent.Substring(0, $LastIndex)
-    $FirstIndex = $Tmp.LastIndexOf($StartDelimeter)
-    $DeviceName = $Tmp.Substring($FirstIndex + 1) + ' ' + $IP
-    Rename-Item $Dir\$Num $Dir\$DeviceName
 }
 
 function Check-Table($totalRows) 
@@ -309,9 +320,6 @@ function Check-JSON($FilePath)
         if ([string]::IsNullOrEmpty($IPEntry)){
             $counteri++
         }
-        if ([string]::IsNullOrEmpty($PortEntry)){
-            $counteri++
-        }
         if ([string]::IsNullOrEmpty($UserEntry)){
             $counteri++
         }
@@ -332,6 +340,29 @@ function Check-JSON($FilePath)
         Read-Host "If all OK, Press [Enter] to continue"
     }
 }
+
+function create-devices-file(){
+try{
+    $global:excel = New-Object -ComObject Excel.Application
+    Write-Host "Excel is installed" -ForegroundColor Green
+    Write-Host "We recommend using excel for this script, but you can also use .json format"
+    $input = Read-Host "Press Enter to use Excel or [J] for JSON"
+    if ($input -eq 'J'){
+        $global:usedexcel = $false
+        create-json
+    } else {
+        $global:usedexcel = $true
+        create-excel
+    }
+} catch {
+    Write-Host "Excel is not installed on this PC" -ForegroundColor Red
+    Write-Host "We recommend running this module using excel" -ForegroundColor Yellow
+    Read-Host "Press [Enter] to continue with the run (use .json) or [Ctrl + C] to quit"
+    $global:usedExcel = $false
+    create-json
+}
+}
+
 $help = @"
 
         This tool will try to automatically collect configuration and routing tables from network devices
@@ -365,35 +396,41 @@ $help = @"
 
 Write-Host $help 
 
-if (!($Timeout = Read-Host "Choose Timeout (in seconds) between each run (or Enter for 5 seconds)")) { $Timeout = 5 }
+$types = @("NetworkDevices*.txt","NetworkDevices*.xlsx")
 
-
-try{
-    $global:excel = New-Object -ComObject Excel.Application
-    Write-Host "Excel is installed" -ForegroundColor Green
-    Write-Host "We recommend using excel for this script, but you can also use .json format"
-    $input = Read-Host "Press Enter to use Excel or [J] for JSON"
-    if ($input -eq 'J'){
-        $global:usedexcel = $false
-        create-json
-    } else {
+if(Test-Path -Path "$ACQ\*" -Include $types[1]){
+    Write-Host "A .xlsx already exists inside the Network directory" -ForegroundColor Yellow
+    Write-Host "Would you like to create a new network file or use the one that exists?"
+    $xlsx = Read-Host "Press [N] to create a new file, otherwise press Enter"
+    if($xlsx -ne "N"){
+        $file = Get-ChildItem $path -Include $types[1]
+        $global:FilePath = $file.ToString()
         $global:usedexcel = $true
-        create-excel
+        $global:excel = New-Object -ComObject Excel.Application
+        $global:workBook = $global:excel.Workbooks.Open($global:FilePath)
+        $global:worksheet = $global:workBook.Worksheets.Item(1)
+    } else {
+    create-devices-file
     }
-} catch {
-    Write-Host "Excel is not installed on this PC" -ForegroundColor Red
-    Write-Host "We recommend running this module using excel" -ForegroundColor Yellow
-    Read-Host "Press [Enter] to continue with the run (use .json) or [Ctrl + C] to quit"
-    $global:usedExcel = $false
-    create-json
+} elseif(Test-Path -Path "$ACQ\*" -Include $types[0]){
+    Write-Host "A .json already exists inside the Network directory" -ForegroundColor Yellow
+    Write-Host "Would you like to create a new network file or use the one that exists?"
+    $txt = Read-Host "Press [N] to create a new file, otherwise press Enter"
+    if($txt -ne "N"){
+        $file = Get-ChildItem $path -Include $types[0]
+        $global:FilePath = $file.ToString()
+        $global:usedexcel = $false
+    } else {
+    create-devices-file
+    }
+} else {
+    create-devices-file
 }
 
-$action = Read-Host "Press [S] to save file and start collecting config data (or Enter to quit)"
-
+$action = Read-Host "Press [S] to check device list and to start collecting config data (or Enter to quit)"
 
 if ($action -eq "S") {
     if ($global:usedExcel){
-        $global:worksheet.SaveAs($global:FilePath)
         $length = $worksheet.UsedRange.Rows.Count
         $IPCol = 1
         $PortCol = 2
@@ -401,7 +438,7 @@ if ($action -eq "S") {
         $PassCol = 4
         $VendorCol = 5
         $StartRow = 2
-        Check-Table ($length)
+        Check-Table($length)
     } else {
         Check-JSON($FilePath)
         $length = $($devices.Length - 1)
@@ -454,53 +491,46 @@ if ($action -eq "S") {
 	            {
 	                #CISCO
 	                $vendors[0]{
- 				        Get-DeviceConfig -HostAddress $ip -HostPort $port -Username $username -Password $password -Vendor $vendors[0] -Command "sh run" -Output $savePath'sh run.txt' -Timeout $Timeout -Nipper $nipperDir
-                        Get-DeviceConfig -HostAddress $ip -HostPort $port -Username $username -Password $password -Vendor $vendors[0] -Command "show ip route vrf *" -Output $savePath'route.txt' -Timeout $Timeout
-                        Get-DeviceConfig -HostAddress $ip -HostPort $port -Username $username -Password $password -Vendor $vendors[0] -Command "sh snmp user" -Output $savePath'snmp.txt' -Timeout $Timeout
-                        Get-DeviceConfig -HostAddress $ip -HostPort $port -Username $username -Password $password -Vendor $vendors[0] -Command "sh conf | include hostname" -Output $savePath'run.txt' -Timeout $Timeout
-                        Get-DeviceConfig -HostAddress $ip -HostPort $port -Username $username -Password $password -Vendor $vendors[0] -Command "sh ver" -Output $savePath'run.txt' -a -Timeout $Timeout
-                        Get-DeviceConfig -HostAddress $ip -HostPort $port -Username $username -Password $password -Vendor $vendors[0] -Command "show access-lists" -Output $savePath'run.txt' -a -Timeout $Timeout
-	                    #Rename-Dir -Num $i -Dir $dir -IP $ip -Vendor $vendor -File $dir\$i\'run.txt'
+ 				        Get-DeviceConfig -HostAddress $ip -HostPort $port -Username $username -Password $password -Vendor $vendors[0] -Command "sh run" -Output $savePath'sh run.txt' -Nipper $nipperDir
+                        Get-DeviceConfig -HostAddress $ip -HostPort $port -Username $username -Password $password -Vendor $vendors[0] -Command "show ip route vrf *" -Output $savePath'route.txt'
+                        Get-DeviceConfig -HostAddress $ip -HostPort $port -Username $username -Password $password -Vendor $vendors[0] -Command "sh snmp user" -Output $savePath'snmp.txt'
+                        Get-DeviceConfig -HostAddress $ip -HostPort $port -Username $username -Password $password -Vendor $vendors[0] -Command "sh conf | include hostname" -Output $savePath'run.txt'
+                        Get-DeviceConfig -HostAddress $ip -HostPort $port -Username $username -Password $password -Vendor $vendors[0] -Command "sh ver" -Output $savePath'run.txt' -a
+                        Get-DeviceConfig -HostAddress $ip -HostPort $port -Username $username -Password $password -Vendor $vendors[0] -Command "show access-lists" -Output $savePath'run.txt' -a
 	                }
 	                #H3C
 	                $vendors[2]{
-                        Get-DeviceConfig -HostAddress $ip -HostPort $port -Username $username -Password $password -Vendor $vendors[2] -Command "display" -Output $savePath\'run.txt' -Timeout $Timeout -Nipper $nipperDir
-                        Get-DeviceConfig -HostAddress $ip -HostPort $port -Username $username -Password $password -Vendor $vendors[2] -Command "display ip routing-table" -Output $savePath\'route.txt' -Timeout $Timeout
-	                    #Rename-Dir -Num $i -Dir $dir -IP $ip -Vendor $vendor -File $dir\$i\'run.txt'
+                        Get-DeviceConfig -HostAddress $ip -HostPort $port -Username $username -Password $password -Vendor $vendors[2] -Command "display" -Output $savePath\'run.txt' -Nipper $nipperDir
+                        Get-DeviceConfig -HostAddress $ip -HostPort $port -Username $username -Password $password -Vendor $vendors[2] -Command "display ip routing-table" -Output $savePath\'route.txt'
 	                }
 	                #HP
 	                $vendors[1]{
-                        Get-DeviceConfig -HostAddress $ip -HostPort $port -Username $username -Password $password -Vendor $vendors[1] -Command "sh run" -Output $savePath\'run.txt' -Timeout $Timeout -Nipper $nipperDir
-                        Get-DeviceConfig -HostAddress $ip -HostPort $port -Username $username -Password $password -Vendor $vendors[1] -Command "show ip route" -Output $savePath\'route.txt' -Timeout $Timeout
-	                    #Rename-Dir -Num $i -Dir $dir -IP $ip -Vendor $vendor -File $dir\$i\'run.txt'
+                        Get-DeviceConfig -HostAddress $ip -HostPort $port -Username $username -Password $password -Vendor $vendors[1] -Command "sh run" -Output $savePath\'run.txt' -Nipper $nipperDir
+                        Get-DeviceConfig -HostAddress $ip -HostPort $port -Username $username -Password $password -Vendor $vendors[1] -Command "show ip route" -Output $savePath\'route.txt'
 	                }
 	                #Juniper
 	                $vendors[3]{
-                        Get-DeviceConfig -HostAddress $ip -HostPort $port -Username $username -Password $password -Vendor $vendors[3] -Command "show configuration | display inheritance | no-more" -Output $savePath\'run.txt' -Timeout $Timeout -Nipper $nipperDir
-                        Get-DeviceConfig -HostAddress $ip -HostPort $port -Username $username -Password $password -Vendor $vendors[3] -Command "show chassis hardware | no-more" -Output $savePath\'run.txt' -a -Timeout $Timeout
-                        Get-DeviceConfig -HostAddress $ip -HostPort $port -Username $username -Password $password -Vendor $vendors[3] -Command "show route logical-system all | no-more" -Output $savePath\'route.txt' -Timeout $Timeout
-                        Get-DeviceConfig -HostAddress $ip -HostPort $port -Username $username -Password $password -Vendor $vendors[3] -Command "show route all | no-more" -Output $savePath\'route-allW.txt' -Timeout $Timeout
-	                    #Rename-Dir -Num $i -Dir $dir -IP $ip -Vendor $vendor -File $dir\$i\'run.txt'
+                        Get-DeviceConfig -HostAddress $ip -HostPort $port -Username $username -Password $password -Vendor $vendors[3] -Command "show configuration | display inheritance | no-more" -Output $savePath\'run.txt' -Nipper $nipperDir
+                        Get-DeviceConfig -HostAddress $ip -HostPort $port -Username $username -Password $password -Vendor $vendors[3] -Command "show chassis hardware | no-more" -Output $savePath\'run.txt' -a
+                        Get-DeviceConfig -HostAddress $ip -HostPort $port -Username $username -Password $password -Vendor $vendors[3] -Command "show route logical-system all | no-more" -Output $savePath\'route.txt'
+                        Get-DeviceConfig -HostAddress $ip -HostPort $port -Username $username -Password $password -Vendor $vendors[3] -Command "show route all | no-more" -Output $savePath\'route-allW.txt'
 	                }
 	                #Enterasys
 	                $vendors[4]{
-                        Get-DeviceConfig -HostAddress $ip -HostPort $port -Username $username -Password $password -Vendor $vendors[4] -Command "show config all" -Output $savePath\'run.txt' -Timeout $Timeout -Nipper $nipperDir
-                        Get-DeviceConfig -HostAddress $ip -HostPort $port -Username $username -Password $password -Vendor $vendors[4] -Command "show ip route" -Output $savePath\'route.txt' -Timeout $Timeout
-	                    #Rename-Dir -Num $i -Dir $dir -IP $ip -Vendor $vendor -File $dir\$i\'run.txt'
+                        Get-DeviceConfig -HostAddress $ip -HostPort $port -Username $username -Password $password -Vendor $vendors[4] -Command "show config all" -Output $savePath\'run.txt' -Nipper $nipperDir
+                        Get-DeviceConfig -HostAddress $ip -HostPort $port -Username $username -Password $password -Vendor $vendors[4] -Command "show ip route" -Output $savePath\'route.txt'
 	                }
 	                #Fortigate
 	                $vendors[5]{
-	                    Get-DeviceConfig -HostAddress $ip -HostPort $port -Username $username -Password $password -Vendor $vendors[5] -Command "get system status" -Output $savePath\'config.txt' -Timeout $Timeout
-	                    Get-DeviceConfig -HostAddress $ip -HostPort $port -Username $username -Password $password -Vendor $vendors[5] -Command "show" -Output $savePath\'config.txt' -Append -Timeout $Timeout
-	                    Get-DeviceConfig -HostAddress $ip -HostPort $port -Username $username -Password $password -Vendor $vendors[5] -Command "get router info routing-table" -Output $savePath\'route.txt' -Timeout $Timeout
-	                    #Rename-Dir -Num $i -Dir $dir -IP $ip -Vendor $vendor -File $dir\$i\'config.txt'
+	                    Get-DeviceConfig -HostAddress $ip -HostPort $port -Username $username -Password $password -Vendor $vendors[5] -Command "get system status" -Output $savePath\'config.txt'
+	                    Get-DeviceConfig -HostAddress $ip -HostPort $port -Username $username -Password $password -Vendor $vendors[5] -Command "show" -Output $savePath\'config.txt' -Append -Timeout
+	                    Get-DeviceConfig -HostAddress $ip -HostPort $port -Username $username -Password $password -Vendor $vendors[5] -Command "get router info routing-table" -Output $savePath\'route.txt'
 	                }
 	                #ASA
 	                $vendors[6]{
-	                    Get-DeviceConfig -HostAddress $ip -HostPort $port -Username $username -Password $password -Vendor $vendors[6] -Command "show run" -Output $savePath\'run.txt' -Timeout $Timeout -Nipper $nipperDir
-	                    Get-DeviceConfig -HostAddress $ip -HostPort $port -Username $username -Password $password -Vendor $vendors[6] -Command "show access-lists" -Output $savePath\'run.txt' -Append -Timeout $Timeout
-	                    Get-DeviceConfig -HostAddress $ip -HostPort $port -Username $username -Password $password -Vendor $vendors[6] -Command "show route" -Output $savePath\'route.txt' -Timeout $Timeout
-	                    #Rename-Dir -Num $i -Dir $dir -IP $ip -Vendor $vendor -File $dir\$i\'run.txt'
+	                    Get-DeviceConfig -HostAddress $ip -HostPort $port -Username $username -Password $password -Vendor $vendors[6] -Command "show run" -Output $savePath\'run.txt' -Nipper $nipperDir
+	                    Get-DeviceConfig -HostAddress $ip -HostPort $port -Username $username -Password $password -Vendor $vendors[6] -Command "show access-lists" -Output $savePath\'run.txt' -Append
+	                    Get-DeviceConfig -HostAddress $ip -HostPort $port -Username $username -Password $password -Vendor $vendors[6] -Command "show route" -Output $savePath\'route.txt'
 	                }
                 }
             Add-Content -Encoding UTF8 "$ACQ\log.txt" "$ip - Success";
