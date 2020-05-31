@@ -74,7 +74,7 @@ Write-Host "     5. PolicyAnalizer | Compare GPO to Microdoft Security configura
 Write-Host "     6. statistics     | Cracked Enterprise & Domain Admin passwords statistics         " -ForegroundColor White
 Write-Host "     7. Dsinternals    | Password cracking using haveibeenpawned NTLM v5 file           " -ForegroundColor White
 Write-Host "     8. AppInspector   | Software source code analysis to identify good or bad patterns " -ForegroundColor White
-Write-Host "     9. Charts         | Generate an excel Risk and remediation efforts charts          " -ForegroundColor White
+Write-Host "     9. XlsCharts      | Generate an excel Risk and remediation efforts charts          " -ForegroundColor White
 Write-Host ""
 Write-Host "    99. Quit                                                                            " -ForegroundColor White
 Write-Host ""
@@ -110,7 +110,7 @@ switch ($input) {
         NtdsAudit $ACQ\ntds.dit -s $ACQ\SYSTEM  -p  $ACQ\pwdump.txt -u  $ACQ\user-dump.csv --debug
         Import-Module DSInternals
         $bk=Get-BootKey -SystemHivePath $ACQ\SYSTEM
-        $fileFormat = @("Ophcrack","HashcatNT","HashcatLM","JohnNT","JohnLM")
+        #$fileFormat = @("Ophcrack","HashcatNT","HashcatLM","JohnNT","JohnLM")
         $fileFormat = @("Ophcrack")
         foreach ($f in $fileFormat) 
         {
@@ -146,7 +146,7 @@ switch ($input) {
              Write-Host "[Failure] Please install Microsoft Excel before continuing running this analysis" -ForegroundColor Red
              read-host “Press [Enter] if you installed Excel (or Ctrl + c to quit)”
         }
-
+        
         read-host “Press ENTER to continue”
         $null = start-Process -PassThru explorer $ACQ
      }

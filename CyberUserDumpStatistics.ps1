@@ -13,7 +13,7 @@
         https://blog.psskills.com/2019/01/13/excel-reports-using-importexcel-module-from-powershell-gallery/
 #>
 
-$Host.UI.RawUI.WindowTitle = "Cyber Audit Tool 2020 - User Statistics"
+$Host.UI.RawUI.WindowTitle = "Cyber Audit Tool 2020 - Domain and Enterprise admins users Statistics"
 
 . $PSScriptRoot\CyberFunctions.ps1
 
@@ -21,9 +21,10 @@ $Host.UI.RawUI.WindowTitle = "Cyber Audit Tool 2020 - User Statistics"
 #kills any excel process with a file name "cyber" if running
 KillApp("EXCEL","Cyber")
 
-$filesPath = $ACQ
+#$filesPath = $ACQ
+$filesPath = "C:\CyberAuditPS2020\win10-P\NTDS"
 
-$xlfile = "$filesPath\Admin-Users-PasswordNotExpire-Statistics.xlsx"
+$xlfile = "$filesPath\Admin-users-dump-statistics.xlsx"
 Remove-Item $xlfile -ErrorAction Ignore
 
 $userDump = Import-Csv -path "$filesPath\user-dump.csv"
@@ -35,7 +36,6 @@ $userDump | Export-Excel $xlfile -AutoSize -StartRow 1 -StartColumn 1 -Worksheet
 
 $xl = Export-Excel -Path $xlfile -WorksheetName "Statistics"  -PassThru -AutoSize
 $ws = $xl.Workbook.Worksheets["Statistics"]
-$ws.Cells.ra
 
 $TotalRows = $ws.Dimension.Rows
 $range = $ws.Dimension.Address
@@ -66,4 +66,4 @@ Set-ExcelRow -Worksheet $ws -Row $lastRow -Bold -FontSize 28 -BackgroundColor ye
 
 Close-ExcelPackage $xl -Show
 success "Taking snapshot of results and saving"
-Convert-ExcelRangeToImage -workSheetname "Statistics" -Path $xlfile  -range $range  -destination "$ACQ\Admin-Users-PasswordNotExpire-Statistics.png" -show
+Convert-ExcelRangeToImage -workSheetname "Statistics" -Path $xlfile  -range $range  -destination "$ACQ\Admin-Users-Passwordno-Statistics.png" -show

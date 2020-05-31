@@ -74,6 +74,7 @@ Write-Host "    15. Runecast	| Security Hardening checks of VMWARE vSphere/NSX/c
 Write-Host "    16. Misc    	| collection of scripts that checks miscofigurations or vulns  " -ForegroundColor White
 Write-Host "    17. Skybox    	| All windows machines interface and routing config collector  " -ForegroundColor White
 Write-Host "    18. Nessus    	| Vulnerability misconfigurations scanning of OS,Net,Apps,DB..." -ForegroundColor White
+Write-Host "    19. Printers  	| Searching for printers and print servers vulnerabilities     " -ForegroundColor White
 Write-Host ""
 Write-Host "    99. Quit                                                                       " -ForegroundColor White
 Write-Host ""
@@ -665,9 +666,10 @@ Write-Host $block -ForegroundColor Red
 
         Checks:
 
-        - TBD
-        - TBD
-                
+        1. WSUS Updates over HTTP
+        2. 
+        3.
+        4.        
 "@
         Write-Host $help
         $ACQ = ACQ("Misc")
@@ -801,6 +803,57 @@ $help = @"
                 $sslbypass.click()
                 }
         read-host “Press ENTER to continue”
+        }
+              
+        #Printers
+     19 {
+        Cls
+        $help = @"
+
+        Printers
+        --------
+        
+        Searching for printers and print servers misconfigurations and vulnerabilities.
+
+        Steps:
+        After searching for printers in the network, connect to the WEB interface
+        and log in with default password for the printer (search in google for the password).
+
+        Take screenshots of configuration of printer.
+        
+           
+"@
+        Write-Host $help
+        $ACQ = ACQ("Printers")
+
+        Write-Host "Getting list of print servers from domain server"
+        $printservers = (Get-ADObject -LDAPFilter "(&(uncName=*)(objectCategory=printQueue))" -properties *|Sort-Object -Unique -Property servername).servername
+        $printservers | Export-Csv $ACQ\PrintServers.csv
+
+        Write-Host "Getting list of installed printers from all registered domain computers"
+        $computers = (Get-ADComputer -Filter *).name
+        # Get printer information
+        ForEach ($Printserver in $computers)
+        { 
+            $Printers = Get-WmiObject Win32_Printer -ComputerName $Printserver
+            ForEach ($Printer in $Printers)
+            {
+                $Ports = Get-WmiObject Win32_TcpIpPrinterPort -Filter "name = '$($Printer.Portname)'" -ComputerName $Printserver
+                if (($Printer.Name -notmatch "Microsoft") -and ($Printer.Name -notmatch "Adobe") -and ($Printer.Name -notlike "Fax*") -and ($Printer.Name -notmatch "FOXIT") -and ($Printer.Name -notmatch "OneNote"))
+                {
+
+                    Write-Host  "Server: $Printserver | IP: $Ports | Printer:" $Printer.Name | Export-Csv $ACQ\DomainPrinters.csv -NoTypeInformation -Append
+                }
+            }
+        }
+
+        $NetworkSegments = (Get-NetNeighbor -State "Reachable").ipaddress | foreach {[IPAddress] (([IPAddress] $_).Address -band ([IPAddress] "255.255.255.0").Address) | Select-Object IPAddressToString} | Get-Unique
+        Write-Host "Network segements found:" $NetworkSegments.IPAddressToString
+        $input = Read-Host "Input network subnet for scanning using nmap eg. 10.0.0.0/24"
+        nmap -p 515,631,9100 
+
+        read-host “Press ENTER to continue”
+        $null = start-Process -PassThru explorer $ACQ
         }
 
 

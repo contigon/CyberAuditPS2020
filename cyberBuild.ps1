@@ -47,6 +47,7 @@ $CollectorApps = @("ntdsaudit","RemoteExecutionEnablerforPowerShell","PingCastle
 $GPOBaselines = @("Windows10Version1507SecurityBaseline","Windows10Version1511SecurityBaseline","Windows10Version1607andWindowsServer2016SecurityBaseline","Windows10Version1703SecurityBaseline","Windows10Version1709SecurityBaseline","Windows10Version1803SecurityBaseline","Windows10Version1809andWindowsServer2019SecurityBaseline","W10V1903WinSerV1903SecBase","W10V1909WinSerV1909SecBaseline","WindowsServer2012R2SecurityBaseline")
 $AnalyzerApps = @("PolicyAnalyzer","BloodHoundExampleDB","BloodHoundAD","neo4j","ophcrack","hashcat","rockyou","vista_proba_free","AppInspector")
 $AttackApps = @("nirlauncher", "ruler")
+$pips = @("colorama","pysnmp","win_unicode_console")
 
 #Creating desktop shortcuts
 if ((Test-Path -Path "C:\Users\Public\Desktop\Build.lnk","C:\Users\Public\Desktop\Audit.lnk","C:\Users\Public\Desktop\Analyze.lnk") -match "False")
@@ -314,6 +315,15 @@ switch ($input)
         {
             scoop install $utility -g
         }
+        
+        #intall python third party modules required for some scripts  
+        SetPythonVersion "2"
+        python -m pip install --upgrade pip
+        foreach ($pip in $pips)
+        {
+            pip install $pip
+        }
+
      read-host “Press ENTER to continue” 
      }
     
