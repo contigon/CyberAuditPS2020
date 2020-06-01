@@ -75,6 +75,7 @@ Write-Host "    16. Misc    	| collection of scripts that checks miscofiguration
 Write-Host "    17. Skybox    	| All windows machines interface and routing config collector  " -ForegroundColor White
 Write-Host "    18. Nessus    	| Vulnerability misconfigurations scanning of OS,Net,Apps,DB..." -ForegroundColor White
 Write-Host "    19. Printers  	| Searching for printers and print servers vulnerabilities     " -ForegroundColor White
+Write-Host "    20. Sensitive  	| Searching for Sensitive documents and files on fileservers   " -ForegroundColor White
 Write-Host ""
 Write-Host "    99. Quit                                                                       " -ForegroundColor White
 Write-Host ""
@@ -808,6 +809,7 @@ $help = @"
         #Printers
      19 {
         Cls
+        $PretPath = scoop prefix PRET
         $help = @"
 
         Printers
@@ -815,20 +817,40 @@ $help = @"
         
         Searching for printers and print servers misconfigurations and vulnerabilities.
 
-        Steps:
-        After searching for printers in the network, connect to the WEB interface
-        and log in with default password for the printer (search in google for the password).
-
-        Take screenshots of configuration of printer.
+        Audit Steps
+        -----------
+        1. After searching for printers in the network, connect to the WEB interface
+           and log in with default password for the printer (search in google for the password)
+        2. Take screenshots of configuration of printer
+        3. Use PRET (Printer Exploitation Toolkit) to check for 
+           https://github.com/RUB-NDS/PRET
         
-           
+        Help Using PRET
+        ---------------
+        1. Open Powershell Command Line
+        2. cd to folder $PretPath
+        3. run the command will show help # python .\pret.py -h
+        4. examples:
+           # python .\pret.py -help status (this will show help on status command)
+           # python <ip of printer> pjl (connect to printer using pjl mode, options are:ps,pjl,pcl)
+        5. last command will open console to printer
+           # display <message> - Set printers display message
+           # info id - Provides the printer model number
+           # restart - will restart the printer 
+        
+        SHODAN Search for PJL printers
+        ------------------------------
+        port:9100 @pjl
+                
 "@
         Write-Host $help
         $ACQ = ACQ("Printers")
 
         Write-Host "Getting list of print servers from domain server"
         $printservers = (Get-ADObject -LDAPFilter "(&(uncName=*)(objectCategory=printQueue))" -properties *|Sort-Object -Unique -Property servername).servername
-        $printservers | Export-Csv $ACQ\PrintServers.csv
+        if ($printservers) {
+            $printservers | Export-Csv $ACQ\PrintServers.csv
+        }
 
         Write-Host "Getting list of installed printers from all registered domain computers"
         $computers = (Get-ADComputer -Filter *).name
@@ -849,12 +871,54 @@ $help = @"
 
         $NetworkSegments = (Get-NetNeighbor -State "Reachable").ipaddress | foreach {[IPAddress] (([IPAddress] $_).Address -band ([IPAddress] "255.255.255.0").Address) | Select-Object IPAddressToString} | Get-Unique
         Write-Host "Network segements found:" $NetworkSegments.IPAddressToString
-        $input = Read-Host "Input network subnet for scanning using nmap eg. 10.0.0.0/24"
-        nmap -p 515,631,9100 
+        $input = Read-Host "Input network subnet for scanning for printers using nmap eg. 10.0.0.0/24"
+        nmap -p 515,631,9100 $input -oG $ACQ\PrintersTCPscan.txt
+        $null = start-Process -PassThru explorer $ACQ
+
+        Write-Host "Scanning for Printers using snmpget"
+        nmap -sU -p 161 $input -oG $ACQ\PrintersUDPscan.txt
+
+        #snmpget -v 1 -O v -c public $ipaddress system.sysDescr.0
+
+        $input = Read-Host "Input ip address of a printer to try and hack usin PRET" 
+        SetPythonVersion "2"
+        Push-Location $PretPath
+        python .\pret.py $input pjl
+        Start-Process powershell
+        Pop-Location
 
         read-host “Press ENTER to continue”
         $null = start-Process -PassThru explorer $ACQ
         }
+
+        #Sensitive
+     20 {
+        Cls
+        $help = @"
+
+        Sensitive
+        ----
+        
+        Searching for sensitive documents and files in fileservers and shared folders.
+        This scripts uses the voidtools everything search fast search engine.
+
+        Checks:
+
+        1. Password protected files that might hold sensitve information
+        2. Documets that hold user names and passwords for different systems and accounts
+        3. Database backups of files with sensitive information (medical, finance, employees data, etc')
+               
+"@
+        Write-Host $help
+        $ACQ = ACQ("Sensitive")
+        
+        $cmd = "everything"
+        Invoke-Expression $cmd
+
+        read-host “Press ENTER to continue”
+        $null = start-Process -PassThru explorer $ACQ
+        }
+
 
 
     #Menu End
