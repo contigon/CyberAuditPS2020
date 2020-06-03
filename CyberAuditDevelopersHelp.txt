@@ -16,3 +16,8 @@ uploading files up to 25mb (no av scanning)
 Google Drive Direct Link  (for using in scoop):
 https://drive.google.com/uc?export=download&id=<GDRIVE file ID>
 
+help on properties of a function
+--------------------------------
+Get-IPAddressInformation | get-member (If you want to know what properties (and methods) there are)
+Get-IPAddressInformation | Select *
+Get-IPAddressInformation | format-custom *

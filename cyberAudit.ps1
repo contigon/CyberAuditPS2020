@@ -21,6 +21,11 @@ $Host.UI.RawUI.WindowTitle = "Cyber Audit Tool 2020 - Audit"
 
 start-Transcript -path $AcqBaseFolder\CyberAuditPhase.Log -Force -append
 
+#get external ip information includin ISP
+$ACQ = ACQ("")
+$externalIP = Get-IPAddressInformation 
+$externalIP > $ACQ\externalIP.txt
+
 #SET Domain controller name
 $i=0
 $DC = ($env:LOGONSERVER).TrimStart("\\")
@@ -837,10 +842,31 @@ $help = @"
            # display <message> - Set printers display message
            # info id - Provides the printer model number
            # restart - will restart the printer 
+        6. printers such as hp lasejet uses PostScript we can capture and show all printed documents
+           # python .\pret.py ps
+           # start capture
+           # capture list
         
-        SHODAN Search for PJL printers
+        
+        SHODAN Search for printers
         ------------------------------
-        port:9100 @pjl
+        515 (LPR), 631 (IPP), and 9100 (JetDirect)
+
+        port:9100 @pjl (wearch fo pjl printers)
+        port:9100 laserjet 4250 (search fo ps printer)
+
+
+        Links and Tutorials
+        -------------------
+        https://forums.hak5.org/topic/42138-packetsquirrel-printer-exploitation-toolkit/
+        https://serverfault.com/questions/154650/find-printers-with-nmap
+        https://seclists.org/fulldisclosure/2017/Jan/89
+        http://download.support.xerox.com/pub/docs/4600/userdocs/any-os/en_GB/Phaser4600.4620_PDL_Guide.pdf
+        https://courses.csail.mit.edu/6.857/2018/project/kritkorn-cattalyy-korrawat-suchanv-Printer.pdf
+        https://www.bard-security.com/index.php/2019/01/18/if-you-pwn-a-printer-is-it-prwnting/#more-85
+
+        get-
+        https://www.bard-security.com/index.php/2019/01/25/the-problem-with-protecting-against-pret/
                 
 "@
         Write-Host $help
@@ -884,7 +910,7 @@ $help = @"
         SetPythonVersion "2"
         Push-Location $PretPath
         python .\pret.py $input pjl
-        Start-Process powershell
+        Start-Process powershell -ArgumentList ls
         Pop-Location
 
         read-host “Press ENTER to continue”
@@ -906,15 +932,16 @@ $help = @"
 
         1. Password protected files that might hold sensitve information
         2. Documets that hold user names and passwords for different systems and accounts
-        3. Database backups of files with sensitive information (medical, finance, employees data, etc')
-               
+        3. Database backups of files with sensitive information (medical, finance, employees data and more)
+        
 "@
         Write-Host $help
         $ACQ = ACQ("Sensitive")
-        
-        $cmd = "everything"
+        $iniPath = scoop prefix everything
+        $input = Read-Host "Input network share to scan for files (eg. \\FileServer\c$\Users)"
+        $null = (Get-Content $iniPath\Everything.ini -Raw) -replace "\bfolders=(.*)","folders=$input" | Set-Content -Path $iniPath\Everything.ini -Force
+        $cmd = "everything -minimized -first-instance -admin -reindex"
         Invoke-Expression $cmd
-
         read-host “Press ENTER to continue”
         $null = start-Process -PassThru explorer $ACQ
         }
@@ -927,3 +954,5 @@ $help = @"
  }
 while ($input -ne '99')
 stop-Transcript | out-null
+$cmd = "everything -exit"
+Invoke-Expression $cmd

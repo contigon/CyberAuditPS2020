@@ -24,6 +24,15 @@ function screenshot ()
     Get-Clipboard -Format Image | ForEach-Object -MemberName Save -ArgumentList "$AcqBaseFolder\Screenshots\capture-$timestamp.png"
 }
 
+#Determine the active IP address on a Windows machine
+function activeIPaddress()
+{
+    $defaultRouteNic = Get-NetRoute -DestinationPrefix 0.0.0.0/0 | Sort-Object -Property RouteMetric | Select-Object -ExpandProperty ifIndex
+    $ipv4 = Get-NetIPAddress -AddressFamily IPv4 -InterfaceIndex $defaultRouteNic | Select-Object -ExpandProperty IPAddress
+    Return $ipv4
+}
+
+
 #get installed application path from application name 
 #example: GetAppInstallPath(nessus")
 function GetAppInstallPath ($appName)
