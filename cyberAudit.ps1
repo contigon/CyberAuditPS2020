@@ -77,10 +77,12 @@ Write-Host "    13. Grouper2 	| Find ActiveDirectory GPO security-related miscon
 Write-Host "    14. Dumpert	 	| LSASS memory dumper for offline extraction of credentials    " -ForegroundColor White
 Write-Host "    15. Runecast	| Security Hardening checks of VMWARE vSphere/NSX/cloud        " -ForegroundColor White
 Write-Host "    16. Misc    	| collection of scripts that checks miscofigurations or vulns  " -ForegroundColor White
-Write-Host "    17. Skybox    	| All windows machines interface and routing config collector  " -ForegroundColor White
+Write-Host "    17. Skybox-Win	| All windows machines interface and routing config collector  " -ForegroundColor White
 Write-Host "    18. Nessus    	| Vulnerability misconfigurations scanning of OS,Net,Apps,DB..." -ForegroundColor White
 Write-Host "    19. Printers  	| Searching for printers and print servers vulnerabilities     " -ForegroundColor White
 Write-Host "    20. Sensitive  	| Searching for Sensitive documents and files on fileservers   " -ForegroundColor White
+Write-Host "    21. Scanners	| ICMP, Port, IP, NetBIOS, ActiveDirectory and SNMP scanners   " -ForegroundColor White
+Write-Host "    22. Skybox-WMI	| WMI collector of installed programs from all windows machine " -ForegroundColor White
 Write-Host ""
 Write-Host "    99. Quit                                                                       " -ForegroundColor White
 Write-Host ""
@@ -923,7 +925,7 @@ $help = @"
         $help = @"
 
         Sensitive
-        ----
+        ---------
         
         Searching for sensitive documents and files in fileservers and shared folders.
         This scripts uses the voidtools everything search fast search engine.
@@ -940,13 +942,92 @@ $help = @"
         $iniPath = scoop prefix everything
         $input = Read-Host "Input network share to scan for files (eg. \\FileServer\c$\Users)"
         $null = (Get-Content $iniPath\Everything.ini -Raw) -replace "\bfolders=(.*)","folders=$input" | Set-Content -Path $iniPath\Everything.ini -Force
-        $cmd = "everything -minimized -first-instance -admin -reindex"
+        $heb = "רשימה|סיסמה|סודי|סיסמאות|לקוחות|מסווג|רשימת|זהות|מטופלים|לקוחות|משכורות|חשבונות|כתובות|הנהלה"
+        $eng = "secret|password|customer|patient|accounting|confidential"
+        $ext = ".xls|.pdf|.doc|.zip|.7z|.rar|.txt"
+        $cmd = "everything -first-instance -admin -reindex -s '$heb|$eng $ext' "
         Invoke-Expression $cmd
         read-host “Press ENTER to continue”
         $null = start-Process -PassThru explorer $ACQ
         }
+         #Network and Port Scanners
+     21 {
+        Cls
+        $help = @"
 
+        PortScanner
+        ----------
+        
+        find open ports on network computers and retrieve versions of programs running on the detected ports
 
+        Netscanner
+        ----------
+        
+        multi-threaded ICMP, Port, IP, NetBIOS, ActiveDirectory and SNMP scanner 
+
+        - Scan features:
+        - ActiveDirectory
+        - Network neighbourhood
+        - Ping (ICMP)
+        - IP Address
+        - MAC Address (even across routers)
+        - MAC Vendor
+        - Device name
+        - Device domain/workgroup
+        - Logged user
+        - Operating system
+        - BIOS, Model and CPU
+        - System time and Up time
+        - Device description
+        - Type flags (SQL server, Domain controller etc)
+        - Remote device date and time
+        - TCP and UDP port scanning
+        - SNMP services
+        - Installed services on device
+        - Shared resources
+        - Sessions
+        - Open Files
+        - Running processes
+        - Terminal sessions
+        - Event Log
+        - Installed software
+        - SAM accounts
+        - WMI Queries
+        - Powerful WhoIs client
+        
+"@
+        Write-Host $help
+        $ACQ = ACQ("Netscanner")
+        $cmd = "AdvancedPortScanner"
+        Invoke-Expression $cmd
+        $cmd = "netscanner64"
+        Invoke-Expression $cmd
+        read-host “Press ENTER to continue”
+        $null = start-Process -PassThru explorer $ACQ
+        }
+   #Skybox WMI scanner and parser
+     21 {
+        Cls
+        $help = @"
+
+        Skybox WMI collect and parse
+        ----------------------------
+
+        Collect information from windows machines such as:
+        - OS 
+        - installed Software
+        - hotfixes
+
+"@
+        Write-Host $help
+        $ACQ = ACQ("Skybox-WMI")
+        $cmd = "wmi_collector"
+        Invoke-Expression $cmd
+        $cmd = "wmi_parser -"
+        Invoke-Expression $cmd
+        read-host “Press ENTER to continue”
+        $null = start-Process -PassThru explorer $ACQ
+        }
 
     #Menu End
     } 
