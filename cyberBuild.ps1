@@ -1,4 +1,4 @@
-﻿<#	
+<#	
 	.NOTES
 	===========================================================================
 	 Created on:   	2/24/2020 1:11 PM
@@ -21,6 +21,9 @@ CyberBginfo
 DisableFirewall
 DisableAntimalware
 proxydetect
+Write-Host "Setting power scheme to ultimate performance"
+$cmd = "powercfg -s e9a42b02-d5df-448d-aa00-03f14749eb61"
+Invoke-Expression $cmd
 
 Write-Host "Adding GodMode shortcut to desktop"
 $godmodeSplat = @{
@@ -42,7 +45,7 @@ $DownloadsDir = New-Item -Path $Tools -Name "\Downloads" -ItemType "directory" -
 
 #Powershell Modules, Utilities and Applications that needs to be installed
 $PSGModules = @("Testimo","VMware.PowerCLI","ImportExcel","Posh-SSH","7Zip4PowerShell","FileSplitter")
-$utilities = @("sudo","dotnet-sdk","Net_Framework_Installed_Versions_Getter","python27","python37","oraclejdk","putty","winscp","nmap","rclone","everything","VoidToolsCLI","notepadplusplus","googlechrome","firefox","foxit-reader","irfanview","grepwin","sysinternals","snmpget","wireshark","excelviewer")
+$utilities = @("dotnet-sdk","Net_Framework_Installed_Versions_Getter","python27","python37","oraclejdk","putty","winscp","nmap","rclone","everything","VoidToolsCLI","notepadplusplus","googlechrome","firefox","foxit-reader","irfanview","grepwin","sysinternals","snmpget","wireshark","excelviewer")
 $CollectorApps = @("ntdsaudit","RemoteExecutionEnablerforPowerShell","PingCastle","goddi","SharpHound","Red-Team-Scripts","Scuba-Windows","azscan3","LGPO","grouper2","Outflank-Dumpert","lantopolog","nessus","NetScanner64","AdvancedPortScanner","skyboxwmicollector","skyboxwmiparser")
 $GPOBaselines = @("Windows10Version1507SecurityBaseline","Windows10Version1511SecurityBaseline","Windows10Version1607andWindowsServer2016SecurityBaseline","Windows10Version1703SecurityBaseline","Windows10Version1709SecurityBaseline","Windows10Version1803SecurityBaseline","Windows10Version1809andWindowsServer2019SecurityBaseline","W10V1903WinSerV1903SecBase","W10V1909WinSerV1909SecBaseline","WindowsServer2012R2SecurityBaseline")
 $AnalyzerApps = @("PolicyAnalyzer","BloodHoundExampleDB","BloodHoundAD","neo4j","ophcrack","hashcat","rockyou","vista_proba_free","AppInspector")
@@ -96,6 +99,7 @@ Write-Host "    10. Update   	| Update scoop applications and powershell modules
 Write-Host "    11. Licenses   	| Install or Create licenses to/from license files            " -ForegroundColor $menuColor[11]
 Write-Host "    12. Uninstall  	| Uninstall scoop applications and powershell modules         " -ForegroundColor $menuColor[12]
 Write-Host "    13. Backup  	| Compress and Backup all Audit folders and Files             " -ForegroundColor $menuColor[13]
+Write-Host "    14. Linux   	| Install Windows Subsystem for Linux                         " -ForegroundColor $menuColor[13]
 Write-Host ""
 Write-Host "    99. Quit                                                                      " -ForegroundColor White
 Write-Host ""
@@ -150,13 +154,20 @@ switch ($input)
       read-host “Press ENTER to continue”
       }
     
-     #Check Powershell and .Net versions and install if needed
+     #Check Powershell and .Net versions and install if needed and add turn on more features
      2{
         $menuColor[2] = "Yellow"
         CheckPowershell
         CheckDotNet
+        #Get-WindowsOptionalFeature -Online | Where-Object -FilterScript {$_.featurename -Like "*nfs*"}
+        Enable-WindowsOptionalFeature -Online -FeatureName "telnetclient" -Source "SourcePath"
+        Enable-WindowsOptionalFeature -Online -FeatureName "ServicesForNFS-ClientOnly" -Source "SourcePath"
+        Enable-WindowsOptionalFeature -Online -FeatureName "ClientForNFS-Infrastructure" -Source "SourcePath"
+        Enable-WindowsOptionalFeature -Online -FeatureName "NFS-Administration" -Source "SourcePath"
+        Enable-WindowsOptionalFeature -Online -FeatureName "Microsoft-Windows-Subsystem-Linux" -Source "SourcePath" -NoRestart -All
+        Enable-WindowsOptionalFeature -Online -FeatureName "VirtualMachinePlatform" -Source "SourcePath" -NoRestart -All
         Write-Host "Downloading and installing .NET Core 3.1 SDK (v3.1.201) Windows x64"
-        Invoke-WebRequest -Uri "https://download.visualstudio.microsoft.com/download/pr/56131147-65ea-47d6-a945-b0296c86e510/44b43b7cb27d55081e650b9a4188a419/dotnet-sdk-3.1.201-win-x64.exe" -OutFile "$PSScriptRoot\Downloads\dotnet-sdk-3.1.201-win-x64.exe"
+        &powershell -NoProfile -ExecutionPolicy unrestricted -Command "[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; &([scriptblock]::Create((Invoke-WebRequest -UseBasicParsing 'https://dot.net/v1/dotnet-install.ps1')))"
       read-host “Press ENTER to continue”
       }
     
@@ -220,9 +231,15 @@ switch ($input)
              {
                 Try
 	            {
-                    Get-InstalledModule -Name $PSGModule
-                    Install-Module -Name $PSGModule -AllowClobber -Force     
-                    Import-Module $PSGModule    
+                    if (Get-InstalledModule -Name $PSGModule -ErrorAction SilentlyContinue)
+                    {
+                        Install-Module -Name $PSGModule -AllowClobber -Force     
+                        Import-Module $PSGModule    
+                    }
+                    else
+                    {
+                        success "$PSGModule is already installed and imported"
+                    }
                 }
                 Catch
 	            {
@@ -233,6 +250,9 @@ switch ($input)
             {
                 Write-Host "$PSGModule is already installed" -ForegroundColor Green
             }
+            Set-PowerCLIConfiguration -Scope User -ParticipateInCEIP $false
+            success "These powershell modules are installed"
+            Get-Module
         }
      read-host “Press ENTER to continue”
      }
@@ -277,11 +297,14 @@ switch ($input)
         scoop config aria2-enabled false
         scoop install git -g
         scoop install OpenSSH -g
+        scoop install sudo -g
         [environment]::setenvironmentvariable('GIT_SSH', (resolve-path (scoop which ssh)), 'MACHINE')
         Set-ItemProperty 'HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem' -Name 'LongPathsEnabled' -Value 1
         scoop checkup
         scoop status
-        scoop update        
+        scoop update
+        sudo Add-MpPreference -ExclusionPath '$scoopDir'
+        sudo Add-MpPreference -ExclusionPath 'C:\CAT2020\Tools\GlobalScoopApps'        
         read-host “Press ENTER to continue”  
      }
     
@@ -307,6 +330,7 @@ switch ($input)
             write-host "- $utility"
         }
         $menuColor[6] = "Yellow"
+        
         scoop bucket add extras
         scoop bucket add java
         scoop bucket add versions
@@ -703,6 +727,24 @@ switch ($input)
         Write-Host $verify
         read-host “Press ENTER to continue”
         $null = start-Process -PassThru explorer $dst
+     }
+
+     #Windows Subsystem for Linux 
+    14 {
+       $help = @"
+
+        Install the Windows Subsystem for Linux
+        ---------------------------------------
+
+        Install your Linux distribution of choice
+
+
+"@
+        Write-Host $help
+        $menuColor[14] = "Yellow"
+        wsl --set-default-version 2
+
+        read-host “Press ENTER to continue”
      }
 
 #Menu End
