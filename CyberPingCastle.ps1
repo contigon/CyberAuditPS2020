@@ -19,11 +19,14 @@ switch ($key)
      cmd /c start .\PingCastle --interactive
     }
 "A" {
-     cmd /c start .\PingCastle --no-enum-limit --carto --healthcheck --server *
-     cmd /c start .\PingCastle --hc-conso
+    Start-Job -Name "full" -ScriptBlock {Push-Location $using:ACQ;cmd /c start .\PingCastle --no-enum-limit --carto --healthcheck --server *;Pop-Location}
+    Wait-Job -Name "full"
+    Start-Job -Name "conso" -ScriptBlock {Push-Location $using:ACQ;cmd /c start .\PingCastle --hc-conso;Pop-Location}
+    Wait-Job -Name "conso"
     $checks = @("antivirus","corruptADDatabase","laps_bitlocker","localadmin","nullsession","nullsession-trust","share","smb","spooler","startup")
     foreach($check in $checks){
-         cmd /c start .\PingCastle --scanner $check
+        Start-Job -Name "scan" -ScriptBlock {Push-Location $using:ACQ;cmd /c start .\PingCastle --scanner $check;Pop-Location}
+        Wait-Job -Name "scan"      
         }
     }
 }

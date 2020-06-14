@@ -32,7 +32,8 @@ if ($input -eq "C") {
 else
 {
     #create the azscan key file in the azscan3 folder
-    if (Test-Path -Path $appsDir\azscan3 -PathType Any)
+    $azscanfolder = scoop prefix azscan3
+    if (Test-Path -Path $azscanfolder -PathType Any)
     {
         $AZScanKey = "aFpMS0NoVGVDM29oM0w4QjBIOENkazVMOG40WjBDVThrY1hWXTJjZ29SNGJzSTReWllQM0Y2T3U4TzVkWkU4aDlPSDZmWGw0XTFKNGhCbVkNCmtfUDddNko+SjE0d0paMjk7STNoMWsxZnA0SFBvWUI5XnBxOF40X
         FYzMl5PMEkzbjN1OU4wXFgyaDFdYEFjMl9VTTVnMWw2WjFcMnVvM2xZDQpqXDBvQ0tHNVRcMEY3YksxcjJUcmFcc3EwbVBRMWEyXlkyZTVnNmcxYTFqOW85ZDBre31XVzZmNVFARlY5TDdoXmczRjRiZTNKNEQyRG
@@ -42,7 +43,7 @@ else
         jZxY0tmN0o2YjdhOHFxOF40XFYzUzZvOEM1aEI5RzVlUTFiNmxgOGZrZ3BnOWs2YHJBDQpmWlM1dDdtZzZoMmw1YzVpOEoxczk1NTU9NTUlLSU3SmcyYGA5ZXU3RjlcMUJkN1Q3aXAwUTVDY1hYRVY3XTBIQ0UwRD
         FRUmQySThJXjNwVQ0KS19VXEdxSmtCY05mRmdRZkVgQmtMbUtmUlxCaVhfT21HblBmSXBXcFNjVmZRclBoUV5OckJvUlxCbEtsSV5JYVVfWWBJcEheSG9ZXVpqRXINCg=="
         $Content = [System.Convert]::FromBase64String($AZScanKey)
-        Set-Content -Path $appsDir\azscan3\current\AZScanKey.dat -Value $Content -Encoding Byte
+        Set-Content -Path $azscanfolder\AZScanKey.dat -Value $Content -Encoding Byte
         Write-Host "azscan license file was created successfully" -ForegroundColor Green
     }
 

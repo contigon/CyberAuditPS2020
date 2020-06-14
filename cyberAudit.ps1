@@ -15,37 +15,67 @@ ShowIncd
 CyberBginfo
 $Host.UI.RawUI.WindowTitle = "Cyber Audit Tool 2020 - Audit"
 
-#Set the credentials for this Audit (it will be stored in a file)
-#Get-Credential $env:userdomain\$env:USERNAME | Export-Clixml -Path $PSScriptRoot\Tools\credentials.xml
-#$cred = Import-Clixml -Path $PSScriptRoot\Tools\credentials.xml
+$ACQ = ACQ("")
+
+#Set the credentials for this Audit (it will be stored in a file) and retrieve if exists
+$credPath = "$ACQ\${env:USERNAME}_${env:COMPUTERNAME}.xml"
+
+if ( Test-Path $credPath ) 
+{
+    $cred = Import-Clixml -Path $credPath
+}
+else
+{
+    $parent = split-path $credpath -parent
+    if ( -not ( test-Path $parent ) )
+    {
+        New-Item -ItemType Directory -Force -Path $parent
+    }
+    Get-Credential $env:userdomain\$env:USERNAME | Export-Clixml -Path $credPath
+}
 
 start-Transcript -path $AcqBaseFolder\CyberAuditPhase.Log -Force -append
 
 #get external ip information includin ISP
-$ACQ = ACQ("")
 $externalIP = Get-IPAddressInformation 
 $externalIP > $ACQ\externalIP.txt
 
 #SET Domain controller name
 $i=0
 $DC = ($env:LOGONSERVER).TrimStart("\\")
-$DClist = Get-ADDomainController -filter * | select hostname, operatingsystem
-foreach ($dcontroller in $DClist) {$i++;$a = $dcontroller.hostname;$os = $dcontroller.operatingsystem ;if (($OS -match "2003") -or $OS -match "2008") {Write-Host "Domain Controller $i => $a ($OS)" -ForegroundColor red} else {Write-Host "Domain Controller $i => $a ($OS)" -ForegroundColor green}}
-if ($i -gt 1) 
+Write-Host "Please wait, searching for a domain controller..."
+try
 {
-    Write-Host "You are currently logged on to domain controller $DC"
-    Write-Host "Some scripts will not operate automatically on Windows 2003/2008 Doman Controllers"
-    $dcName = Read-Host "Input a different Domain Controller name to connect to (or Enter to continue using $DC)"
-    if ($dcName -ne "") 
+    if ($DClist = Get-ADDomainController -filter * | select hostname, operatingsystem)
     {
-        $c = nltest /Server:$env:COMPUTERNAME /SC_RESET:$env:USERDNSDOMAIN\$dcName
-        if ($c.Contains("The command completed successfully"))
+        foreach ($dcontroller in $DClist) {$i++;$a = $dcontroller.hostname;$os = $dcontroller.operatingsystem ;if (($OS -match "2003") -or $OS -match "2008") {Write-Host "Domain Controller $i => $a ($OS)" -ForegroundColor red} else {Write-Host "Domain Controller $i => $a ($OS)" -ForegroundColor green}}
+        if ($i -gt 1) 
         {
-            $DC = $dcName
-            success "Domain controller was changed to $DC"
-         }
+            Write-Host "You are currently logged on to domain controller $DC"
+            Write-Host "Some scripts will not operate automatically on Windows 2003/2008 Doman Controllers"
+            $dcName = Read-Host "Input a different Domain Controller name to connect to (or Enter to continue using $DC)"
+            if ($dcName -ne "") 
+            {
+                $c = nltest /Server:$env:COMPUTERNAME /SC_RESET:$env:USERDNSDOMAIN\$dcName
+                if ($c.Contains("The command completed successfully"))
+                {
+                    $DC = $dcName
+                    success "Domain controller was changed to $DC"
+                 }
+            }
+        }
+    }
+    else 
+    {
+        failed "No domain server was found, please connect this machine to a domain"
     }
 }
+catch 
+{
+    failed "No domain server was found, please connect this machine to a domain"
+}
+
+Read-Host "Press Enter to start the audit collection phase"
 
 cls
 
@@ -127,7 +157,7 @@ switch ($input)
         }
         else
         {
-            $domain = Read-Host -Prompt "Enter Domain name to join the machine to"
+            $domain = Read-Host -Prompt "Enter Domain name to join the machine to (eg. cyber.gov.il)"
             $username = read-host -Prompt "Enter an admin user name which have enough permissions"
             $password = Read-Host -Prompt "Enter password for $user" -AsSecureString
             $username = $domain+"\"+$username
@@ -480,9 +510,12 @@ Write-Host $block -ForegroundColor Red
 "@
         Write-Host $help
         $ACQ = ACQ("HostEnum")
-        Import-Module $appsDir\red-team-scripts\current\HostEnum.ps1
+        $enumPath = scoop prefix red-team-scripts
+        Push-Location $enumPath
+        Import-Module .\HostEnum.ps1
         Invoke-HostEnum -ALL -HTMLReport -Verbose
-        Move-Item -Path $appsDir\red-team-scripts\current\*.html -Destination $ACQ
+        Move-Item -Path *.html -Destination $ACQ
+        Pop-Location
         read-host “Press ENTER to continue”
         $null = start-Process -PassThru explorer $ACQ
      }
@@ -721,8 +754,8 @@ Write-Host $block -ForegroundColor Red
             if ( (Test-WinRM -ComputerName $comp.name).status)
             {
                 $compname = $comp.name
-                success $compname
-                New-Item -ItemType Directory -Path "$ACQ\$compname" -Force                
+                success "Collecting interface and routing from: $compname"
+                $null = New-Item -ItemType Directory -Path "$ACQ\$compname" -Force                
                 $res = Invoke-command -COMPUTER $compname -ScriptBlock {ipconfig} -ErrorAction SilentlyContinue -ErrorVariable ResolutionError
                 Out-File -InputObject ($res) -FilePath "$ACQ\$compname\ipconfig.txt" -Encoding ascii
                 $res = Invoke-command -COMPUTER $compname -ScriptBlock {netstat -r} -ErrorAction SilentlyContinue -ErrorVariable ResolutionError
@@ -737,11 +770,13 @@ Write-Host $block -ForegroundColor Red
          #Nessus
      18 {
         Cls
+        $nessusPath = GetAppInstallPath("nessus")
+        Push-Location $nessusPath
 $help = @"
 
         Misc
         ----
-        
+
         Nessus Professional automates point-in-time assessments 
         to help quickly identify and fix vulnerabilities and misconfigurations
         including:
@@ -762,14 +797,14 @@ $help = @"
         - A Script that sets three registry keys and restarts a service to allow nessus 
           to scan, Open Powershell as Admin and run these commands:
             
-          `$NPF = scoop prefix NessusPreFlight
-          cd `$NPF
+          $NPF = scoop prefix NessusPreFlight
+          cd $NPF
           . .\NPF.ps1
           Invoke-NPF -remote -target "MAchine Name or IP Address"
           when fininshed scanning run:
           Invoke-NPF -remoteclean -target "MAchine Name or IP address"
           
-         In order to backup/restore udits,
+         In order to backup/restore audits,
          please run these commands from elevated powershell:
 
          net stop "Tenable Nessus"
@@ -780,11 +815,11 @@ $help = @"
          More tips:
          https://astrix.co.uk/news/2019/11/26/nessus-professional-tips-and-tricks
 
+         Note: If you recieve activation error please reactivate with the same serial
+
 "@
         Write-Host $help
         $ACQ = ACQ("Nessus")
-        $nessusPath = GetAppInstallPath("nessus")
-        Push-Location $nessusPath
         <# $reg = Read-Host "Press [S] to register online or [O] for offline challenge (or Enter to continue)"
         if ($reg -eq "S") 
         {
@@ -795,8 +830,10 @@ $help = @"
             Start-Process .\nessuscli -ArgumentList "fetch --challenge" -wait -NoNewWindow -PassThru
         }
         #>
+        $null = Start-Process .\nessuscli -ArgumentList "fetch --code-in-use" -wait -NoNewWindow -PassThru
         Write-Host "Nessus users:"
         $null = Start-Process .\nessuscli -ArgumentList "lsuser" -wait -NoNewWindow -PassThru
+        $null = Start-Process .\nessuscli -ArgumentList "update --all" -wait -NoNewWindow -PassThru
         Pop-Location
         Write-Host "Starting Internet Explorer in background..."
         $ie = New-Object -com InternetExplorer.Application
@@ -1006,24 +1043,47 @@ $help = @"
         $null = start-Process -PassThru explorer $ACQ
         }
    #Skybox WMI scanner and parser
-     21 {
+     22 {
         Cls
         $help = @"
 
         Skybox WMI collect and parse
         ----------------------------
 
-        Collect information from windows machines such as:
+        Collect information from domain controlled windows machines such as:
         - OS 
         - installed Software
         - hotfixes
 
+        After getting all machines listed in the domain ou=computers, the script connects to
+        each machine and collects the relevant information using wmi protocol.
+
+        Needs user with domain administration permissions on all machines.
+        
+        The script can be downloaded from:
+        https://drive.google.com/open?id=1E-1ibwElj_JK2oRc6QbS5bwl5Aj0cs1F
+
+        wmi_collector.exe -s URI -b BASEDN -u USERNAME -p PASSWORD -o
+        -s URI >>> example : ldap://dc01.myorg.dom
+        -b BASEDN >>> example : dc=myorg,dc=dom
+        -u USERNAME >>> example : myuser@myorg.com
+        -p PASSWORD
+        -o >>> Output folder
+
 "@
         Write-Host $help
+        $ldapServer = (Get-ADDomain).pdcemulator
+        $basedn = (Get-ADDomain).distinguishedname
+        $domain = (Get-ADDomain).dnsroot
         $ACQ = ACQ("Skybox-WMI")
-        $cmd = "wmi_collector"
+        $userName = Read-Host "Input user name with domain admin permissions"
+        $userPassword = Read-Host "Input password for this user"
+        $cmd = "wmi_collector -s 'ldap://$ldapServer' -b '$basedn' -u $username@$domain -p $userPassword -o $ACQ"
+        success "Starting the collection phase"
         Invoke-Expression $cmd
-        $cmd = "wmi_parser -"
+        $null = New-Item -Path $ACQ -Name "parsedFiles" -ItemType Directory -Force
+        $cmd = "wmi_parser -i $ACQ -o $ACQ\parsedFiles"
+        success "Starting the parsing phase"
         Invoke-Expression $cmd
         read-host “Press ENTER to continue”
         $null = start-Process -PassThru explorer $ACQ
