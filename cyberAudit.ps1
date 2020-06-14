@@ -23,6 +23,8 @@ $credPath = "$ACQ\${env:USERNAME}_${env:COMPUTERNAME}.xml"
 if ( Test-Path $credPath ) 
 {
     $cred = Import-Clixml -Path $credPath
+    $credUserName = $cred.username
+    success "You have credentials stored for:  $credUserName"
 }
 else
 {
@@ -903,14 +905,12 @@ $help = @"
         http://download.support.xerox.com/pub/docs/4600/userdocs/any-os/en_GB/Phaser4600.4620_PDL_Guide.pdf
         https://courses.csail.mit.edu/6.857/2018/project/kritkorn-cattalyy-korrawat-suchanv-Printer.pdf
         https://www.bard-security.com/index.php/2019/01/18/if-you-pwn-a-printer-is-it-prwnting/#more-85
-
-        get-
+        https://www.nds.ruhr-uni-bochum.de/media/ei/arbeiten/2017/01/30/exploiting-printers.pdf
         https://www.bard-security.com/index.php/2019/01/25/the-problem-with-protecting-against-pret/
                 
 "@
         Write-Host $help
         $ACQ = ACQ("Printers")
-
         Write-Host "Getting list of print servers from domain server"
         $printservers = (Get-ADObject -LDAPFilter "(&(uncName=*)(objectCategory=printQueue))" -properties *|Sort-Object -Unique -Property servername).servername
         if ($printservers) {
@@ -935,23 +935,40 @@ $help = @"
         }
 
         $NetworkSegments = (Get-NetNeighbor -State "Reachable").ipaddress | foreach {[IPAddress] (([IPAddress] $_).Address -band ([IPAddress] "255.255.255.0").Address) | Select-Object IPAddressToString} | Get-Unique
-        Write-Host "Network segements found:" $NetworkSegments.IPAddressToString
-        $input = Read-Host "Input network subnet for scanning for printers using nmap eg. 10.0.0.0/24"
+        $segmentIp = $NetworkSegments.IPAddressToString
+        Write-Host "Network segements found: $segmentIp"
+        $input = Read-Host "Input a network subnet or [Enter] to scan $segmentIp/24 segment for printers"
+        if ($input -eq "") {
+            $input = "$segmentIp/24"
+        }
+        Write-Host "TCP Scanning for Printers... "
         nmap -p 515,631,9100 $input -oG $ACQ\PrintersTCPscan.txt
         $null = start-Process -PassThru explorer $ACQ
 
-        Write-Host "Scanning for Printers using snmpget"
+        Write-Host "UDP Scanning for Printers... "
         nmap -sU -p 161 $input -oG $ACQ\PrintersUDPscan.txt
 
         #snmpget -v 1 -O v -c public $ipaddress system.sysDescr.0
 
-        $input = Read-Host "Input ip address of a printer to try and hack usin PRET" 
         SetPythonVersion "2"
         Push-Location $PretPath
-        python .\pret.py $input pjl
-        Start-Process powershell -ArgumentList ls
+        Write-Host "SMNP scanning for printers..."
+        python .\pret.py
+        $loop = {
+         $input = Read-Host "Input ip address of a printer to try and hack or [Enter] to skip" 
+         if ($input -ne "")
+          {
+                python .\pret.py $input pjl
+                Start-Process powershell -ArgumentList ls
+                $input = Read-Host "Press [T] to test More printers or [Enter] to finish"
+                if ($input -eq "T") 
+                {
+                    &$loop
+                }
+           }
+        }
+        &$loop
         Pop-Location
-
         read-host “Press ENTER to continue”
         $null = start-Process -PassThru explorer $ACQ
         }
@@ -979,10 +996,11 @@ $help = @"
         $iniPath = scoop prefix everything
         $input = Read-Host "Input network share to scan for files (eg. \\FileServer\c$\Users)"
         $null = (Get-Content $iniPath\Everything.ini -Raw) -replace "\bfolders=(.*)","folders=$input" | Set-Content -Path $iniPath\Everything.ini -Force
+        $null = (Get-Content $iniPath\Everything.ini -Raw) -replace "\bntfs_volume_includes=1","ntfs_volume_includes=0" | Set-Content -Path $iniPath\Everything.ini -Force
         $heb = "רשימה|סיסמה|סודי|סיסמאות|לקוחות|מסווג|רשימת|זהות|מטופלים|לקוחות|משכורות|חשבונות|כתובות|הנהלה"
         $eng = "secret|password|customer|patient|accounting|confidential"
         $ext = ".xls|.pdf|.doc|.zip|.7z|.rar|.txt"
-        $cmd = "everything -first-instance -admin -reindex -s '$heb|$eng $ext' "
+        $cmd = "everything -first-instance -admin -reindex -s '$heb|$eng|$ext' "
         Invoke-Expression $cmd
         read-host “Press ENTER to continue”
         $null = start-Process -PassThru explorer $ACQ
