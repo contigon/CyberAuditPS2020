@@ -21,8 +21,7 @@ $Host.UI.RawUI.WindowTitle = "Cyber Audit Tool 2020 - Domain and Enterprise admi
 #kills any excel process with a file name "cyber" if running
 KillApp("EXCEL","Cyber")
 
-#$filesPath = $ACQ
-$filesPath = "C:\CyberAuditPS2020\win10-P\NTDS"
+$filesPath = $ACQ
 
 $xlfile = "$filesPath\Admin-users-dump-statistics.xlsx"
 Remove-Item $xlfile -ErrorAction Ignore
