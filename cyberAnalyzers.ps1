@@ -75,6 +75,7 @@ Write-Host "     6. statistics     | Cracked Enterprise & Domain Admin passwords
 Write-Host "     7. Dsinternals    | Password cracking using haveibeenpawned NTLM v5 file           " -ForegroundColor White
 Write-Host "     8. AppInspector   | Software source code analysis to identify good or bad patterns " -ForegroundColor White
 Write-Host "     9. XlsCharts      | Generate an excel Risk and remediation efforts charts          " -ForegroundColor White
+Write-Host "    10. NTDS-Offline   | Mount ndts.dit file and SYSVOL for offline audit               " -ForegroundColor White
 Write-Host ""
 Write-Host "    99. Quit                                                                            " -ForegroundColor White
 Write-Host ""
@@ -587,6 +588,63 @@ switch ($input) {
              failed " Please install Microsoft Excel before running this analysis"
         }
         read-host “Press ENTER to continue”
+     }
+     #Offline NTDS
+     10 {
+        CLS
+        $ACQ = ACQA("NTDS")
+        $help = @"
+
+        Offline NTDS
+        ------------
+        
+        Run Active Directory from ntds.dit file.
+
+        requirements: Active Directory server 
+
+        Option 1 - mounting ntds.dit remotely on the Domain server
+        ----------------------------------------------------------
+        The script will copy the ntds.dit to the domain controller 
+        and try to mout it using dsamain.exe command
+
+        Steps:
+        1- Browse and Choose the ntds.dit file to load
+        2- Check ntds.dit integrity
+        3- Upgrade the ntds.dit database      
+        4- Run the AD on port 10389
+        5- Get the domain name from the mounted database
+        6- Browse the AD using the sysinternals tool adexplorer (connect to $AD port 10389)
+
+        Option 2 - mounting ntds.dit directly on the Domain server
+        ----------------------------------------------------------
+        run this script directly on the domain server
+
+        $upg = "dsamain.exe /dbpath <path to ntds.dit> /ldapport 10389  /allowupgrade"
+        $null = Invoke-Expression $upg
+        $cmd = "/c dsamain.exe /dbpath <path to ntds.dit> /ldapport 10389  /allownonadminaccess"
+        Start-Process "cmd.exe" $cmd
+
+        
+        Running Sharphound on mounted AD
+        --------------------------------
+        Import-Module SharpHound.ps1
+        Invoke-BloodHound -DomainController <server name or IP> -LdapPort 10389 -Domain <full Domain name of the organization>
+
+        (BloodHound needs the net-sessions in order to create the attack paths, so offline is not that relevant :-)
+
+        Running pingcastle on mounted AD
+        --------------------------------               
+        pingCastle --no-enum-limit --carto --healthcheck --server <server name or ip> --port 10389
+        pingCastle --hc-conso
+
+        (pingcastle needs the SYSVOL from the original domain in order to create the complete report)
+
+        
+"@
+        write-host $help
+        $ScriptToRun = $PSScriptRoot+"\CyberOfflineNTDS.ps1"
+        &$ScriptToRun
+        read-host “Press ENTER to continue”     
      }
 
 #End Menu

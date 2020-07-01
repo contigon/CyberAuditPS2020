@@ -96,7 +96,7 @@ Write-Host ""
 Write-Host "     1. Domain		| Join/Disconnect machine to/from a Domain                     " -ForegroundColor White
 Write-Host "     2. Test		| Test Domain Connections and Configurations for audit         " -ForegroundColor White
 Write-Host "     3. NTDS		| Remote aquire ntds/SYSTEM                                    " -ForegroundColor White
-Write-Host "     4. Network 	| Collect config files and routing from network devices        " -ForegroundColor White
+Write-Host "     4. Network 	| Collect config files and routing from network devices (V2)   " -ForegroundColor White
 Write-Host "     5. PingCastle 	| Active Directory Security Scoring                            " -ForegroundColor White
 Write-Host "     6. Testimo 	| Running audit checks of Active Directory                     " -ForegroundColor White
 Write-Host "     7. goddi		| dumps Active Directory domain information                    " -ForegroundColor White
@@ -313,7 +313,7 @@ Write-Host $block -ForegroundColor Red
         Write-Host $help
         $ACQ = ACQ("Network")
         lantopolog
-        $ScriptToRun = $PSScriptRoot+"\CyberCollectNetworkConfig.ps1"
+        $ScriptToRun = $PSScriptRoot+"\CyberCollectNetworkConfigV2.ps1"
         &$ScriptToRun
         read-host “Press ENTER to continue”
         $null = start-Process -PassThru explorer $ACQ
@@ -427,15 +427,35 @@ Write-Host $block -ForegroundColor Red
         GPO
         ---
         
-        Backs up all the GPOs in a domain.
-
+        1- Backs up all the GPOs in a domain 
+        2- Back's up th SYSVOL folder
+        3- This script will also collect the gpresult all computers and servers
+           in order to know th active gpo's when using policyanalyzer
+        
+        requirements:
         In order for this script to succeed you need to have a user with 
-        Domain Admin permissions.
+        Domain Admin permissions
                 
 "@
         Write-Host $help
         $ACQ = ACQ("GPO")
-        Backup-GPO -All -Path $ACQ
+        $null = New-Item -Path "$ACQ\GPO" -ItemType Directory -Force
+        $null = New-Item -Path "$ACQ\gpresult" -ItemType Directory -Force
+        Backup-GPO -All -Path "$ACQ\GPO"
+        $ADcomputers = Get-ADComputer -Filter * | Select-Object name
+        foreach ($comp in $ADcomputers)
+        {
+            if (Test-Connection -ComputerName $comp.name -Count 1 -TimeToLive 20 -ErrorAction Continue)
+            {
+                $compname = $comp.name
+                $cmd = "gpresult /Scope User /v > $ACQ\gpresult\gpresult-user-$compname.txt"
+                Invoke-Expression $cmd
+                $cmd = "gpresult /Scope computer /v  > $ACQ\gpresult\gpresult-computer-$compname.txt"
+                Invoke-Expression $cmd
+            }
+        }
+        $cmd = "robocopy $env:LOGONSERVER\sysvol\ $ACQ\sysvol\ /copyall /mir"
+        Invoke-Expression $cmd
         read-host “Press ENTER to continue”
         $null = start-Process -PassThru explorer $ACQ
      }
