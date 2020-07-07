@@ -63,7 +63,7 @@ if ((Test-Path -Path "C:\Users\Public\Desktop\Build.lnk","C:\Users\Public\Deskto
     $null = CreateShortcut -name "Attack" -Target "$env:windir\System32\WindowsPowerShell\v1.0\powershell.exe" -Arguments "-ExecutionPolicy Unrestricted -File `"$PSScriptroot\cyberAttack.ps1`"" -OutputDirectory "C:\Users\Public\Desktop" -IconLocation "$PSScriptroot\CyberYellowIcon.ico" -Description "CyberAuditTool Powershell Edition" -Elevated True
 }
 
-read-host ‚ÄúPress ENTER to continue (or Ctrl+C to quit)‚Äù
+read-host ìPress ENTER to continue (or Ctrl+C to quit)î
 
 start-Transcript -path $PSScriptRoot\CyberBuildPhase.Log -Force -append
 
@@ -99,7 +99,7 @@ Write-Host "    10. Update   	| Update scoop applications and powershell modules
 Write-Host "    11. Licenses   	| Install or Create licenses to/from license files            " -ForegroundColor $menuColor[11]
 Write-Host "    12. Uninstall  	| Uninstall scoop applications and powershell modules         " -ForegroundColor $menuColor[12]
 Write-Host "    13. Backup  	| Compress and Backup all Audit folders and Files             " -ForegroundColor $menuColor[13]
-Write-Host "    14. Linux   	| Install Windows Subsystem for Linux                         " -ForegroundColor $menuColor[13]
+Write-Host "    14. Linux   	| Install Windows Subsystem for Linux                         " -ForegroundColor $menuColor[14]
 Write-Host ""
 Write-Host "    99. Quit                                                                      " -ForegroundColor White
 Write-Host ""
@@ -149,9 +149,9 @@ switch ($input)
         {
             Install-Module -Name PSWindowsUpdate
             Add-WUServiceManager -ServiceID "7971f918-a847-4430-9279-4a52d1efe18d" -AddServiceFlag 7
-            Get-WUInstall -AcceptAll ‚ÄìIgnoreReboot
+            Get-WUInstall -AcceptAll ñIgnoreReboot
         }
-      read-host ‚ÄúPress ENTER to continue‚Äù
+      read-host ìPress ENTER to continueî
       }
     
      #Check Powershell and .Net versions and install if needed and add turn on more features
@@ -168,7 +168,7 @@ switch ($input)
         Enable-WindowsOptionalFeature -Online -FeatureName "VirtualMachinePlatform" -Source "SourcePath" -NoRestart -All
         Write-Host "Downloading and installing .NET Core 3.1 SDK (v3.1.201) Windows x64"
         &powershell -NoProfile -ExecutionPolicy unrestricted -Command "[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; &([scriptblock]::Create((Invoke-WebRequest -UseBasicParsing 'https://dot.net/v1/dotnet-install.ps1')))"
-      read-host ‚ÄúPress ENTER to continue‚Äù
+      read-host ìPress ENTER to continueî
       }
     
      #Install RSAT
@@ -201,7 +201,7 @@ switch ($input)
         {
             Write-Host "All Windows RSAT (Remote Server Administration tools) modules are already installed" -ForegroundColor Green
         }
-     read-host ‚ÄúPress ENTER to continue‚Äù
+     read-host ìPress ENTER to continueî
      }
     
      #Install PowerShell Modules from PSGallery Online
@@ -224,7 +224,7 @@ switch ($input)
         $menuColor[4] = "Yellow"
         Set-PSRepository -Name 'PSGallery' -InstallationPolicy Trusted
         Install-PackageProvider Nuget -Force
-        Install-Module ‚ÄìName PowerShellGet ‚ÄìForce -AllowClobber
+        Install-Module ñName PowerShellGet ñForce -AllowClobber
         foreach ($PSGModule in $PSGModules)
         {
             If ((Get-Module $PSGModule) -eq $null)
@@ -254,7 +254,7 @@ switch ($input)
             success "These powershell modules are installed"
             Get-Module
         }
-     read-host ‚ÄúPress ENTER to continue‚Äù
+     read-host ìPress ENTER to continueî
      }
     
      #Install scoop
@@ -305,7 +305,7 @@ switch ($input)
         scoop update
         sudo Add-MpPreference -ExclusionPath '$scoopDir'
         sudo Add-MpPreference -ExclusionPath 'C:\CAT2020\Tools\GlobalScoopApps'        
-        read-host ‚ÄúPress ENTER to continue‚Äù  
+        read-host ìPress ENTER to continueî  
      }
     
     #add buckets and isntall global utilities
@@ -349,7 +349,7 @@ switch ($input)
             pip install $pipW
         }
 
-     read-host ‚ÄúPress ENTER to continue‚Äù 
+     read-host ìPress ENTER to continueî 
      }
     
     #install audit applications from cyberauditbucket
@@ -398,7 +398,7 @@ switch ($input)
                 }
             }
         }
-     read-host ‚ÄúPress ENTER to continue‚Äù 
+     read-host ìPress ENTER to continueî 
      }
      
       #install Analyzers and Reporting applications from cyberauditbucket
@@ -496,7 +496,7 @@ switch ($input)
         {
             Write-Host "[Failed] You dont have .Net core SDK installed, Please install and try again" -ForegroundColor Red
         }
-     read-host ‚ÄúPress ENTER to continue‚Äù 
+     read-host ìPress ENTER to continueî 
      }
      
      #install Attacking scripts and tools
@@ -528,7 +528,7 @@ switch ($input)
                 }
             }
         }
-     read-host ‚ÄúPress ENTER to continue‚Äù 
+     read-host ìPress ENTER to continueî 
      }
 
      #Update scoop, Powershell and applications
@@ -606,7 +606,7 @@ switch ($input)
         
         Write-Output 'checking .Net version so you can update it manually...'
         detect
-     read-host ‚ÄúPress ENTER to continue‚Äù 
+     read-host ìPress ENTER to continueî 
      }
      
      #Licenses
@@ -629,7 +629,7 @@ switch ($input)
         $menuColor[11] = "Yellow"
         $ScriptToRun = $PSScriptRoot+"\CyberLicenses.ps1"
         &$ScriptToRun
-     read-host ‚ÄúPress ENTER to continue‚Äù 
+     read-host ìPress ENTER to continueî 
      }
      
      #Uninstal scoop utilities, applications and scoop itself
@@ -683,7 +683,7 @@ switch ($input)
             Restore-Computer -RestorePoint $resPoint -Confirm -ErrorAction SilentlyContinue
             }
         Get-ComputerRestorePoint -LastStatus
-     read-host ‚ÄúPress ENTER to continue‚Äù       
+     read-host ìPress ENTER to continueî       
      }
     
     #Backup
@@ -731,7 +731,7 @@ switch ($input)
         Write-Host "Backup file Password is: $pass" -ForegroundColor Yellow
         Get-7ZipInformation "$dst\$file" -Password $pass
         Write-Host $verify
-        read-host ‚ÄúPress ENTER to continue‚Äù
+        read-host ìPress ENTER to continueî
         $null = start-Process -PassThru explorer $dst
      }
 
@@ -750,7 +750,7 @@ switch ($input)
         $menuColor[14] = "Yellow"
         wsl --set-default-version 2
 
-        read-host ‚ÄúPress ENTER to continue‚Äù
+        read-host ìPress ENTER to continueî
      }
 
 #Menu End
