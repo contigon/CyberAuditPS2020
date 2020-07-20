@@ -429,7 +429,8 @@ Write-Host $block -ForegroundColor Red
         
         1- Backs up all the GPOs in a domain 
         2- Back's up th SYSVOL folder
-        3- This script will also collect the gpresult all computers and servers
+        3- Run the CyberGPLinkReport.ps1 script to create csv with linked gpo's
+        4- This script will also collect the gpresult all computers and servers
            in order to know th active gpo's when using policyanalyzer
         
         requirements:
@@ -442,6 +443,8 @@ Write-Host $block -ForegroundColor Red
         $null = New-Item -Path "$ACQ\GPO" -ItemType Directory -Force
         $null = New-Item -Path "$ACQ\gpresult" -ItemType Directory -Force
         Backup-GPO -All -Path "$ACQ\GPO"
+        $ScriptToRun = $PSScriptRoot+"\CyberGPLinkReport.ps1"
+        &$ScriptToRun | Export-Csv -Path $ACQ\GPLinkReport.csv -NoTypeInformation
         $ADcomputers = Get-ADComputer -Filter * | Select-Object name
         foreach ($comp in $ADcomputers)
         {

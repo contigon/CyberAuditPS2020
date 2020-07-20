@@ -100,6 +100,7 @@ Write-Host "    11. Licenses   	| Install or Create licenses to/from license fil
 Write-Host "    12. Uninstall  	| Uninstall scoop applications and powershell modules         " -ForegroundColor $menuColor[12]
 Write-Host "    13. Backup  	| Compress and Backup all Audit folders and Files             " -ForegroundColor $menuColor[13]
 Write-Host "    14. Linux   	| Install Windows Subsystem for Linux                         " -ForegroundColor $menuColor[14]
+Write-Host "    15. RAM     	| Schedule Trimming of processes working sets and release RAM " -ForegroundColor $menuColor[15]
 Write-Host ""
 Write-Host "    99. Quit                                                                      " -ForegroundColor White
 Write-Host ""
@@ -556,6 +557,7 @@ switch ($input)
           "cyberBuild.ps1",
           "cyberAttack.ps1",
           "CyberCollectNetworkConfig.ps1",
+          "CyberCollectNetworkConfigV2.ps1",
           "CyberCompressGo.ps1",
           "CyberCreateRunecastRole.ps1",
           "CyberFunctions.ps1",
@@ -566,6 +568,8 @@ switch ($input)
           "CyberMisc.ps1",
           "CyberReport.ps1",
           "CyberOfflineNTDS.ps1",
+          "CyberGPLinkReport.ps1",
+          "CyberRamTrimmer.ps1",
           "Scuba2CSV.py",
           "CyberRiskCompute.xlsx",
           "CyberAuditPrep.xlsx",
@@ -744,12 +748,36 @@ switch ($input)
 
         Install your Linux distribution of choice
 
-
 "@
         Write-Host $help
         $menuColor[14] = "Yellow"
         wsl --set-default-version 2
+        read-host “Press ENTER to continue”
+     }
+     #RAM
+    15 {
+       $help = @"
 
+        Reclaiming Unused Memory
+        ------------------------
+
+        processes can grab memory but not necessarily actually need to use it.
+
+        Memory trimming is where the OS forces processes to empty their working sets.
+        They don’t just discard this memory, since the processes may need it at a later 
+        juncture and it could already contain data,  instead the OS writes it to the page file
+        for them such that it can be retrieved at a later time if required.
+
+        https://guyrleech.wordpress.com/2018/03/15/memory-control-script-reclaiming-unused-memory/
+
+"@
+        Write-Host $help
+        $menuColor[15] = "Yellow"
+        $input = read-host "Input [T] to Trim RAM (Enter to continue doing nothing)"
+        if ($input -eq "T") {
+            $scripttorun = $PSScriptRoot+"\CyberRamTrimmer.ps1"
+            &$scripttorun
+        }
         read-host “Press ENTER to continue”
      }
 
