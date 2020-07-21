@@ -44,7 +44,7 @@ $PowerShellsDir = New-Item -Path $Tools -Name "\PowerShells" -ItemType "director
 $DownloadsDir = New-Item -Path $Tools -Name "\Downloads" -ItemType "directory" -Force
 
 #Powershell Modules, Utilities and Applications that needs to be installed
-$PSGModules = @("Testimo","VMware.PowerCLI","ImportExcel","Posh-SSH","7Zip4PowerShell","FileSplitter")
+$PSGModules = @("Testimo","VMware.PowerCLI","ImportExcel","Posh-SSH","7Zip4PowerShell","FileSplitter","PSWindowsUpdate")
 $utilities = @("dotnet-sdk","Net_Framework_Installed_Versions_Getter","python27","python37","oraclejdk","putty","winscp","nmap","rclone","everything","VoidToolsCLI","notepadplusplus","googlechrome","firefox","foxit-reader","irfanview","grepwin","sysinternals","snmpget","wireshark","excelviewer")
 $CollectorApps = @("ntdsaudit","RemoteExecutionEnablerforPowerShell","PingCastle","goddi","SharpHound","Red-Team-Scripts","Scuba-Windows","azscan3","LGPO","grouper2","Outflank-Dumpert","lantopolog","nessus","NetScanner64","AdvancedPortScanner","skyboxwmicollector","skyboxwmiparser")
 $GPOBaselines = @("Windows10Version1507SecurityBaseline","Windows10Version1511SecurityBaseline","Windows10Version1607andWindowsServer2016SecurityBaseline","Windows10Version1703SecurityBaseline","Windows10Version1709SecurityBaseline","Windows10Version1803SecurityBaseline","Windows10Version1809andWindowsServer2019SecurityBaseline","W10V1903WinSerV1903SecBase","W10V1909WinSerV1909SecBaseline","WindowsServer2012R2SecurityBaseline")
@@ -99,14 +99,8 @@ Write-Host "    10. Update   	| Update scoop applications and powershell modules
 Write-Host "    11. Licenses   	| Install or Create licenses to/from license files            " -ForegroundColor $menuColor[11]
 Write-Host "    12. Uninstall  	| Uninstall scoop applications and powershell modules         " -ForegroundColor $menuColor[12]
 Write-Host "    13. Backup  	| Compress and Backup all Audit folders and Files             " -ForegroundColor $menuColor[13]
-<<<<<<< HEAD
 Write-Host "    14. Linux   	| Install Windows Subsystem for Linux                         " -ForegroundColor $menuColor[14]
 Write-Host "    15. RAM     	| Schedule Trimming of processes working sets and release RAM " -ForegroundColor $menuColor[15]
-||||||| eaf5a95
-Write-Host "    14. Linux   	| Install Windows Subsystem for Linux                         " -ForegroundColor $menuColor[13]
-=======
-Write-Host "    14. Linux   	| Install Windows Subsystem for Linux                         " -ForegroundColor $menuColor[14]
->>>>>>> f4dad90a98e8d8f91196d494da8ef88bc455c470
 Write-Host ""
 Write-Host "    99. Quit                                                                      " -ForegroundColor White
 Write-Host ""
@@ -151,12 +145,58 @@ switch ($input)
             {
             write-host "OS build version is OK, you can continue installation without upgrade" -ForegroundColor Green
             }
-        $update = Read-Host "Press U to update windows (Or Enter to continue without upgrading)"
+        $update = Read-Host "Press [R] to Upgrade or [U] to update windows (Enter to continue doing nothing)"
         if ($update -eq "U")
         {
             Install-Module -Name PSWindowsUpdate
+            Import-Module -Name PSWindowsUpdate
             Add-WUServiceManager -ServiceID "7971f918-a847-4430-9279-4a52d1efe18d" -AddServiceFlag 7
+            Get-WindowsUpdate
             Get-WUInstall -AcceptAll –IgnoreReboot
+        }
+        if ($update -eq "R")
+        {
+            try {
+            # Declarations
+            [string]$DownloadDir = 'C:\Temp\Windows_FU\packages'
+            [string]$LogDir = 'C:\Temp\Logs'
+            [string]$LogFilePath = [string]::Format("{0}\{1}_{2}.log", $LogDir, "$(get-date -format `"yyyyMMdd_hhmmsstt`")", $MyInvocation.MyCommand.Name.Replace(".ps1", ""))
+            [string]$Url = 'https://go.microsoft.com/fwlink/?LinkID=799445'
+            [string]$UpdaterBinary = "$($DownloadDir)\Win10Upgrade.exe"
+            [string]$UpdaterArguments = '/quietinstall /skipeula /auto upgrade /copylogs $LogDir'
+            [System.Net.WebClient]$webClient = New-Object System.Net.WebClient
+ 
+            # Here the music starts playing .. 
+            Write-Log -Message ([string]::Format("Info: Script init - User: {0} Machine {1}", $env:USERNAME, $env:COMPUTERNAME))
+            Write-Log -Message ([string]::Format("Current Windows Version: {0}", [System.Environment]::OSVersion.ToString()))
+ 
+            # Check if folders exis
+            if (!(Test-Path $DownloadDir)) {
+                New-Item -ItemType Directory -Path $DownloadDir
+            }
+            if (!(Test-Path $LogDir)) {
+                New-Item -ItemType Directory -Path $LogDir
+            }
+            if (Test-Path $UpdaterBinary) {
+                Remove-Item -Path $UpdaterBinary -Force
+            }
+            # Download the Windows Update Assistant
+            Write-Log -Message "Will try to download Windows Update Assistant.."
+            $webClient.DownloadFile($Url, $UpdaterBinary)
+ 
+            # If the Update Assistant exists -> create a process with argument to initialize the update process
+            if (Test-Path $UpdaterBinary) {
+                Start-Process -FilePath $UpdaterBinary -ArgumentList $UpdaterArguments -Wait
+                Write-Log "Fired and forgotten?"
+            }
+            else {
+                Write-Log -Message ([string]::Format("ERROR: File {0} does not exist!", $UpdaterBinary))
+            }
+            }
+            catch {
+                Write-Log -Message $_.Exception.Message 
+                Write-Error $_.Exception.Message 
+            }
         }
       read-host “Press ENTER to continue”
       }
@@ -757,6 +797,8 @@ switch ($input)
 "@
         Write-Host $help
         $menuColor[14] = "Yellow"
+        dism.exe /online /enable-feature /featurename:VirtualMachinePlatform /all /norestart
+        Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Windows-Subsystem-Linux
         wsl --set-default-version 2
         read-host “Press ENTER to continue”
      }
