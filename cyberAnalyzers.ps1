@@ -145,10 +145,10 @@ switch ($input) {
         else
         {
              Write-Host "[Failure] Please install Microsoft Excel before continuing running this analysis" -ForegroundColor Red
-             read-host ‚ÄúPress [Enter] if you installed Excel (or Ctrl + c to quit)‚Äù
+             read-host "úPress [Enter] if you installed Excel (or Ctrl + c to quit)"ù
         }
         
-        read-host ‚ÄúPress ENTER to continue‚Äù
+        read-host "úPress ENTER to continue"ù
         $null = start-Process -PassThru explorer $ACQ
      }
 
@@ -188,7 +188,7 @@ switch ($input) {
         {
             Write-Host "[Failed] The file $ACQ\hashes-Ophcrack.txt was not found, please check and try again" -ForegroundColor Red
         }
-        read-host ‚ÄúPress ENTER to continue‚Äù
+        read-host "úPress ENTER to continue"ù
      }
        #hashcat
      3 {
@@ -303,7 +303,7 @@ switch ($input) {
             }
         }
      Pop-Location
-     read-host ‚ÄúPress ENTER to continue‚Äù
+     read-host "úPress ENTER to continue"ù
      }
      #BloodHound
      4 {
@@ -318,12 +318,12 @@ switch ($input) {
         within an Active Directory environment and dentify highly complex attack paths.
 
         Data Includes:
-        - Users         ‚Äì The users on the network extracted from active directory
-        - Computers     ‚Äì The different endpoints on the network, servers, workstations and other devices
-        - Groups        ‚Äì The different AD groups extracted from AD
-        - Sessions      ‚Äì The amount of user sessions on computers on the network that the ingestor has extracted
-        - ACLs          ‚Äì Access control lists, the different permissions and access that users and groups have against each other
-        - Relationships ‚Äì The different relations that all of the other aspects have to each other such as 
+        - Users         "ì The users on the network extracted from active directory
+        - Computers     "ì The different endpoints on the network, servers, workstations and other devices
+        - Groups        "ì The different AD groups extracted from AD
+        - Sessions      "ì The amount of user sessions on computers on the network that the ingestor has extracted
+        - ACLs          "ì Access control lists, the different permissions and access that users and groups have against each other
+        - Relationships "ì The different relations that all of the other aspects have to each other such as 
                           group memberships, users, user sessions and other related information
 
         Please wait untill the neo4j database is running, this can take some time,
@@ -383,14 +383,14 @@ switch ($input) {
 	            write-host "User:     neo4j" 
 	            write-host "Password: neo4j"
 	            write-host "Please change default password to: BloodHound" -ForegroundColor Red
-                read-host  ‚ÄúAfter password is changed, Press ENTER to continue‚Äù
+                read-host  "úAfter password is changed, Press ENTER to continue"ù
                 write-host "Login to the BloodHound application using:"
                 write-host "User:     neo4j" -ForegroundColor Yello
                 write-host "Password: BloodHound" -ForegroundColor Yello
                 invoke-expression "BloodHound"
         }
         Start-Process iexplore $ACQ
-        read-host ‚ÄúPress ENTER to continue‚Äù
+        read-host "úPress ENTER to continue"ù
      }
      #PolicyAnalizer
      5 {
@@ -415,7 +415,7 @@ switch ($input) {
         write-host $help
         $cmd = "policyanalyzer"
         Invoke-Expression $cmd
-        read-host ‚ÄúPress ENTER to continue‚Äù     
+        read-host "úPress ENTER to continue"ù     
      }
      #Statistics
      6 {     
@@ -481,9 +481,9 @@ switch ($input) {
         else
         {
              Write-Host "[Failure] Please install Microsoft Excel before continuing running this analysis" -ForegroundColor Red
-             read-host ‚ÄúPress [Enter] if you installed Excel (or Ctrl + c to quit)‚Äù
+             read-host "úPress [Enter] if you installed Excel (or Ctrl + c to quit)"ù
         }
-        read-host ‚ÄúPress ENTER to continue‚Äù
+        read-host "úPress ENTER to continue"ù
      }
 
     #DSInternals
@@ -515,7 +515,7 @@ switch ($input) {
             $pwndfile = Get-FileName
             Get-ADDBAccount -All -DatabasePath $ACQ\ntds.dit -BootKey $bk | Test-PasswordQuality -WeakPasswordHashesSortedFile $pwndfile
          }
-        read-host ‚ÄúPress ENTER to continue‚Äù     
+        read-host "úPress ENTER to continue"ù     
      }
      #appInspector
      8 {
@@ -552,7 +552,7 @@ switch ($input) {
         Invoke-Expression $cmd
         Start-Process iexplore $ACQ
         Pop-Location    
-        read-host ‚ÄúPress ENTER to continue‚Äù     
+        read-host "úPress ENTER to continue"ù     
      }
      #Remediation Efforts and Risk Charts
      9 {
@@ -594,7 +594,7 @@ switch ($input) {
         {
              failed " Please install Microsoft Excel before running this analysis"
         }
-        read-host ‚ÄúPress ENTER to continue‚Äù
+        read-host "úPress ENTER to continue"ù
      }
      #Offline NTDS
      10 {
@@ -651,7 +651,7 @@ switch ($input) {
         write-host $help
         $ScriptToRun = $PSScriptRoot+"\CyberOfflineNTDS.ps1"
         &$ScriptToRun
-        read-host ‚ÄúPress ENTER to continue‚Äù     
+        read-host "úPress ENTER to continue"ù     
      }
 
 #End Menu
