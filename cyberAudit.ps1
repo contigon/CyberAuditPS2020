@@ -39,7 +39,7 @@ else
 start-Transcript -path $AcqBaseFolder\CyberAuditPhase.Log -Force -append
 
 #get external ip information includin ISP
-$externalIP = Get-IPAddressInformation 
+$externalIP = (Invoke-WebRequest -uri "http://ifconfig.me/ip").Content 
 $externalIP > $ACQ\externalIP.txt
 
 #SET Domain controller name

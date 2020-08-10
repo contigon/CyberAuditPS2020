@@ -318,12 +318,12 @@ switch ($input) {
         within an Active Directory environment and dentify highly complex attack paths.
 
         Data Includes:
-        - Users         "“ The users on the network extracted from active directory
-        - Computers     "“ The different endpoints on the network, servers, workstations and other devices
-        - Groups        "“ The different AD groups extracted from AD
-        - Sessions      "“ The amount of user sessions on computers on the network that the ingestor has extracted
-        - ACLs          "“ Access control lists, the different permissions and access that users and groups have against each other
-        - Relationships "“ The different relations that all of the other aspects have to each other such as 
+        - Users          The users on the network extracted from active directory
+        - Computers      The different endpoints on the network, servers, workstations and other devices
+        - Groups         The different AD groups extracted from AD
+        - Sessions       The amount of user sessions on computers on the network that the ingestor has extracted
+        - ACLs           Access control lists, the different permissions and access that users and groups have against each other
+        - Relationships  The different relations that all of the other aspects have to each other such as 
                           group memberships, users, user sessions and other related information
 
         Please wait untill the neo4j database is running, this can take some time,

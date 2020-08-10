@@ -350,8 +350,7 @@ switch ($input)
         scoop checkup
         scoop status
         scoop update
-        sudo Add-MpPreference -ExclusionPath '$scoopDir'
-        sudo Add-MpPreference -ExclusionPath 'C:\CAT2020\Tools\GlobalScoopApps'        
+        #sudo Add-MpPreference -ExclusionPath 'C:\CAT2020\Tools\GlobalScoopApps'        
         read-host "œPress ENTER to continue"  
      }
     
@@ -534,7 +533,7 @@ switch ($input)
         if ((dotnet --version) -ge "3.1.200")
         {
             $a = appdir("appinspector")
-            Set-Location $a
+            push-Location $a
             $cmd = "dotnet.exe tool install --global Microsoft.CST.ApplicationInspector.CLI"
             Invoke-Expression $cmd
             Pop-Location            
@@ -589,6 +588,7 @@ switch ($input)
         - Update scoop and buckets
         - Update Powershell modules
         - Check if there is a newer powershell version
+        - AutoUpdate PingCastle
 
 "@
         Write-Host $help
@@ -656,6 +656,12 @@ switch ($input)
         
         Write-Output 'checking .Net version so you can update it manually...'
         detect
+
+        $pingcastlePath = scoop prefix pingcastle
+        Push-Location $pingcastlePath
+        PingCastleAutoUpdater
+        Pop-Location
+
      read-host "œPress ENTER to continue" 
      }
      
