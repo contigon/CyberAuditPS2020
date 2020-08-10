@@ -45,10 +45,10 @@ $DownloadsDir = New-Item -Path $Tools -Name "\Downloads" -ItemType "directory" -
 
 #Powershell Modules, Utilities and Applications that needs to be installed
 $PSGModules = @("Testimo","VMware.PowerCLI","ImportExcel","Posh-SSH","7Zip4PowerShell","FileSplitter","PSWindowsUpdate")
-$utilities = @("dotnet-sdk","Net_Framework_Installed_Versions_Getter","python27","python37","oraclejdk","putty","winscp","nmap","rclone","everything","VoidToolsCLI","notepadplusplus","googlechrome","firefox","foxit-reader","irfanview","grepwin","sysinternals","snmpget","wireshark","excelviewer")
+$utilities = @("dotnet-sdk","Net_Framework_Installed_Versions_Getter","python27","python37","oraclejdk","putty","winscp","nmap","rclone","everything","VoidToolsCLI","notepadplusplus","googlechrome","firefox","foxit-reader","irfanview","grepwin","sysinternals","snmpget","wireshark")
 $CollectorApps = @("ntdsaudit","RemoteExecutionEnablerforPowerShell","PingCastle","goddi","SharpHound","Red-Team-Scripts","Scuba-Windows","azscan3","LGPO","grouper2","Outflank-Dumpert","lantopolog","nessus","NetScanner64","AdvancedPortScanner","skyboxwmicollector","skyboxwmiparser")
-$GPOBaselines = @("Windows10Version1507SecurityBaseline","Windows10Version1511SecurityBaseline","Windows10Version1607andWindowsServer2016SecurityBaseline","Windows10Version1703SecurityBaseline","Windows10Version1709SecurityBaseline","Windows10Version1803SecurityBaseline","Windows10Version1809andWindowsServer2019SecurityBaseline","W10V1903WinSerV1903SecBase","W10V1909WinSerV1909SecBaseline","WindowsServer2012R2SecurityBaseline")
-$AnalyzerApps = @("PolicyAnalyzer","BloodHoundExampleDB","BloodHoundAD","neo4j","ophcrack","hashcat","rockyou","vista_proba_free","AppInspector")
+$GPOBaselines = @("PolicyAnalyzerSecurityBaseline")
+$AnalyzerApps = @("PolicyAnalyzer","BloodHoundAD","neo4j","ophcrack","hashcat","rockyou","vista_proba_free","AppInspector")
 $AttackApps = @("nirlauncher", "ruler","ncat")
 $pips = @("colorama","pysnmp","win_unicode_console")
 $pythonScripts = @("colorama","pysnmp","win_unicode_console")
@@ -63,7 +63,7 @@ if ((Test-Path -Path "C:\Users\Public\Desktop\Build.lnk","C:\Users\Public\Deskto
     $null = CreateShortcut -name "Attack" -Target "$env:windir\System32\WindowsPowerShell\v1.0\powershell.exe" -Arguments "-ExecutionPolicy Unrestricted -File `"$PSScriptroot\cyberAttack.ps1`"" -OutputDirectory "C:\Users\Public\Desktop" -IconLocation "$PSScriptroot\CyberYellowIcon.ico" -Description "CyberAuditTool Powershell Edition" -Elevated True
 }
 
-read-host ìPress ENTER to continue (or Ctrl+C to quit)î
+read-host ‚ÄúPress ENTER to continue (or Ctrl+C to quit)‚Äù
 
 start-Transcript -path $PSScriptRoot\CyberBuildPhase.Log -Force -append
 
@@ -152,7 +152,7 @@ switch ($input)
             Import-Module -Name PSWindowsUpdate
             Add-WUServiceManager -ServiceID "7971f918-a847-4430-9279-4a52d1efe18d" -AddServiceFlag 7
             Get-WindowsUpdate
-            Get-WUInstall -AcceptAll ñIgnoreReboot
+            Get-WUInstall -AcceptAll ‚ÄìIgnoreReboot
         }
         if ($update -eq "R")
         {
@@ -198,7 +198,7 @@ switch ($input)
                 Write-Error $_.Exception.Message 
             }
         }
-      read-host ìPress ENTER to continueî
+      read-host ‚ÄúPress ENTER to continue‚Äù
       }
     
      #Check Powershell and .Net versions and install if needed and add turn on more features
@@ -215,7 +215,7 @@ switch ($input)
         Enable-WindowsOptionalFeature -Online -FeatureName "VirtualMachinePlatform" -Source "SourcePath" -NoRestart -All
         Write-Host "Downloading and installing .NET Core 3.1 SDK (v3.1.201) Windows x64"
         &powershell -NoProfile -ExecutionPolicy unrestricted -Command "[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; &([scriptblock]::Create((Invoke-WebRequest -UseBasicParsing 'https://dot.net/v1/dotnet-install.ps1')))"
-      read-host ìPress ENTER to continueî
+      read-host ‚ÄúPress ENTER to continue‚Äù
       }
     
      #Install RSAT
@@ -248,7 +248,7 @@ switch ($input)
         {
             Write-Host "All Windows RSAT (Remote Server Administration tools) modules are already installed" -ForegroundColor Green
         }
-     read-host ìPress ENTER to continueî
+     read-host ‚ÄúPress ENTER to continue‚Äù
      }
     
      #Install PowerShell Modules from PSGallery Online
@@ -271,7 +271,7 @@ switch ($input)
         $menuColor[4] = "Yellow"
         Set-PSRepository -Name 'PSGallery' -InstallationPolicy Trusted
         Install-PackageProvider Nuget -Force
-        Install-Module ñName PowerShellGet ñForce -AllowClobber
+        Install-Module ‚ÄìName PowerShellGet ‚ÄìForce -AllowClobber
         foreach ($PSGModule in $PSGModules)
         {
             If ((Get-Module $PSGModule) -eq $null)
@@ -301,7 +301,7 @@ switch ($input)
             success "These powershell modules are installed"
             Get-Module
         }
-     read-host ìPress ENTER to continueî
+     read-host ‚ÄúPress ENTER to continue‚Äù
      }
     
      #Install scoop
@@ -352,7 +352,7 @@ switch ($input)
         scoop update
         sudo Add-MpPreference -ExclusionPath '$scoopDir'
         sudo Add-MpPreference -ExclusionPath 'C:\CAT2020\Tools\GlobalScoopApps'        
-        read-host ìPress ENTER to continueî  
+        read-host ‚ÄúPress ENTER to continue‚Äù  
      }
     
     #add buckets and isntall global utilities
@@ -390,13 +390,13 @@ switch ($input)
         
         #intall python third party modules required for some scripts  
         SetPythonVersion "2"
-        python -m pip install --upgrade pip
+        python -m pip install --upgrade pip --progress-bar=off
         foreach ($pip in $pips)
         {
-            pip install $pipW
+            pip install $pip --progress-bar=off
         }
 
-     read-host ìPress ENTER to continueî 
+     read-host ‚ÄúPress ENTER to continue‚Äù 
      }
     
     #install audit applications from cyberauditbucket
@@ -445,7 +445,7 @@ switch ($input)
                 }
             }
         }
-     read-host ìPress ENTER to continueî 
+     read-host ‚ÄúPress ENTER to continue‚Äù 
      }
      
       #install Analyzers and Reporting applications from cyberauditbucket
@@ -543,7 +543,7 @@ switch ($input)
         {
             Write-Host "[Failed] You dont have .Net core SDK installed, Please install and try again" -ForegroundColor Red
         }
-     read-host ìPress ENTER to continueî 
+     read-host ‚ÄúPress ENTER to continue‚Äù 
      }
      
      #install Attacking scripts and tools
@@ -575,7 +575,7 @@ switch ($input)
                 }
             }
         }
-     read-host ìPress ENTER to continueî 
+     read-host ‚ÄúPress ENTER to continue‚Äù 
      }
 
      #Update scoop, Powershell and applications
@@ -656,7 +656,7 @@ switch ($input)
         
         Write-Output 'checking .Net version so you can update it manually...'
         detect
-     read-host ìPress ENTER to continueî 
+     read-host ‚ÄúPress ENTER to continue‚Äù 
      }
      
      #Licenses
@@ -679,7 +679,7 @@ switch ($input)
         $menuColor[11] = "Yellow"
         $ScriptToRun = $PSScriptRoot+"\CyberLicenses.ps1"
         &$ScriptToRun
-     read-host ìPress ENTER to continueî 
+     read-host ‚ÄúPress ENTER to continue‚Äù 
      }
      
      #Uninstal scoop utilities, applications and scoop itself
@@ -733,7 +733,7 @@ switch ($input)
             Restore-Computer -RestorePoint $resPoint -Confirm -ErrorAction SilentlyContinue
             }
         Get-ComputerRestorePoint -LastStatus
-     read-host ìPress ENTER to continueî       
+     read-host ‚ÄúPress ENTER to continue‚Äù       
      }
     
     #Backup
@@ -781,7 +781,7 @@ switch ($input)
         Write-Host "Backup file Password is: $pass" -ForegroundColor Yellow
         Get-7ZipInformation "$dst\$file" -Password $pass
         Write-Host $verify
-        read-host ìPress ENTER to continueî
+        read-host ‚ÄúPress ENTER to continue‚Äù
         $null = start-Process -PassThru explorer $dst
      }
 
@@ -800,7 +800,7 @@ switch ($input)
         dism.exe /online /enable-feature /featurename:VirtualMachinePlatform /all /norestart
         Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Windows-Subsystem-Linux
         wsl --set-default-version 2
-        read-host ìPress ENTER to continueî
+        read-host ‚ÄúPress ENTER to continue‚Äù
      }
      #RAM
     15 {
@@ -812,7 +812,7 @@ switch ($input)
         processes can grab memory but not necessarily actually need to use it.
 
         Memory trimming is where the OS forces processes to empty their working sets.
-        They donít just discard this memory, since the processes may need it at a later 
+        They don‚Äôt just discard this memory, since the processes may need it at a later 
         juncture and it could already contain data,  instead the OS writes it to the page file
         for them such that it can be retrieved at a later time if required.
 
@@ -826,7 +826,7 @@ switch ($input)
             $scripttorun = $PSScriptRoot+"\CyberRamTrimmer.ps1"
             &$scripttorun
         }
-        read-host ìPress ENTER to continueî
+        read-host ‚ÄúPress ENTER to continue‚Äù
      }
 
 #Menu End
