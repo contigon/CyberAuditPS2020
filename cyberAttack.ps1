@@ -36,7 +36,7 @@ Write-Host "     1. InfectionMonkey		| Breach and Attack Simulation tool        
 Write-Host "     2. Vulmap(online)		| Find Windows/Linux installed software vulnerabilities    " -ForegroundColor White
 Write-Host "     3. cmdkey      		| Searching for usable domain admin stored credentials     " -ForegroundColor White
 Write-Host "     4. ncat         		| Hacking using ncat (netcat replacement)                  " -ForegroundColor White
-Write-Host "     5. KerberosRun    		| Active directory Attack tool                             " -ForegroundColor White
+Write-Host "     5. NirSoft     		| Password recovery, networking, system and forensics      " -ForegroundColor White
 Write-Host ""
 Write-Host "    99. Quit                                                                           " -ForegroundColor White
 Write-Host ""
@@ -124,16 +124,24 @@ switch ($input)
 
 "@
         Write-Host $help
-        $ACQ = ACQ("Vulmap")
-        $ADcomputers = Get-ADComputer -Filter * | Select-Object name
-        foreach ($comp in $ADcomputers)
+
+        if (!(Test-NetConnection google.com).pingsucceeded)
         {
-            if (Test-Connection -ComputerName $comp.name -Count 1 -TimeToLive 20 -ErrorAction Continue)
+            failed "You need to be connected to the internet in order to run this test"
+        }
+        else
+        {
+            $ACQ = ACQ("Vulmap")
+            $ADcomputers = Get-ADComputer -Filter * | Select-Object name
+            foreach ($comp in $ADcomputers)
             {
-                $compname = $comp.name
-                success $compname
-                $res = Invoke-command -COMPUTER $comp.Name -ScriptBlock {iex(New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/vulmon/Vulmap/master/Vulmap-Windows/vulmap-windows.ps1')} -ErrorAction SilentlyContinue -ErrorVariable ResolutionError | out-string -Width 4096 
-                Out-File -InputObject ($res) -FilePath "$ACQ\$compname.txt" -Encoding ascii
+                if (Test-Connection -ComputerName $comp.name -Count 1 -TimeToLive 20 -ErrorAction Continue)
+                {
+                    $compname = $comp.name
+                    success $compname
+                    $res = Invoke-command -COMPUTER $comp.Name -ScriptBlock {iex(New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/vulmon/Vulmap/master/Vulmap-Windows/vulmap-windows.ps1')} -ErrorAction SilentlyContinue -ErrorVariable ResolutionError | out-string -Width 4096 
+                    Out-File -InputObject ($res) -FilePath "$ACQ\$compname.txt" -Encoding ascii
+                }
             }
         }
         read-host “Press ENTER to continue”
@@ -220,24 +228,22 @@ switch ($input)
        $KerberosRun = scoop prefix KerberosRun
        $help = @"
 
-        Ncat (netcat)
-        -------------
+        Nirsoft Utilities
+        -----------------
         
-        https://securityonline.info/kerberosrun/
-        https://github.com/dev-2null/KerberosRun
-        https://github.com/dev-2null/KerberosRun/releases/download/1.0.0/KerberosRun.exe
+        NirLauncher is a package of more than 200 portable freeware utilities:
+        - Password Recovery Utilities
+        - Network Monitoring Tools
+        - Web Browser Tools
+        - Video/Audio Related Utilities
+        - Internet Related Utilities
+        - Desktop Utilities
+        - Outlook/Office Utilities
+        - Programmer Tools
+        - Disk Utilities
+        - System Utilities
+        - Forensic Utilities
 
-        networking utility which reads and writes data across networks from the command line,
-        and is integrated with Nmap.
-
-        This script will help you to open an Encrypted reverse cmd shell from a remote computer
-        to the local computer.
-        
-        Tutorials
-        ---------
-        https://www.hackingtutorials.org/networking/hacking-with-netcat-part-1-the-basics/
-
-        Note: You can copy ncat from: $ncat
 "@
         Write-Host $help
         $ACQ = ACQ("ncat")

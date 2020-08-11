@@ -49,7 +49,7 @@ $utilities = @("dotnet-sdk","Net_Framework_Installed_Versions_Getter","python27"
 $CollectorApps = @("ntdsaudit","RemoteExecutionEnablerforPowerShell","PingCastle","goddi","SharpHound","Red-Team-Scripts","Scuba-Windows","azscan3","LGPO","grouper2","Outflank-Dumpert","lantopolog","nessus","NetScanner64","AdvancedPortScanner","skyboxwmicollector","skyboxwmiparser")
 $GPOBaselines = @("PolicyAnalyzerSecurityBaseline")
 $AnalyzerApps = @("PolicyAnalyzer","BloodHoundAD","neo4j","ophcrack","hashcat","rockyou","vista_proba_free","AppInspector")
-$AttackApps = @("nirlauncher", "ruler","ncat")
+$AttackApps = @("nirlauncher", "ruler","ncat","infectionmonkey")
 $pips = @("colorama","pysnmp","win_unicode_console")
 $pythonScripts = @("colorama","pysnmp","win_unicode_console")
 
