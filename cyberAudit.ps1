@@ -213,7 +213,7 @@ switch ($input)
                 RemoteExecutionEnablerforPowerShell
             }
         }
-        read-host “Press ENTER to continue”
+        read-host "Press ENTER to continue"
      }
 
      #NTDS and SYSTEM hive remote aquisition
@@ -264,7 +264,7 @@ Write-Host $block -ForegroundColor Red
             winrs -r:$DC ntdsutil "ac i ntds" "ifm" "create full c:\ntdsdump" q q
             Copy-Item -Path $env:LOGONSERVER\c$\ntdsdump\* -Destination $ACQ -Recurse -Force
         }
-     read-host “Press ENTER to continue”
+     read-host "Press ENTER to continue"
      $null = start-Process -PassThru explorer $ACQ
      }
 
@@ -315,7 +315,7 @@ Write-Host $block -ForegroundColor Red
         lantopolog
         $ScriptToRun = $PSScriptRoot+"\CyberCollectNetworkConfigV2.ps1"
         &$ScriptToRun
-        read-host “Press ENTER to continue”
+        read-host "Press ENTER to continue"
         $null = start-Process -PassThru explorer $ACQ
         }
 
@@ -339,7 +339,7 @@ Write-Host $block -ForegroundColor Red
         $ACQ = ACQ("PingCastle")
         $ScriptToRun = $PSScriptRoot+"\CyberPingCastle.ps1"
         &$ScriptToRun
-        read-host “Press ENTER to continue”
+        read-host "Press ENTER to continue"
         $null = start-Process -PassThru explorer $ACQ
         }
 
@@ -371,7 +371,7 @@ Write-Host $block -ForegroundColor Red
             Invoke-Testimo  -ExcludeSources DCDiagnostics -ReportPath $ACQ\Testimo.html
             $null = start-Process -PassThru explorer $ACQ
         }
-        read-host “Press ENTER to continue”
+        read-host "Press ENTER to continue"
      }
 
     #goddi
@@ -415,7 +415,7 @@ Write-Host $block -ForegroundColor Red
         $Pwd =[Runtime.InteropServices.Marshal]::PtrToStringAuto([Runtime.InteropServices.Marshal]::SecureStringToBSTR($securePwd))
         goddi-windows-amd64.exe -username="$env:USERNAME" -password="$Pwd" -domain="$env:USERDNSDOMAIN" -dc="$DC" -unsafe
         Move-Item -Path $appsDir\goddi\current\csv\* -Destination $ACQ -Force
-        read-host “Press ENTER to continue”
+        read-host "Press ENTER to continue"
         $null = start-Process -PassThru explorer $ACQ
      }
 
@@ -459,7 +459,7 @@ Write-Host $block -ForegroundColor Red
         }
         $cmd = "robocopy $env:LOGONSERVER\sysvol\ $ACQ\sysvol\ /copyall /mir"
         Invoke-Expression $cmd
-        read-host “Press ENTER to continue”
+        read-host "Press ENTER to continue"
         $null = start-Process -PassThru explorer $ACQ
      }
 
@@ -499,10 +499,10 @@ Write-Host $block -ForegroundColor Red
         $ACQ = ACQ("Sharphound")
         Import-Module $appsDir\sharphound\current\SharpHound.ps1
         Invoke-BloodHound -CollectionMethod All,GPOLocalGroup,LoggedOn -OutputDirectory $ACQ
-        $MaXLoop = read-host “Choose Maximum loop time for session collecting task (eg. 30m)”
+        $MaXLoop = read-host "Choose Maximum loop time for session collecting task (eg. 30m)"
         Invoke-BloodHound -CollectionMethod SessionLoop -MaxLoopTime $MaXLoop -OutputDirectory $ACQ
         Invoke-BloodHound -SearchForeset -CollectionMethod All,GPOLocalGroup,LoggedOn -OutputDirectory $ACQ
-        read-host “Press ENTER to continue”
+        read-host "Press ENTER to continue"
         $null = start-Process -PassThru explorer $ACQ
      }
 
@@ -541,7 +541,7 @@ Write-Host $block -ForegroundColor Red
         Invoke-HostEnum -ALL -HTMLReport -Verbose
         Move-Item -Path *.html -Destination $ACQ
         Pop-Location
-        read-host “Press ENTER to continue”
+        read-host "Press ENTER to continue"
         $null = start-Process -PassThru explorer $ACQ
      }
 
@@ -566,7 +566,7 @@ Write-Host $block -ForegroundColor Red
         write-host $help 
         $cmd = "Scuba"
         Invoke-Expression $cmd
-        $input = read-host “Wait untill auditing finished and Press [Enter] to save report”
+        $input = read-host "Wait untill auditing finished and Press [Enter] to save report"
         $ScubaDir = scoop prefix scuba-windows
         if (Get-Item -Path "$ScubaDir\Scuba App\production\AssessmentResults.js" -ErrorAction SilentlyContinue)
             {
@@ -586,7 +586,7 @@ Write-Host $block -ForegroundColor Red
             {
                 Write-Host "Could not find any Report, please check why and try again"
             }            
-            read-host “Press ENTER to continue”
+            read-host "Press ENTER to continue"
             KillApp("javaw","Scuba")
      }
 
@@ -641,7 +641,7 @@ Write-Host $block -ForegroundColor Red
         Invoke-Expression $cmd
         $cmd = " grouper2.exe -f $ACQ\Report.html"
         Invoke-Expression $cmd
-        read-host “Press ENTER to continue”
+        read-host "Press ENTER to continue"
         $null = start-Process -PassThru explorer $ACQ
      }
         #Dumpert
@@ -668,7 +668,7 @@ Write-Host $block -ForegroundColor Red
         Copy-Item -Path $appsDir\Outflank-Dumpert\current\Outflank-Dumpert.exe -Destination \\$target\c$\Windows\temp -Recurse -Force
         winrs -r:$target c:\Windows\temp\$cmd
         Copy-Item -Path $target\c$\WINDOWS\Temp\dumpert.dmp -Destination $ACQ -Recurse -Force
-        read-host “Press ENTER to continue”
+        read-host "Press ENTER to continue"
         $null = start-Process -PassThru explorer $ACQ
      }
         #runecast
@@ -716,7 +716,7 @@ Write-Host $block -ForegroundColor Red
             $ScriptToRun = $PSScriptRoot+"\CyberCreateRunecastRole.ps1"
             &$ScriptToRuns
         }
-        read-host “Press ENTER to continue”
+        read-host "Press ENTER to continue"
         $null = start-Process -PassThru explorer $ACQ
      }
     
@@ -741,7 +741,7 @@ Write-Host $block -ForegroundColor Red
         $ACQ = ACQ("Misc")
         $ScriptToRun = $PSScriptRoot+"\CyberMisc.ps1"
         &$ScriptToRun
-        read-host “Press ENTER to continue”
+        read-host "Press ENTER to continue"
         $null = start-Process -PassThru explorer $ACQ
         }
     
@@ -788,7 +788,7 @@ Write-Host $block -ForegroundColor Red
             }
         }
 
-        read-host “Press ENTER to continue”
+        read-host "Press ENTER to continue"
         $null = start-Process -PassThru explorer $ACQ
         }
 
@@ -872,7 +872,7 @@ $help = @"
                 $sslbypass=$ie.Document.getElementsByTagName("a") | where-object {$_.id -eq "overridelink"}
                 $sslbypass.click()
                 }
-        read-host “Press ENTER to continue”
+        read-host "Press ENTER to continue"
         }
               
         #Printers
@@ -992,7 +992,7 @@ $help = @"
         }
         &$loop
         Pop-Location
-        read-host “Press ENTER to continue”
+        read-host "Press ENTER to continue"
         $null = start-Process -PassThru explorer $ACQ
         }
 
@@ -1025,7 +1025,7 @@ $help = @"
         $ext = ".xls|.pdf|.doc|.zip|.7z|.rar|.txt"
         $cmd = "everything -first-instance -admin -reindex -s '$heb|$eng|$ext' "
         Invoke-Expression $cmd
-        read-host “Press ENTER to continue”
+        read-host "Press ENTER to continue"
         $null = start-Process -PassThru explorer $ACQ
         }
          #Network and Port Scanners
@@ -1080,7 +1080,7 @@ $help = @"
         Invoke-Expression $cmd
         $cmd = "netscanner64"
         Invoke-Expression $cmd
-        read-host “Press ENTER to continue”
+        read-host "Press ENTER to continue"
         $null = start-Process -PassThru explorer $ACQ
         }
    #Skybox WMI scanner and parser
@@ -1126,7 +1126,7 @@ $help = @"
         $cmd = "wmi_parser -i $ACQ -o $ACQ\parsedFiles"
         success "Starting the parsing phase"
         Invoke-Expression $cmd
-        read-host “Press ENTER to continue”
+        read-host "Press ENTER to continue"
         $null = start-Process -PassThru explorer $ACQ
         }
 

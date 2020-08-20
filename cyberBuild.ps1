@@ -271,7 +271,7 @@ switch ($input)
         $menuColor[4] = "Yellow"
         Set-PSRepository -Name 'PSGallery' -InstallationPolicy Trusted
         Install-PackageProvider Nuget -Force
-        Install-Module "“Name PowerShellGet "“Force -AllowClobber
+        Install-Module -Name PowerShellGet -Force -AllowClobber
         foreach ($PSGModule in $PSGModules)
         {
             If ((Get-Module $PSGModule) -eq $null)
