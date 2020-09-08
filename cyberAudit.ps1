@@ -10,10 +10,14 @@
 		Cyber Audit Tool - Audit
 #>
 
+CLS
+
 . $PSScriptRoot\CyberFunctions.ps1
 ShowIncd
 CyberBginfo
 $Host.UI.RawUI.WindowTitle = "Cyber Audit Tool 2020 - Audit"
+
+$menuColor = "White"
 
 $ACQ = ACQ("")
 
@@ -54,7 +58,7 @@ try
         if ($i -gt 1) 
         {
             Write-Host "You are currently logged on to domain controller $DC"
-            Write-Host "Some scripts will not operate automatically on Windows 2003/2008 Doman Controllers"
+            Write-Host "Some scripts can not execute automatically on Windows 2003/2008 Doman Controllers"
             $dcName = Read-Host "Input a different Domain Controller name to connect to (or Enter to continue using $DC)"
             if ($dcName -ne "") 
             {
@@ -63,6 +67,7 @@ try
                 {
                     $DC = $dcName
                     success "Domain controller was changed to $DC"
+                    $menuColor = "green"
                  }
             }
         }
@@ -70,14 +75,18 @@ try
     else 
     {
         failed "No domain server was found, please connect this machine to a domain"
+        $DC = "YOU ARE CURRENTLY NOT CONNECTED TO ANY DOMAIN !!!"
+        $menuColor = "red"
     }
 }
 catch 
 {
     failed "No domain server was found, please connect this machine to a domain"
+    $DC = "YOU ARE CURRENTLY NOT CONNECTED TO ANY DOMAIN !!!"
+    $menuColor = "red"
 }
 
-Read-Host "Press Enter to start the audit collection phase"
+Read-Host "Press Enter to start the audit collection phase (or Ctrl+C to quit)"
 
 cls
 
@@ -90,7 +99,7 @@ Write-Host "********************************************************************
 Write-Host ""
 Write-Host "     Audit Data Collection:                                                        " -ForegroundColor White
 Write-Host ""
-Write-Host "     Domain Controller: $DC                                                        " -ForegroundColor yellow
+Write-Host "     Domain Controller: $DC                                                        " -ForegroundColor $menuColor
 Write-Host "     Aquisition folder: $AcqBaseFolder                                             " -ForegroundColor yellow
 Write-Host ""
 Write-Host "     1. Domain		| Join/Disconnect machine to/from a Domain                     " -ForegroundColor White
@@ -446,15 +455,19 @@ Write-Host $block -ForegroundColor Red
         $ScriptToRun = $PSScriptRoot+"\CyberGPLinkReport.ps1"
         &$ScriptToRun | Export-Csv -Path $ACQ\GPLinkReport.csv -NoTypeInformation
         $ADcomputers = Get-ADComputer -Filter * | Select-Object name
-        foreach ($comp in $ADcomputers)
+        $input = Read-Host "Press G to get all gpresults from all computers in the domain"
+        if ($input -eq "G")
         {
-            if (Test-Connection -ComputerName $comp.name -Count 1 -TimeToLive 20 -ErrorAction Continue)
+            foreach ($comp in $ADcomputers)
             {
-                $compname = $comp.name
-                $cmd = "gpresult /Scope User /v > $ACQ\gpresult\gpresult-user-$compname.txt"
-                Invoke-Expression $cmd
-                $cmd = "gpresult /Scope computer /v  > $ACQ\gpresult\gpresult-computer-$compname.txt"
-                Invoke-Expression $cmd
+                if (Test-Connection -ComputerName $comp.name -Count 1 -TimeToLive 20 -ErrorAction Continue)
+                {
+                    $compname = $comp.name
+                    $cmd = "gpresult /Scope User /v > $ACQ\gpresult\gpresult-user-$compname.txt"
+                    Invoke-Expression $cmd
+                    $cmd = "gpresult /Scope computer /v  > $ACQ\gpresult\gpresult-computer-$compname.txt"
+                    Invoke-Expression $cmd
+                }
             }
         }
         $cmd = "robocopy $env:LOGONSERVER\sysvol\ $ACQ\sysvol\ /copyall /mir"

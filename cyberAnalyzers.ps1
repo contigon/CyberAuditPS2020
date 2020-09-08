@@ -413,9 +413,22 @@ switch ($input) {
 
 "@
         write-host $help
+        $analyzerPath = scoop prefix policyanalyzer
+        $docsPath = [environment]::getfolderpath("mydocuments")
+        [xml]$xml = get-content $ACQ\GPO\manifest.xml
+        $auditDomain = ($xml.DocumentElement.ChildNodes.gpodomain)[1].InnerText
+        Remove-Item $docsPath\PolicyAnalyzer\*.PolicyRules
+        Write-Host "Copying policy rule sets to $docsPath\PolicyAnalyzer"
+        Copy-Item "$analyzerPath\Policy Rules\*.PolicyRules" $docsPath\PolicyAnalyzer\
+        Write-Host "Converting audited GPO to PolicyRules..."
+        $cmd = "GPO2PolicyRules.exe $ACQ\GPO $docsPath\PolicyAnalyzer\$auditDomain.PolicyRules"
+        Invoke-Expression $cmd
+        Write-Host "Splitting policy rules to multiple gpo's"
+        $ScriptToRun = $analyzerPath + "\Split-PolicyRules.ps1"
+        &$ScriptToRun $docsPath\PolicyAnalyzer\$auditDomain.PolicyRules $docsPath\PolicyAnalyzer\$auditDomain
         $cmd = "policyanalyzer"
         Invoke-Expression $cmd
-        read-host "úPress ENTER to continue"ù     
+        read-host "Press Enter to continue"
      }
      #Statistics
      6 {     
