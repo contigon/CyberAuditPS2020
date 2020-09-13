@@ -33,6 +33,7 @@ Remove-Item "$PSScriptRoot\Downloads\goUpdate.pdf" -ErrorAction SilentlyContinue
 $compress = @{
   Path = "$PSScriptRoot\cyberAnalyzers.ps1",
           "$PSScriptRoot\cyberAudit.ps1",
+          "$PSScriptRoot\cyberAuditremote.ps1",
           "$PSScriptRoot\cyberBuild.ps1",
           "$PSScriptRoot\cyberAttack.ps1",
           "$PSScriptRoot\CyberCollectNetworkConfig.ps1",
@@ -67,6 +68,7 @@ $compress = @{
 $compressUpdates = @{
   Path = "$PSScriptRoot\cyberAnalyzers.ps1",
           "$PSScriptRoot\cyberAudit.ps1",
+          "$PSScriptRoot\cyberAuditremote.ps1",
           "$PSScriptRoot\cyberBuild.ps1",
           "$PSScriptRoot\cyberAttack.ps1",
           "$PSScriptRoot\CyberCollectNetworkConfig.ps1",
