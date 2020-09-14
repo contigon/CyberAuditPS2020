@@ -45,6 +45,7 @@ $DownloadsDir = New-Item -Path $Tools -Name "\Downloads" -ItemType "directory" -
 
 #Powershell Modules, Utilities and Applications that needs to be installed
 $PSGModules = @("Testimo","VMware.PowerCLI","ImportExcel","Posh-SSH","7Zip4PowerShell","FileSplitter","PSWindowsUpdate")
+$PSGModulesOffline = @("Testimo","ImportExcel","Posh-SSH","7Zip4PowerShell","FileSplitter")
 $utilities = @("dotnet-sdk","Net_Framework_Installed_Versions_Getter","python27","python37","oraclejdk","putty","winscp","nmap","rclone","everything","VoidToolsCLI","notepadplusplus","googlechrome","firefox","foxit-reader","irfanview","grepwin","sysinternals","snmpget","wireshark")
 $CollectorApps = @("ntdsaudit","RemoteExecutionEnablerforPowerShell","PingCastle","goddi","SharpHound","Red-Team-Scripts","Scuba-Windows","azscan3","LGPO","grouper2","Outflank-Dumpert","lantopolog","nessus","NetScanner64","AdvancedPortScanner","skyboxwmicollector","skyboxwmiparser")
 $GPOBaselines = @("PolicyAnalyzerSecurityBaseline")
@@ -300,6 +301,11 @@ switch ($input)
             Set-PowerCLIConfiguration -Scope User -ParticipateInCEIP $false
             success "These powershell modules are installed"
             Get-Module
+        }
+        Write-Host "Saving powershell modules needed for offline running on remote machines"
+        foreach ($PSGModule in $PSGModulesOffline)
+        {
+            Save-Module -Name $PSGModulesOffline -Path $PowerShellsDir -Repository PSGallery -Force
         }
      read-host "œPress ENTER to continue"
      }
