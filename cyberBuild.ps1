@@ -606,7 +606,7 @@ switch ($input)
         $FilesToUpdate = (
           "cyberAnalyzers.ps1",
           "cyberAudit.ps1",
-          "cyberAuditremote.ps1",
+          "cyberAuditRemote.ps1",
           "cyberBuild.ps1",
           "cyberAttack.ps1",
           "CyberCollectNetworkConfig.ps1",

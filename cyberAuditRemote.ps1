@@ -22,9 +22,23 @@ $menuColor = "White"
 $ACQ = ACQ("")
 
 #Set the credentials for this Audit (it will be stored in a file) and retrieve if exists
+
 $credPath = "$ACQ\${env:USERNAME}_${env:COMPUTERNAME}.xml"
 
-if ( Test-Path $credPath ) 
+if (Test-Path $credPath) 
+{
+    $cred = Import-Clixml -Path $credPath
+    $credUserName = $cred.username
+    Write-Host "You have credentials stored for user: $credUserName"
+    $input = Read-Host "Press [D] to delete the credentials file (or Enter to continue)"
+    if ($input -match "D")
+    {
+        Remove-Item -Path "$ACQ\${env:USERNAME}_${env:COMPUTERNAME}.xml"
+    }
+
+}
+
+if (Test-Path $credPath)
 {
     $cred = Import-Clixml -Path $credPath
     $credUserName = $cred.username
@@ -33,11 +47,11 @@ if ( Test-Path $credPath )
 else
 {
     $parent = split-path $credpath -parent
-    if ( -not ( test-Path $parent ) )
+    if (-not (test-Path $parent))
     {
         New-Item -ItemType Directory -Force -Path $parent
     }
-    Write-Host "Input A domain admin user and password for this audit"
+    Write-Host "Input a domain admin user for this audit (eg: <domain>\<user>)"
     Get-Credential | Export-Clixml -Path $credPath
 }
 
@@ -83,9 +97,9 @@ Write-Host "     1. Test		| Test remote Connections and Configurations for audit
 Write-Host "     2. NTDS		| Remote aquire ntds/SYSTEM                                    " -ForegroundColor White
 Write-Host "     3. Network 	| Collect config files and routing from network devices (V2)   " -ForegroundColor White
 Write-Host "     4. PingCastle 	| Active Directory Security Scoring                            " -ForegroundColor White
-Write-Host "     6. Testimo 	| Running audit checks of Active Directory                     " -ForegroundColor White
-Write-Host "     7. goddi		| dumps Active Directory domain information                    " -ForegroundColor White
-Write-Host "     8. GPO      	| Backup Domain GPO to compare using Microsoft PolicyAnalyzer  " -ForegroundColor White
+Write-Host "     5. Testimo 	| Running audit checks of Active Directory                     " -ForegroundColor White
+Write-Host "     6. goddi		| dumps Active Directory domain information                    " -ForegroundColor White
+Write-Host "     7. GPO      	| Backup Domain GPO to compare using Microsoft PolicyAnalyzer  " -ForegroundColor White
 Write-Host "     9. SharpHound	| BloodHound Ingestor for collecting data from AD              " -ForegroundColor White
 Write-Host "    10. HostEnum	| Red-Team-Script Collecting info from remote host and Domain  " -ForegroundColor White
 Write-Host "    11. SCUBA		| Vulnerability scanning Oracle,MS-SQL,SAP-Sybase,IBM-DB2,MySQ " -ForegroundColor White
@@ -279,19 +293,20 @@ Write-Host $block -ForegroundColor Red
         Write-Host $help
         $ACQ = ACQ("PingCastle")
         $pingCastleDir = scoop prefix pingcastle
+        $RemoteDir = "c:\Temp\PingCastle"
         $sess = New-PSsession -ComputerName $dc -SessionOption (New-PSSessionOption -NoMachineProfile) -ErrorAction Stop -Credential $cred       
-        Invoke-Command -ScriptBlock {mkdir c:\pingcastle} -Session $sess
-        Copy-Item -Path "$pingCastleDir\*" -Destination "c:\PingCastle\" -Recurse -Force -ToSession $sess
-        Invoke-Command -ScriptBlock {push-Location "c:\PingCastle";.\PingCastle --server * --no-enum-limit --carto --healthcheck;Pop-Location} -Session $sess                
-        Invoke-Command -ScriptBlock {push-Location "c:\PingCastle";.\PingCastle --server * --no-enum-limit --hc-conso;Pop-Location} -Session $sess                
-        Copy-Item -Path "c:\PingCastle\*" -Destination $ACQ -Recurse -Force -FromSession $sess
+        Invoke-Command -ScriptBlock {mkdir $using:RemoteDir -Force} -Session $sess
+        Copy-Item -Path "$pingCastleDir\*" -Destination $RemoteDir -Recurse -Force -ToSession $sess
+        Invoke-Command -ScriptBlock {push-Location $using:RemoteDir;.\PingCastle --server * --no-enum-limit --carto --healthcheck;Pop-Location} -Session $sess                
+        Invoke-Command -ScriptBlock {push-Location $using:RemoteDir;.\PingCastle --server * --no-enum-limit --hc-conso;Pop-Location} -Session $sess                
+        Copy-Item -Path "$RemoteDir\ad_*.*" -Destination $ACQ -Force -FromSession $sess
         $sess | Remove-PSSession
         read-host "Press ENTER to continue"
         $null = start-Process -PassThru explorer $ACQ
         }
 
     #Testimo
-    6 {
+    5 {
         Cls
         $help = @"
 
@@ -312,17 +327,20 @@ Write-Host $block -ForegroundColor Red
 "@
         Write-Host $help
         $ACQ = ACQ("Testimo")
-        if (checkRsat) 
-        {
-            import-module activedirectory ; Get-ADDomainController -Filter * | Select Name, ipv4Address, OperatingSystem, site | Sort-Object -Property Name
-            Invoke-Testimo  -ExcludeSources DCDiagnostics -ReportPath $ACQ\Testimo.html
-            $null = start-Process -PassThru explorer $ACQ
-        }
+        $RemoteDir = "c:\Temp\Powershells"
+        $sess = New-PSsession -ComputerName $dc -SessionOption (New-PSSessionOption -NoMachineProfile) -ErrorAction Stop -Credential $cred       
+        Invoke-Command -ScriptBlock {mkdir $using:RemoteDir -Force} -Session $sess
+        Copy-Item -Path "$PowerShellsDir\*" -Destination "$RemoteDir\" -Recurse -Force -ToSession $sess
+        Invoke-Command -ScriptBlock {$Env:PSModulePath = $Env:PSModulePath+";$using:remotedir"} -Session $sess
+        Invoke-Command -ScriptBlock {Invoke-Testimo  -ExcludeSources DCDiagnostics -ReportPath "$using:RemoteDir\Testimo-Report.html"} -Session $sess                             
+        Copy-Item -Path "$RemoteDir\Testimo-Report.html" -Destination $ACQ -Force -FromSession $sess
+        $sess | Remove-PSSession        
+        $null = start-Process -PassThru explorer $ACQ
         read-host "Press ENTER to continue"
      }
 
     #goddi
-    7 {
+    6 {
         Cls
         $help = @"
 
@@ -356,12 +374,18 @@ Write-Host $block -ForegroundColor Red
                 
 "@
         Write-Host $help
-        $ACQ = ACQ("goddi")        
-        Write-Host "You are running as user: $env:USERDNSDOMAIN\$env:USERNAME"
-        $securePwd = Read-Host "Input a Domain Admin password" -AsSecureString
-        $Pwd =[Runtime.InteropServices.Marshal]::PtrToStringAuto([Runtime.InteropServices.Marshal]::SecureStringToBSTR($securePwd))
-        goddi-windows-amd64.exe -username="$env:USERNAME" -password="$Pwd" -domain="$env:USERDNSDOMAIN" -dc="$DC" -unsafe
+        $ACQ = ACQ("goddi")
+        $RemoteDir = "c:\Temp\goddi"
+        $goddiDir = scoop prefix goddi
+        $sess = New-PSsession -ComputerName $dc -SessionOption (New-PSSessionOption -NoMachineProfile) -ErrorAction Stop -Credential $cred       
+        $remoteDomain = Invoke-Command -ScriptBlock {(get-addomain).dnsroot} -Session $sess
+        $remoteUser = ($cred.GetNetworkCredential()).username
+        $RemotePassword = ($cred.GetNetworkCredential()).password
+        Write-Host "You are running goddi as user: $remoteUser"
+        Write-Host "You are running goddi in the domain: $remoteDomain"
+        goddi-windows-amd64.exe -username="$remoteUser" -password="$RemotePassword" -domain="$remoteDomain" -dc="$DC" -unsafe                
         Move-Item -Path $appsDir\goddi\current\csv\* -Destination $ACQ -Force
+        $sess | Remove-PSSession       
         read-host "Press ENTER to continue"
         $null = start-Process -PassThru explorer $ACQ
      }
