@@ -463,9 +463,7 @@ Write-Host $block -ForegroundColor Red
                 if (Test-Connection -ComputerName $comp.name -Count 1 -TimeToLive 20 -ErrorAction Continue)
                 {
                     $compname = $comp.name
-                    $cmd = "gpresult /Scope User /v > $ACQ\gpresult\gpresult-user-$compname.txt"
-                    Invoke-Expression $cmd
-                    $cmd = "gpresult /Scope computer /v  > $ACQ\gpresult\gpresult-computer-$compname.txt"
+                    $cmd = "gpresult /S $compname /R /V > $ACQ\gpresult\gpresult-$compname.txt"
                     Invoke-Expression $cmd
                 }
             }

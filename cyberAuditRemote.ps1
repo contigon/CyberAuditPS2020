@@ -100,20 +100,20 @@ Write-Host "     4. PingCastle 	| Active Directory Security Scoring             
 Write-Host "     5. Testimo 	| Running audit checks of Active Directory                     " -ForegroundColor White
 Write-Host "     6. goddi		| dumps Active Directory domain information                    " -ForegroundColor White
 Write-Host "     7. GPO      	| Backup Domain GPO to compare using Microsoft PolicyAnalyzer  " -ForegroundColor White
-Write-Host "     9. SharpHound	| BloodHound Ingestor for collecting data from AD              " -ForegroundColor White
-Write-Host "    10. HostEnum	| Red-Team-Script Collecting info from remote host and Domain  " -ForegroundColor White
-Write-Host "    11. SCUBA		| Vulnerability scanning Oracle,MS-SQL,SAP-Sybase,IBM-DB2,MySQ " -ForegroundColor White
-Write-Host "    12. azscan		| Oracle,Unix-Linux,iSeries,AS400-OS400,HP-Alpha,Vax,DECVax,VMS" -ForegroundColor White
-Write-Host "    13. Grouper2 	| Find ActiveDirectory GPO security-related misconfigurations  " -ForegroundColor White
-Write-Host "    14. Dumpert	 	| LSASS memory dumper for offline extraction of credentials    " -ForegroundColor White
-Write-Host "    15. Runecast	| Security Hardening checks of VMWARE vSphere/NSX/cloud        " -ForegroundColor White
-Write-Host "    16. Misc    	| collection of scripts that checks miscofigurations or vulns  " -ForegroundColor White
-Write-Host "    17. Skybox-Win	| All windows machines interface and routing config collector  " -ForegroundColor White
-Write-Host "    18. Nessus    	| Vulnerability misconfigurations scanning of OS,Net,Apps,DB..." -ForegroundColor White
-Write-Host "    19. Printers  	| Searching for printers and print servers vulnerabilities     " -ForegroundColor White
-Write-Host "    20. Sensitive  	| Searching for Sensitive documents and files on fileservers   " -ForegroundColor White
-Write-Host "    21. Scanners	| ICMP, Port, IP, NetBIOS, ActiveDirectory and SNMP scanners   " -ForegroundColor White
-Write-Host "    22. Skybox-WMI	| WMI collector of installed programs from all windows machine " -ForegroundColor White
+Write-Host "     8. SharpHound	| BloodHound Ingestor for collecting data from AD              " -ForegroundColor White
+Write-Host "     9. HostEnum	| Red-Team-Script Collecting info from remote host and Domain  " -ForegroundColor White
+Write-Host "    10. SCUBA		| Vulnerability scanning Oracle,MS-SQL,SAP-Sybase,IBM-DB2,MySQ " -ForegroundColor White
+Write-Host "    11. azscan		| Oracle,Unix-Linux,iSeries,AS400-OS400,HP-Alpha,Vax,DECVax,VMS" -ForegroundColor White
+Write-Host "    12. Grouper2 	| Find ActiveDirectory GPO security-related misconfigurations  " -ForegroundColor White
+Write-Host "    13. Dumpert	 	| LSASS memory dumper for offline extraction of credentials    " -ForegroundColor White
+Write-Host "    14. Runecast	| Security Hardening checks of VMWARE vSphere/NSX/cloud        " -ForegroundColor White
+Write-Host "    15. Misc    	| collection of scripts that checks miscofigurations or vulns  " -ForegroundColor White
+Write-Host "    16. Skybox-Win	| All windows machines interface and routing config collector  " -ForegroundColor White
+Write-Host "    17. Nessus    	| Vulnerability misconfigurations scanning of OS,Net,Apps,DB..." -ForegroundColor White
+Write-Host "    18. Printers  	| Searching for printers and print servers vulnerabilities     " -ForegroundColor White
+Write-Host "    19. Sensitive  	| Searching for Sensitive documents and files on fileservers   " -ForegroundColor White
+Write-Host "    20. Scanners	| ICMP, Port, IP, NetBIOS, ActiveDirectory and SNMP scanners   " -ForegroundColor White
+Write-Host "    21. Skybox-WMI	| WMI collector of installed programs from all windows machine " -ForegroundColor White
 Write-Host ""
 Write-Host "    99. Quit                                                                       " -ForegroundColor White
 Write-Host ""
@@ -375,7 +375,6 @@ Write-Host $block -ForegroundColor Red
 "@
         Write-Host $help
         $ACQ = ACQ("goddi")
-        $RemoteDir = "c:\Temp\goddi"
         $goddiDir = scoop prefix goddi
         $sess = New-PSsession -ComputerName $dc -SessionOption (New-PSSessionOption -NoMachineProfile) -ErrorAction Stop -Credential $cred       
         $remoteDomain = Invoke-Command -ScriptBlock {(get-addomain).dnsroot} -Session $sess
@@ -384,14 +383,14 @@ Write-Host $block -ForegroundColor Red
         Write-Host "You are running goddi as user: $remoteUser"
         Write-Host "You are running goddi in the domain: $remoteDomain"
         goddi-windows-amd64.exe -username="$remoteUser" -password="$RemotePassword" -domain="$remoteDomain" -dc="$DC" -unsafe                
-        Move-Item -Path $appsDir\goddi\current\csv\* -Destination $ACQ -Force
+        Move-Item -Path $goddiDir\csv\* -Destination $ACQ -Force
         $sess | Remove-PSSession       
         read-host "Press ENTER to continue"
         $null = start-Process -PassThru explorer $ACQ
      }
 
      #GPO
-     8 {
+     7 {
         cls
         $help = @"
 
@@ -401,7 +400,7 @@ Write-Host $block -ForegroundColor Red
         1- Backs up all the GPOs in a domain 
         2- Back's up th SYSVOL folder
         3- Run the CyberGPLinkReport.ps1 script to create csv with linked gpo's
-        4- This script will also collect the gpresult all computers and servers
+        4- This script can also collect the gpresult all computers and servers
            in order to know th active gpo's when using policyanalyzer
         
         requirements:
@@ -411,35 +410,36 @@ Write-Host $block -ForegroundColor Red
 "@
         Write-Host $help
         $ACQ = ACQ("GPO")
+        $RemoteDir = "c:\Temp"
         $null = New-Item -Path "$ACQ\GPO" -ItemType Directory -Force
         $null = New-Item -Path "$ACQ\gpresult" -ItemType Directory -Force
-        Backup-GPO -All -Path "$ACQ\GPO"
-        $ScriptToRun = $PSScriptRoot+"\CyberGPLinkReport.ps1"
-        &$ScriptToRun | Export-Csv -Path $ACQ\GPLinkReport.csv -NoTypeInformation
-        $ADcomputers = Get-ADComputer -Filter * | Select-Object name
-        $input = Read-Host "Press G to get all gpresults from all computers in the domain"
+        $sess = New-PSsession -ComputerName $dc -SessionOption (New-PSSessionOption -NoMachineProfile) -ErrorAction Stop -Credential $cred 
+        Invoke-Command -ScriptBlock {mkdir "$using:RemoteDir\GPO" -Force} -Session $sess
+        Read-Host "stop1"
+        Invoke-Command -ScriptBlock {Backup-GPO -All -Path "$using:RemoteDir\GPO"} -Session $sess
+        Read-Host "stop2"
+        Invoke-Command -ScriptBlock {Get-ChildItem "$using:RemoteDir\GPO\*" -Recurse -Force | Where-Object {$_.Attributes -match "hidden"} | ForEach-Object {$_.Attributes = "readonly"}} -Session $sess
+        Read-Host "stop3"
+        Invoke-Command -ScriptBlock {Compress-Archive -Path "$using:RemoteDir\GPO" -DestinationPath $using:RemoteDir\GPO-Backup.zip -Force} -Session $sess
+        Copy-Item -Path "$RemoteDir\GPO-Backup.zip" -Destination $ACQ -Recurse -Force -FromSession $sess
+        Copy-Item -Path "C:\Windows\SYSVOL\sysvol\*" -Destination "$ACQ\sysvol\" -Recurse -Force -FromSession $sess
+        takeown.exe /F $ACQ\sysvol\
+        Copy-Item -Path "$PSScriptRoot\CyberGPLinkReport.ps1" -Destination "$RemoteDir\" -Force -ToSession $sess
+        Invoke-Command -ScriptBlock {&$using:RemoteDir\CyberGPLinkReport.ps1 | Export-Csv -Path $using:RemoteDir\GPLinkReport.csv -NoTypeInformation} -Session $sess
+        Copy-Item -Path "$RemoteDir\GPLinkReport.csv" -Destination $ACQ -Recurse -Force -FromSession $sess
+        $input = Read-Host "Press [G] to get all RSOP for all computers & users in the domain"
         if ($input -eq "G")
-        {
-            foreach ($comp in $ADcomputers)
             {
-                if (Test-Connection -ComputerName $comp.name -Count 1 -TimeToLive 20 -ErrorAction Continue)
-                {
-                    $compname = $comp.name
-                    $cmd = "gpresult /Scope User /v > $ACQ\gpresult\gpresult-user-$compname.txt"
-                    Invoke-Expression $cmd
-                    $cmd = "gpresult /Scope computer /v  > $ACQ\gpresult\gpresult-computer-$compname.txt"
-                    Invoke-Expression $cmd
-                }
+              Invoke-Command -ScriptBlock {$ADcomputers = Get-ADComputer -Filter * | Select-Object name;foreach ($comp in $ADcomputers){$compname = $comp.name;gpresult /S $compname /R /V > $using:RemoteDir\gpresult-$compname.txt}} -Session $sess -ErrorAction SilentlyContinue
             }
-        }
-        $cmd = "robocopy $env:LOGONSERVER\sysvol\ $ACQ\sysvol\ /copyall /mir"
-        Invoke-Expression $cmd
+        Copy-Item -Path "$RemoteDir\gpresult-*.txt" -Destination "$ACQ\gpresult" -Force -FromSession $sess
+        $sess | Remove-PSSession      
         read-host "Press ENTER to continue"
         $null = start-Process -PassThru explorer $ACQ
      }
 
      #Sharphound
-     9 {
+     8 {
         cls
         $help = @"
 
@@ -472,11 +472,18 @@ Write-Host $block -ForegroundColor Red
 "@
         Write-Host $help
         $ACQ = ACQ("Sharphound")
-        Import-Module $appsDir\sharphound\current\SharpHound.ps1
-        Invoke-BloodHound -CollectionMethod All,GPOLocalGroup,LoggedOn -OutputDirectory $ACQ
-        $MaXLoop = read-host "Choose Maximum loop time for session collecting task (eg. 30m)"
-        Invoke-BloodHound -CollectionMethod SessionLoop -MaxLoopTime $MaXLoop -OutputDirectory $ACQ
-        Invoke-BloodHound -SearchForeset -CollectionMethod All,GPOLocalGroup,LoggedOn -OutputDirectory $ACQ
+        $SharpHoundDir = scoop prefix sharphound
+        $RemoteDir = "c:\Temp\SharpHound"
+        $sess = New-PSsession -ComputerName $dc -SessionOption (New-PSSessionOption -NoMachineProfile) -ErrorAction Stop -Credential $cred 
+        Invoke-Command -ScriptBlock {mkdir "$using:RemoteDir" -Force} -Session $sess
+        #Copy-Item -Path "$SharpHoundDir\SharpHound.ps1" -Destination "$RemoteDir\" -Force -ToSession $sess
+        Import-Module $SharpHoundDir\SharpHound.ps1
+        Invoke-Command -ScriptBlock {Invoke-BloodHound -CollectionMethod All,GPOLocalGroup,LoggedOn -OutputDirectory "$using:RemoteDir"} -Session $sess
+        #$MaXLoop = read-host "Choose Maximum loop time for session collecting task (eg. 30m)"
+        #Invoke-BloodHound -CollectionMethod SessionLoop -MaxLoopTime $MaXLoop -OutputDirectory $ACQ
+        #Invoke-BloodHound -SearchForeset -CollectionMethod All,GPOLocalGroup,LoggedOn -OutputDirectory $ACQ
+        Copy-Item -Path "$RemoteDir\*.zip" -Destination "$ACQ" -Force -FromSession $sess
+        $sess | Remove-PSSession
         read-host "Press ENTER to continue"
         $null = start-Process -PassThru explorer $ACQ
      }
