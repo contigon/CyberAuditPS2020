@@ -415,11 +415,8 @@ Write-Host $block -ForegroundColor Red
         $null = New-Item -Path "$ACQ\gpresult" -ItemType Directory -Force
         $sess = New-PSsession -ComputerName $dc -SessionOption (New-PSSessionOption -NoMachineProfile) -ErrorAction Stop -Credential $cred 
         Invoke-Command -ScriptBlock {mkdir "$using:RemoteDir\GPO" -Force} -Session $sess
-        Read-Host "stop1"
         Invoke-Command -ScriptBlock {Backup-GPO -All -Path "$using:RemoteDir\GPO"} -Session $sess
-        Read-Host "stop2"
         Invoke-Command -ScriptBlock {Get-ChildItem "$using:RemoteDir\GPO\*" -Recurse -Force | Where-Object {$_.Attributes -match "hidden"} | ForEach-Object {$_.Attributes = "readonly"}} -Session $sess
-        Read-Host "stop3"
         Invoke-Command -ScriptBlock {Compress-Archive -Path "$using:RemoteDir\GPO" -DestinationPath $using:RemoteDir\GPO-Backup.zip -Force} -Session $sess
         Copy-Item -Path "$RemoteDir\GPO-Backup.zip" -Destination $ACQ -Recurse -Force -FromSession $sess
         Copy-Item -Path "C:\Windows\SYSVOL\sysvol\*" -Destination "$ACQ\sysvol\" -Recurse -Force -FromSession $sess
@@ -428,11 +425,13 @@ Write-Host $block -ForegroundColor Red
         Invoke-Command -ScriptBlock {&$using:RemoteDir\CyberGPLinkReport.ps1 | Export-Csv -Path $using:RemoteDir\GPLinkReport.csv -NoTypeInformation} -Session $sess
         Copy-Item -Path "$RemoteDir\GPLinkReport.csv" -Destination $ACQ -Recurse -Force -FromSession $sess
         $input = Read-Host "Press [G] to get all RSOP for all computers & users in the domain"
+        Invoke-Command -ScriptBlock {mkdir "$using:RemoteDir\gpresult" -Force} -Session $sess
         if ($input -eq "G")
             {
-              Invoke-Command -ScriptBlock {$ADcomputers = Get-ADComputer -Filter * | Select-Object name;foreach ($comp in $ADcomputers){$compname = $comp.name;gpresult /S $compname /R /V > $using:RemoteDir\gpresult-$compname.txt}} -Session $sess -ErrorAction SilentlyContinue
+              Invoke-Command -ScriptBlock {$ADcomputers = Get-ADComputer -Filter * | Select-Object name;foreach ($comp in $ADcomputers){$compname = $comp.name;gpresult /S $compname /R /V > $using:RemoteDir\gpresult\$compname.txt}} -Session $sess -ErrorAction SilentlyContinue
             }
-        Copy-Item -Path "$RemoteDir\gpresult-*.txt" -Destination "$ACQ\gpresult" -Force -FromSession $sess
+        Write-Host $sess
+        Copy-Item -Path "$RemoteDir\gpresult\*.txt" -Destination "$ACQ\gpresult" -FromSession $sess -Force -Recurse
         $sess | Remove-PSSession      
         read-host "Press ENTER to continue"
         $null = start-Process -PassThru explorer $ACQ
@@ -478,7 +477,7 @@ Write-Host $block -ForegroundColor Red
         Invoke-Command -ScriptBlock {mkdir "$using:RemoteDir" -Force} -Session $sess
         #Copy-Item -Path "$SharpHoundDir\SharpHound.ps1" -Destination "$RemoteDir\" -Force -ToSession $sess
         Import-Module $SharpHoundDir\SharpHound.ps1
-        Invoke-Command -ScriptBlock {Invoke-BloodHound -CollectionMethod All,GPOLocalGroup,LoggedOn -OutputDirectory "$using:RemoteDir"} -Session $sess
+        Invoke-Command -ScriptBlock {$c:\temp\sharphound.ps1} -Session $sess
         #$MaXLoop = read-host "Choose Maximum loop time for session collecting task (eg. 30m)"
         #Invoke-BloodHound -CollectionMethod SessionLoop -MaxLoopTime $MaXLoop -OutputDirectory $ACQ
         #Invoke-BloodHound -SearchForeset -CollectionMethod All,GPOLocalGroup,LoggedOn -OutputDirectory $ACQ
