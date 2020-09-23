@@ -16,13 +16,12 @@ CLS
 ShowIncd
 CyberBginfo
 $Host.UI.RawUI.WindowTitle = "Cyber Audit Tool 2020 - Remote Audit Not Joined To Domain"
-
 $menuColor = "White"
-
 $ACQ = ACQ("")
+#This is a directory that will be created on remote server in order to aquire files
+$RemoteDir = "c:\CyberAudit"
 
 #Set the credentials for this Audit (it will be stored in a file) and retrieve if exists
-
 $credPath = "$ACQ\${env:USERNAME}_${env:COMPUTERNAME}.xml"
 
 if (Test-Path $credPath) 
@@ -63,6 +62,13 @@ $externalIP > $ACQ\externalIP.txt
 
 #SET Domain controller name
 $DC = Read-Host "Input the Name of a domain controller"
+
+if (!($DC)) 
+    {
+        failed "No Domain controller was specified, Please check and try again"
+        break
+    }
+
 Write-Host "Trying to Ping $DC"
 if (Test-Connection -ComputerName $DC -Quiet -Count 1)
     {
@@ -77,7 +83,10 @@ if (Test-Connection -ComputerName $DC -Quiet -Count 1)
         failed $DC
     }
 
+
 Read-Host "Press Enter to continue (or Ctrl+C to quit)"
+
+
 
 cls
 
@@ -447,11 +456,10 @@ Write-Host $block -ForegroundColor Red
         
         Data Collector for the BloodHound Project
 
-        Sharphound must be run from the context of a domain user, either directly 
-        through a logon or through another method such as RUNAS.
+        Sharphound script and batch will be copied to the domain controller and executed remotely.
 
         CollectionMethod :
-        - Default - group membership, domain trust, local group, session, ACL, object property and SPN target collection
+        - Default - group membership,domain trust,local group,session,ACL,object property,SPN
         - Group - group membership collection
         - LocalAdmin - local admin collection
         - RDP - Remote Desktop Users collection
@@ -465,30 +473,41 @@ Write-Host $block -ForegroundColor Red
         - ACL - collection of ACLs
         - Container - collection of Containers
 
-        In order for this script to succeed you need to have a user with 
-        Domain Admin permissions.
+        Result files will be copied from $DC to $ACQ.
                 
 "@
         Write-Host $help
         $ACQ = ACQ("Sharphound")
         $SharpHoundDir = scoop prefix sharphound
-        $RemoteDir = "c:\Temp\SharpHound"
+
+       if (!(Test-Path -Path $psscriptroot\CyberSharpHound.bat))
+         {
+            $batchScript = "cG93ZXJzaGVsbCAtQ29tbWFuZCAiU3RhcnQtUHJvY2VzcyBwb3dlcnNoZWxsIFwiLUV4ZWN1dGlvblBvbGljeSBCeXBhc3MgLU5vUHJvZmlsZSAtTm9FeGl0IC1Db21tYW5kIGBcImNkIFxgXCJDOlxDeWJlckF1ZGl0XGBcIjsmXGBcIi5cc2hhcnBob3VuZC5wczFcYFwiYFwiXCINCg=="
+            $Content = [System.Convert]::FromBase64String($batchScript)
+            Set-Content -Path $PSScriptRoot\CyberSharpHound.bat -Value $Content -Encoding Byte
+            success "CyberSharpHound.bat file was created successfully"
+         }
+        else {
+            success "CyberSharpHound.bat file was found"
+        }
+
         $sess = New-PSsession -ComputerName $dc -SessionOption (New-PSSessionOption -NoMachineProfile) -ErrorAction Stop -Credential $cred 
-        Invoke-Command -ScriptBlock {mkdir "$using:RemoteDir" -Force} -Session $sess
-        #Copy-Item -Path "$SharpHoundDir\SharpHound.ps1" -Destination "$RemoteDir\" -Force -ToSession $sess
-        Import-Module $SharpHoundDir\SharpHound.ps1
-        Invoke-Command -ScriptBlock {$c:\temp\sharphound.ps1} -Session $sess
-        #$MaXLoop = read-host "Choose Maximum loop time for session collecting task (eg. 30m)"
-        #Invoke-BloodHound -CollectionMethod SessionLoop -MaxLoopTime $MaXLoop -OutputDirectory $ACQ
-        #Invoke-BloodHound -SearchForeset -CollectionMethod All,GPOLocalGroup,LoggedOn -OutputDirectory $ACQ
-        Copy-Item -Path "$RemoteDir\*.zip" -Destination "$ACQ" -Force -FromSession $sess
+        Invoke-Command -ScriptBlock {del "$using:RemoteDir\" -Force -ErrorAction SilentlyContinue -Recurse} -Session $sess
+        $null = Invoke-Command -ScriptBlock {mkdir "$using:RemoteDir" -Force} -Session $sess
+        Copy-Item -Path "$SharpHoundDir\SharpHound.ps1" -Destination "$RemoteDir" -Force -ToSession $sess
+        Copy-Item -Path "C:\CyberAuditPS2020\CyberSharpHound.bat" -Destination "$RemoteDir" -Force -ToSession $sess
+        Invoke-Command -ScriptBlock {Add-Content -Path $using:RemoteDir\SharpHound.ps1 -Value "Invoke-BloodHound -CollectionMethod All,GPOLocalGroup,LoggedOn -OutputDirectory $using:RemoteDir"} -Session $sess
+        psexec \\$DCipAddress cmd.exe /c "$RemoteDir\cybersharphound.bat"
+        Write-Host "Please wait untill the collection process ends..." -ForegroundColor Yellow
+        Invoke-Command -ScriptBlock {while (!(Test-Path "$using:RemoteDir\*_BloodHound.zip")){Start-Sleep 10}} -Session $sess
+        Copy-Item -Path "$RemoteDir\*.zip" -Destination "$ACQ" -FromSession $sess
         $sess | Remove-PSSession
         read-host "Press ENTER to continue"
         $null = start-Process -PassThru explorer $ACQ
      }
 
      #HostEnum
-     10 {
+     9 {
         cls
         $help = @"
 
@@ -517,17 +536,42 @@ Write-Host $block -ForegroundColor Red
         Write-Host $help
         $ACQ = ACQ("HostEnum")
         $enumPath = scoop prefix red-team-scripts
-        Push-Location $enumPath
-        Import-Module .\HostEnum.ps1
-        Invoke-HostEnum -ALL -HTMLReport -Verbose
-        Move-Item -Path *.html -Destination $ACQ
-        Pop-Location
+        
+        $input = Read-Host "Input name of Machine to Enumerate or Enter to enumerate the selected domain ($DC)"
+        if ($input)
+        {
+            $DC = $input
+        }
+
+        $Title = "Enumeration types:"
+        $Prompt = "Input the the type of enumeration you wish to execute"
+        $Choices = [System.Management.Automation.Host.ChoiceDescription[]] @("&Domain", "&Local", "&Privesc","&Quick")
+        $Default = 0
+        $Choice = $host.UI.PromptForChoice($Title, $Prompt, $Choices, $Default)
+        # Action based on the choice
+        switch($Choice)
+        {
+            0 { success "$DC Domain Enumeration";$EnumType = @{Domain=$true}}
+            1 { success "$DC Local Machine Enumeration (May take long time)";$EnumType = @{Local=$true}}
+            2 { success "$DC Privilege Escalation checks (May take long time)";$EnumType = @{Privesc=$true}}
+            3 {success "$DC Brief system survey";$EnumType = @{Quick=$true}}
+        }
+
+        $sess = New-PSsession -ComputerName $dc -SessionOption (New-PSSessionOption -NoMachineProfile) -ErrorAction Stop -Credential $cred 
+        Invoke-Command -ScriptBlock {del "$using:RemoteDir\" -Force -ErrorAction SilentlyContinue -Recurse} -Session $sess
+        $null = Invoke-Command -ScriptBlock {mkdir "$using:RemoteDir" -Force} -Session $sess
+        Copy-Item -Path "$enumPath\HostEnum.ps1" -Destination "$RemoteDir" -Force -ToSession $sess
+        Invoke-Command -ScriptBlock {Push-Location $using:RemoteDir;Import-Module .\HostEnum.ps1;Invoke-HostEnum @using:EnumType|Out-String|Set-Content $using:RemoteDir\RedTeam-$using:dc-$using:EnumType.txt} -Session $sess
+        
+        Invoke-Command -ScriptBlock {while (!(Test-Path "$using:RemoteDir\RedTeam-*.txt")){Start-Sleep 10}} -Session $sess
+        Copy-Item -Path "$RemoteDir\RedTeam-*.txt" -Destination "$ACQ" -FromSession $sess
+        $sess | Remove-PSSession
         read-host "Press ENTER to continue"
         $null = start-Process -PassThru explorer $ACQ
      }
 
      #Scuba
-     11 {
+     10 {
         cls
         $ACQ = ACQ("Scuba")
         $help = @"
@@ -572,7 +616,7 @@ Write-Host $block -ForegroundColor Red
      }
 
         #azscan
-     12 {
+     11 {
         $ACQ = ACQ("azscan")
         $help = @"
 
@@ -585,7 +629,7 @@ Write-Host $block -ForegroundColor Red
         Write-Host $help
         $input = Read-Host "Input [O] in order to audit ORACLE database (Or Enter to continue with other Platforms)"
         if ($input -eq "O") {
-            $CopyToPath = Read-Host "Choose Path to Copy AZOracle.sql script to (eg. \\$DC\c$\Temp)"  
+            $CopyToPath = Read-Host "Input a network share Path to Copy AZOracle.sql script to (eg. \\$DC\c$\Temp)"  
             if (Test-Path -Path $CopyToPath -PathType Any)
              {
                 Copy-Item -Path $appsDir\azscan3\current\AZOracle.sql -Destination $CopyToPath
@@ -603,7 +647,7 @@ Write-Host $block -ForegroundColor Red
      }
 
     #Grouper2
-     13 {
+     12 {
         cls
         $help = @"
 
@@ -618,15 +662,22 @@ Write-Host $block -ForegroundColor Red
 "@
         Write-Host $help
         $ACQ = ACQ("grouper2")
-        $cmd = "grouper2.exe -g"
-        Invoke-Expression $cmd
-        $cmd = " grouper2.exe -f $ACQ\Report.html"
-        Invoke-Expression $cmd
+        $grouperdDir = scoop prefix grouper2
+        $sess = New-PSsession -ComputerName $dc -SessionOption (New-PSSessionOption -NoMachineProfile) -ErrorAction Stop -Credential $cred 
+        Invoke-Command -ScriptBlock {del "$using:RemoteDir\" -Force -ErrorAction SilentlyContinue -Recurse} -Session $sess
+        $null = Invoke-Command -ScriptBlock {mkdir "$using:RemoteDir" -Force} -Session $sess
+        Invoke-Command -ScriptBlock {Add-Content -Path $using:RemoteDir\grouper2.bat -Value "c:\temp\grouper2 -f $using:RemoteDir\Report.html" -Force} -Session $sess
+        Copy-Item -Path "$grouperdDir\grouper2.exe" -Destination "$RemoteDir" -Force -ToSession $sess
+        psexec \\$DCipAddress -i 2 -w $RemoteDir cmd.exe /c "$RemoteDir\grouper2.bat"
+        Write-Host "Please wait untill the collection process ends..." -ForegroundColor Yellow
+        #Invoke-Command -ScriptBlock {while (!(Test-Path "$using:RemoteDir\Report.html")){Start-Sleep 10}} -Session $sess
+        Copy-Item -Path "$RemoteDir\Report.html" -Destination "$ACQ" -FromSession $sess
+        $sess | Remove-PSSession
         read-host "Press ENTER to continue"
         $null = start-Process -PassThru explorer $ACQ
      }
         #Dumpert
-     14 {
+     13 {
         cls
         $help = @"
 
@@ -653,7 +704,7 @@ Write-Host $block -ForegroundColor Red
         $null = start-Process -PassThru explorer $ACQ
      }
         #runecast
-     15 {
+     14 {
         cls
         $ACQ = ACQ("Runecast")
         $help = @"
@@ -702,7 +753,7 @@ Write-Host $block -ForegroundColor Red
      }
     
          #Misc
-     16 {
+     15 {
         Cls
         $help = @"
 
@@ -727,7 +778,7 @@ Write-Host $block -ForegroundColor Red
         }
     
          #IpconfigNetstat
-     17 {
+     16 {
         Cls
         $help = @"
 
@@ -774,7 +825,7 @@ Write-Host $block -ForegroundColor Red
         }
 
          #Nessus
-     18 {
+     17 {
         Cls
         $nessusPath = GetAppInstallPath("nessus")
         Push-Location $nessusPath
@@ -857,7 +908,7 @@ $help = @"
         }
               
         #Printers
-     19 {
+     18 {
         Cls
         $PretPath = scoop prefix PRET
         $help = @"
@@ -978,7 +1029,7 @@ $help = @"
         }
 
         #Sensitive
-     20 {
+     19 {
         Cls
         $help = @"
 
@@ -1010,7 +1061,7 @@ $help = @"
         $null = start-Process -PassThru explorer $ACQ
         }
          #Network and Port Scanners
-     21 {
+     20 {
         Cls
         $help = @"
 
@@ -1065,7 +1116,7 @@ $help = @"
         $null = start-Process -PassThru explorer $ACQ
         }
    #Skybox WMI scanner and parser
-     22 {
+     21 {
         Cls
         $help = @"
 

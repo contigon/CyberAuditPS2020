@@ -22,11 +22,14 @@ if ($input -eq "C") {
         $Base64 = [System.Convert]::ToBase64String($Content)
         $Base64 
         }
-    $filePath = Read-Host "Input the path to the file you want to encrypt"
-     Write-Host "You need to edit the $PSScriptRoot\CyberLicenses.ps1 file and use this encryption as key"
+     Write-Host "Select the file you want to encrypt"
+     Write-Host "You need to edit the $PSScriptRoot\CyberLicenses.ps1 file and use the yellow encryption text as key value"
+     Write-Host "the key is also in your clipboard so you can paste it (Ctrl+V) into the script"
      Write-Host "----------------------------------------------------------------------------------------"
+     $filePath = Get-FileName
      $key = encFile($filePath)
      write-host $key -ForegroundColor Yellow
+     Set-Clipboard -Value $key
      Write-Host "----------------------------------------------------------------------------------------"
 } 
 else
